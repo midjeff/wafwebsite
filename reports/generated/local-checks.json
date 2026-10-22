@@ -1,0 +1,10 @@
+{
+  "suite": "Flask test client + real local OS processes",
+  "platform": "win32",
+  "tests": 26,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "success": true,
+  "limits": "No Docker/WAF/SonarQube; XSS tests inspect HTML, not JavaScript execution. Windows command injection uses &."
+}

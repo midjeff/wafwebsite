@@ -1,0 +1,89 @@
+{
+  "checked_on": "2026-10-21",
+  "verification": "Registry metadata only, images not pulled or executed",
+  "images": [
+    {
+      "repository": "library/python",
+      "tag": "3.12.15-slim-bookworm",
+      "digest": "sha256:6a0e06f5ba0b373d051aabd3fffb9b873f27f9a2a3a14bcbe37dee6f0e3bbc70",
+      "last_updated": "2026-10-21T11:07:35.906489Z",
+      "source": "https://hub.docker.com/v2/repositories/library/python/tags/3.12.15-slim-bookworm",
+      "architectures": [
+        "386",
+        "amd64",
+        "arm",
+        "arm64",
+        "ppc64le",
+        "unknown"
+      ]
+    },
+    {
+      "repository": "owasp/modsecurity-crs",
+      "tag": "4.30.0-nginx-202610180210",
+      "digest": "sha256:7698c48a41a43138ae317feeec964d1515b861cc1d9e50617bc1cdfe9f314e1d",
+      "last_updated": "2026-10-18T02:15:16.239764Z",
+      "source": "https://hub.docker.com/v2/repositories/owasp/modsecurity-crs/tags/4.30.0-nginx-202610180210",
+      "architectures": [
+        "386",
+        "amd64",
+        "arm64"
+      ]
+    },
+    {
+      "repository": "library/sonarqube",
+      "tag": "26.10.0.133078-community",
+      "digest": "sha256:0b3408443fb6a311253de27941b10977c9b977fd53be2265947bfe14161308b8",
+      "last_updated": "2026-10-17T04:53:38.905627Z",
+      "source": "https://hub.docker.com/v2/repositories/library/sonarqube/tags/26.10.0.133078-community",
+      "architectures": [
+        "amd64",
+        "arm64",
+        "unknown"
+      ]
+    },
+    {
+      "repository": "sonarsource/sonar-scanner-cli",
+      "tag": "12.2.0.4256_8.1.0",
+      "digest": "sha256:a3f4215076706c95a17a68c19322ee916e40a3acd081a8c1a1e839e0194afa57",
+      "last_updated": "2026-09-17T12:52:26.139676Z",
+      "source": "https://hub.docker.com/v2/repositories/sonarsource/sonar-scanner-cli/tags/12.2.0.4256_8.1.0",
+      "architectures": [
+        "amd64"
+      ]
+    },
+    {
+      "repository": "semgrep/semgrep",
+      "tag": "1.181.0",
+      "digest": "sha256:81474464c1f07483ba0682a44787fd93c91397419762a04abe2bafaae396304b",
+      "last_updated": "2026-10-14T21:25:26.956057Z",
+      "source": "https://hub.docker.com/v2/repositories/semgrep/semgrep/tags/1.181.0",
+      "architectures": [
+        "amd64",
+        "arm64",
+        "unknown"
+      ]
+    },
+    {
+      "repository": "library/postgres",
+      "tag": "17.9-bookworm",
+      "digest": "sha256:47f917f7409eacd22fc5dfb1dee634e1b55cf0c01d1a7eb701be2227a03e0641",
+      "last_updated": "2026-05-09T04:08:29.867797Z",
+      "source": "https://hub.docker.com/v2/repositories/library/postgres/tags/17.9-bookworm",
+      "architectures": [
+        "386",
+        "amd64",
+        "arm",
+        "arm64",
+        "mips64le",
+        "ppc64le",
+        "s390x",
+        "unknown"
+      ]
+    }
+  ],
+  "semgrep_registry": {
+    "url": "https://semgrep.dev/c/p/python",
+    "rules": 151,
+    "sha256": "e3c25cf9b28ddfd3cb1b7f240d2fc0998734199efa539fa0b10281487a602e79"
+  }
+}

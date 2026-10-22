@@ -1,0 +1,416 @@
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -5,6 +5,7 @@
+     && rm -rf /var/lib/apt/lists/* \
+     && groupadd -g 10001 portal && useradd -u 10001 -g portal -M portal \
+     && mkdir -p /data && chown portal:portal /data
++RUN /usr/sbin/setcap -r /usr/bin/ping
+ WORKDIR /srv
+ COPY requirements.txt /srv/requirements.txt
+ RUN pip install --no-cache-dir -r requirements.txt
+--- a/scripts/verify-project.py
++++ b/scripts/verify-project.py
+@@ -33,16 +33,33 @@
+         check(port.startswith('127.0.0.1:'), f'{name}: published port bound to loopback')
+     for volume in service.get('volumes', []):
+         check('docker.sock' not in volume, f'{name}: no Docker socket mount')
+-check(config['networks']['lab']['internal'] is True, 'Application network has no external route')
++check(config['networks']['lab'].get('internal') is False, 'Application network explicitly permits external routing (internal: false)')
++for name, port in [('vulnerable', '127.0.0.1:8080:5000'), ('waf', '127.0.0.1:8081:8080'), ('fixed', '127.0.0.1:8082:5000')]:
++    service = config['services'][name]
++    check(service.get('ports') == [port], f'{name}: exact loopback port mapping {port}')
++    check(service.get('networks') == ['lab'] and 'network_mode' not in service, f'{name}: attached only to lab, no host network')
+ for name in ['vulnerable', 'fixed']:
+     service = config['services'][name]
+     check(service['read_only'] and service['cap_drop'] == ['ALL'], f'{name}: restricted container')
++    check(not service.get('cap_add') and not service.get('privileged', False), f'{name}: no added capabilities or privileged mode')
++    check(service.get('security_opt') == ['no-new-privileges:true'], f'{name}: no-new-privileges enforced')
++    check(service.get('sysctls', {}).get('net.ipv4.ping_group_range') == '0 2147483647', f'{name}: unprivileged ICMP ping group range preserved')
++    check('user' not in service or service['user'] == '10001:10001', f'{name}: image non-root user is not overridden')
++    build = service.get('build', {})
++    check(build.get('context') == '.' and build.get('dockerfile', 'Dockerfile') == 'Dockerfile'
++          and build.get('args', {}).get('APP_DIR') == ('app' if name == 'vulnerable' else 'app-fixed'),
++          f'{name}: shared Dockerfile builds the correct implementation')
+     check(service['tmpfs'] == ['/tmp:size=16m,mode=1777'], f'{name}: tmpfs options are a single mount specification')
+     check(service['volumes'] == [f'{name}_data:/data'], f'{name}: only dedicated database volume, no host directories')
+ env = dict(line.split('=', 1) for line in (ROOT / 'waf/waf.env').read_text().splitlines() if '=' in line)
+ check(env['BACKEND'] == 'http://vulnerable:5000', 'WAF uses same backend as port 8080')
+ check(env['MODSEC_RULE_ENGINE'] == 'On' and env['MODSEC_REQ_BODY_ACCESS'] == 'On', 'WAF blocking and request body inspection configured')
+-check('USER 10001:10001' in (ROOT / 'Dockerfile').read_text(), 'Application runs as non-root')
++dockerfile = (ROOT / 'Dockerfile').read_text()
++check('USER 10001:10001' in dockerfile, 'Application runs as non-root')
++install = dockerfile.find('apt-get install -y --no-install-recommends iputils-ping')
++remove_cap = dockerfile.find('RUN /usr/sbin/setcap -r /usr/bin/ping')
++non_root = dockerfile.find('USER 10001:10001')
++check(0 <= install < remove_cap < non_root, 'ping file capability removed after installation and before non-root USER')
+ check('|safe' not in ''.join(p.read_text(encoding='utf-8') for p in (ROOT / 'app-fixed/templates').glob('*.html')), 'Fixed templates do not bypass escaping')
+ for source in [ROOT / 'sast/lab-rules.yml', ROOT / 'sast/registry-python.yml']:
+     rules = yaml.safe_load(source.read_text(encoding='utf-8'))
+--- a/README.md
++++ b/README.md
+@@ -2,7 +2,7 @@
+ 
+ Корпоративный портал IT-поддержки на Flask / SQLite. Две самостоятельные реализации позволяют показать шесть сценариев атак, настоящий ModSecurity с OWASP CRS, статический анализ и исправления в коде. Все имена, письма, пароли и данные учебные.
+ 
+-**Фактическая проверка 21.10.2026:** 26 локальных тестов и 36 HTTP-проверок прошли; Semgrep CE выполнен для обеих версий. **Docker, WAF и SonarQube не запускались:** Docker CLI и Docker Desktop отсутствуют в доступной среде. Браузерная автоматизация недоступна; XSS подтверждён по HTML, выполнение JavaScript нужно проверить вручную. Полный протокол: [reports/VERIFICATION.md](reports/VERIFICATION.md).
++**Фактическая проверка 22.10.2026:** Docker установлен; vulnerable, fixed и WAF запущены и healthy. После исправления ping полный `scripts/lab.ps1 test` завершился успешно: **54/54 HTTP-проверки и 5/5 проверок audit WAF**. Обычный ping отдельно прошёл в обоих контейнерах под UID 10001. Структурная проверка прошла. Ранее полученные 26 локальных тестов, 36 Windows HTTP-проверок и результаты Semgrep сохранены без повторного запуска. **SonarQube и выполнение JavaScript в браузере не проверены.** Полный протокол: [reports/VERIFICATION.md](reports/VERIFICATION.md).
+ 
+ ## Быстрый запуск на Windows
+ 
+@@ -17,7 +17,7 @@
+ docker version
+ docker compose version
+ docker info --format '{{.OSType}}'
+-docker compose up --build -d
++docker compose up --build --force-recreate -d --wait
+ docker compose ps
+ ```
+ 
+@@ -66,7 +66,7 @@
+ .\scripts\lab.ps1 scan           # Semgrep, затем SonarQube
+ ```
+ 
+-`reset` удаляет созданные в портале учебные заявки/комментарии и возвращает fixtures. SonarQube не затрагивается. `test` создаёт учебные заявки и очищает комментарии #1003 перед каждым вариантом и после проверки. Старые данные SonarQube сохраняются в named volumes; не используйте `docker compose down -v`, если хотите их сохранить.
++`start` и `test` пересоздают контейнеры стенда, сохраняя named volumes. Это также обновляет адрес backend в nginx после пересборки приложений: старый WAF может удерживать прежний IP. `reset` удаляет созданные в портале учебные заявки/комментарии и возвращает fixtures. SonarQube не затрагивается. `test` создаёт учебные заявки и очищает комментарии #1003 перед каждым вариантом и после проверки. Старые данные SonarQube сохраняются в named volumes; не используйте `docker compose down -v`, если хотите их сохранить.
+ 
+ Первичная настройка SonarQube и ввод токена только в память текущего процесса: [reports/SONAR-SETUP.md](reports/SONAR-SETUP.md). В репозитории нет настоящих токенов. Пароль `sonar-lab-only` относится только к внутренней учебной БД PostgreSQL, порт БД не публикуется.
+ 
+@@ -100,7 +100,9 @@
+ .runtime/             игнорируемые данные только локального developer preview
+ ```
+ 
+-Контейнер приложения не получает исходники через bind mount: код копируется в образ. Единственный том — собственная БД `/data`. Нет Docker socket, пользовательских каталогов или настоящих секретов. Приложения работают как UID 10001 с read-only корнем, сброшенными capabilities, лимитами памяти/процессов и внутренней Docker-сетью без внешнего маршрута. Все опубликованные порты привязаны к `127.0.0.1`. Изоляция Docker должна быть подтверждена после запуска; статическая проверка конфигурации не заменяет её.
++Контейнер приложения не получает исходники через bind mount: код копируется в образ. Единственный том — собственная БД `/data`. Нет Docker socket, пользовательских каталогов или настоящих секретов. Приложения работают как UID/GID 10001 с read-only корнем, `cap_drop: ALL`, `no-new-privileges` и лимитами памяти/процессов. Сеть `lab` — обычная bridge-сеть с `internal: false`: внешняя маршрутизация разрешена. Порты опубликованы только на `127.0.0.1`: 8080 → vulnerable:5000, 8081 → waf:8080, 8082 → fixed:5000. Эти параметры проверены и в конфигурации, и в работающих контейнерах; это не полная проверка всех границ контейнерной изоляции.
++
++У установленного `/usr/bin/ping` была файловая capability `cap_net_raw=ep`. При пустом capability bounding set запуск файла завершался `operation not permitted` ещё до отправки пакета. Общий Dockerfile теперь выполняет `RUN /usr/sbin/setcap -r /usr/bin/ping` после установки пакета и до `USER 10001:10001`. Обычный ping работает через непривилегированные ICMP-сокеты благодаря сохранённому `net.ipv4.ping_group_range: "0 2147483647"`. NET_RAW, privileged, root и запуск через системный загрузчик не используются. Проверка: [generated/ping-runtime.json](reports/generated/ping-runtime.json).
+ 
+ ## Материалы для сдачи
+ 
+@@ -121,6 +123,8 @@
+ | Engine недоступен | Дождаться запуска Desktop; проверить Linux containers. |
+ | Порт занят | `Get-NetTCPConnection -LocalPort 8080,8081,8082,9000 -ErrorAction SilentlyContinue`. Остановить только свой конфликтующий процесс. |
+ | WAF 502 / unhealthy | `docker compose logs vulnerable waf`; дождаться backend healthy, проверить `BACKEND` в `waf/waf.env`. |
++| После пересборки через WAF открывается исправленная версия или появляется неожиданный 403 IDOR | Выполнить `scripts/lab.ps1 start`: он пересоздаёт WAF вместе с приложениями и обновляет разрешение имени backend. Проверить cookie `nexus_vulnerable` на 8081. |
++| `exec /usr/bin/ping: operation not permitted` | Пересобрать через `scripts/lab.ps1 start`; проверить отсутствие файловой capability (`getcap /usr/bin/ping`), UID 10001 и `ping_group_range`. Не добавлять NET_RAW. |
+ | Обычная форма получает 403 за WAF | Сохранить audit, найти реальный rule ID и matched variable. Не отключать весь маршрут и не подменять результат теста. |
+ | XSS появляется после включения WAF | Очистить ранее сохранённые комментарии: WAF не удаляет данные. |
+ | CSRF / форма устарела | Обновить страницу после входа/выхода/сброса. Не переносить CSRF между сессиями. |
+--- a/reports/CHEATSHEET-RU.md
++++ b/reports/CHEATSHEET-RU.md
+@@ -20,7 +20,7 @@
+ | Semgrep ничего не нашёл — безопасно? | Нет. В реальном запуске p/python дал 0, хотя динамические проверки подтвердили уязвимости. |
+ | Зачем свои правила? | Показать поиск опасных конструкций отдельно от готового набора. Они не ищут специально известные имена файлов/строки. |
+ | Почему после исправления 1 предупреждение? | Учебное taint-правило консервативно отслеживает путь к send_file и не доказывает корректный выход по abort; ручной разбор и тесты подтверждают containment. |
+-| Все ли проверки проведены? | 26 локальных тестов, 36 HTTP-проверок и 4 Semgrep-запуска — да. Docker/WAF/SonarQube и браузерный JS — пока нет; результаты не выдуманы. |
++| Все ли проверки проведены? | Docker работает: 54/54 HTTP, 5/5 audit WAF, 2/2 обычных ping, 55/55 структурных проверок. Прежние 26 локальных, 36 Windows HTTP и 4 Semgrep-запуска сохранены. SonarQube и браузерный JS — не проверены. |
+ 
+ **Адреса:** 8080 напрямую, 8081 WAF, 8082 исправлено, 9000 SonarQube. **Аккаунты:** `alice / Alice-Lab-2026!`, `bob / Bob-Lab-2026!`. **Тикеты:** Алиса 1001, Борис 1002, общий 1003.
+ 
+--- a/reports/DEMO-RU.md
++++ b/reports/DEMO-RU.md
+@@ -15,7 +15,7 @@
+ .\scripts\lab.ps1 scan
+ ```
+ 
+-Проверьте реальный итог `test`. Сейчас Docker/WAF/SonarQube ещё не были запущены в среде создания проекта; их ожидаемые результаты нельзя представлять преподавателю как уже измеренные. Если блокировка не сработала, покажите реальный результат и журнал.
++Проверка 22.10.2026: Docker установлен, приложения и WAF запущены; `test` дал 54/54 HTTP и 5/5 audit PASS. Ping исправлен снятием файловой capability, ограничения контейнеров сохранены. Сеть lab имеет internal: false, порты опубликованы только на 127.0.0.1. SonarQube и исполнение JavaScript в браузере ещё не проверены. Результаты Semgrep остались прежними: Registry 0/0, custom 5/1. Перед защитой повторите демонстрацию; фактические правила и история исправлений — в VERIFICATION.md.
+ 
+ Подготовьте окна: обычный профиль — Алиса; приватный профиль — Борис. Откройте 8080, 8081, 8082 и SonarQube. Учтите: 8080/8081 одного профиля разделяют cookie и одну БД. На 8082 отдельная cookie. Желательно масштаб браузера 110–125% для проектора.
+ 
+--- a/reports/RESULTS.md
++++ b/reports/RESULTS.md
+@@ -1,16 +1,20 @@
+-# Шесть сценариев: ожидаемое и фактическое
++# Шесть сценариев: фактический контейнерный результат
+ 
+-Дата: 21.10.2026. «Подтверждено» ниже относится к Windows preview и проверкам Flask/HTTP, а не к ещё не запущенным Docker-контейнерам.
++Обновлено 22.10.2026 (Asia/Qyzylorda). Полный `scripts/lab.ps1 test`: **54/54 HTTP, 5/5 audit WAF**. Все три варианта работают в Linux-контейнерах. Ping прошёл во всех трёх HTTP-вариантах и отдельно в обоих приложениях под UID 10001.
+ 
+-| Сценарий | 8080 напрямую: фактически | 8081 WAF: ожидается, **НЕ ПРОВЕРЕНО** | 8082 исправлено: фактически |
++| Сценарий | 8080 напрямую | 8081 через WAF | 8082 исправлено |
+ |---|---|---|---|
+-| SQL Injection | 1 запись при обычном поиске, 4 при инъекции | 403 + реальный ID/причина CRS | 0 записей для строки инъекции, 200 |
+-| Reflected XSS | В HTML есть исполняемый script; alert ещё не проверен | Блокировка запроса приветствия | Script экранирован; ручная проверка отсутствия alert нужна |
+-| Stored XSS | Алиса сохраняет, отдельная сессия Бориса получает raw script | Блокировка именно POST, после очистки старого payload | Комментарий сохранён как текст и экранирован при чтении |
+-| Command Injection | `LAB_TEST` от реального Windows shell с `&` | Linux-строка с `;` должна блокироваться; запуск не выполнен | 400 до запуска команды, обычный ping работает |
+-| Path Traversal | Вне documents читается `LAB_TRAVERSAL_PROOF` | Блокировка query `file=..%2Flab-only.txt` | 400; обычные документы доступны |
+-| IDOR | Алиса читает и комментирует личную заявку Бориса | Ожидается пропуск: WAF не знает владельца | 403 для чужой заявки; владелец и общий тикет работают |
++| SQL Injection | 200, 4 сотрудника вместо 1 при обычном поиске | 403; 942100, затем 949110 | 200, 0 сотрудников для строки инъекции |
++| Reflected XSS | 200, raw script в HTML | 403; 941100/941110/941160/941390, затем 949110 | 200, script экранирован |
++| Stored XSS | POST 302, отдельная сессия Бориса получает сохранённый raw script | POST 403; те же четыре XSS-правила и 949110, payload не сохранён | POST 302, Борис получает экранированный текст |
++| Command Injection | 200, настоящий `LAB_TEST` из Linux shell для `127.0.0.1; echo LAB_TEST` | 403; 932235, затем 949110 | 400 до запуска команды; обычный ping работает |
++| Path Traversal | 200, `LAB_TRAVERSAL_PROOF` из файла вне documents | 403; 930110, затем 949110 | 400; обычный документ скачивается |
++| IDOR | 200, Алиса читает `BOB_PRIVATE` | 200, WAF не проверяет владельца | 403 для Алисы; владелец Борис имеет доступ |
+ 
+-**Доказательства:** `generated/local-checks.json` (26 тестов), `generated/local-http/` (18 HTTP-проверок на каждую версию). Все они прошли. Это не подтверждение блокировок WAF.
++**Доказательства:** `generated/http-vulnerable.json`, `http-waf.json`, `http-fixed.json`, `waf-evidence.json`, `ping-runtime.json`, `logs/waf.log`. WAF-транзакции сопоставлены с запросами по уникальным case_id; сообщения приведены в JSON и [протоколе](VERIFICATION.md). Таблица отражает выбранные payload, а не все возможные обходы.
+ 
+-После `.\scripts\lab.ps1 test` появятся `generated/http-vulnerable.json`, `http-waf.json`, `http-fixed.json`, `waf-evidence.json` и `logs/waf.log`. По ним дополните таблицу реальными HTTP-кодами, наблюдаемым эффектом, case_id, ID/причиной правил. До этого не заменяйте статус «не проверено» на PASS.
++**Не проверено:** фактическое исполнение JavaScript и отсутствие alert в браузере, визуальная демонстрация, SonarQube. HTTP-клиент не исполняет JavaScript.
++
++Ранее полученные Windows-результаты (26 локальных и 36 HTTP) остаются в `generated/local-checks.json` и `generated/local-http/`; они не перезапускались. Проверка IDOR на POST была частью прежних локальных тестов; текущий HTTP-сценарий проверяет GET. Semgrep также не перезапускался: Registry 0/0, custom 5/1 сохранены.
++
++Промежуточный прогон **53/54** после исправления ping оставлен в `generated/ping-fix-first-run/`: старый nginx направлял запросы в fixed после пересоздания backend. В start/test добавлено пересоздание всего стенда; окончательный прогон выше успешен. Код приложений, правила WAF и тестовые ожидания сохранены.
+--- a/reports/TASK-1-WAF.md
++++ b/reports/TASK-1-WAF.md
+@@ -4,9 +4,9 @@
+ 
+ This is an intentionally vulnerable, local-only training portal with synthetic employees, tickets and documents. The six scenarios cover five vulnerability classes: SQL injection, XSS (reflected and stored), OS command injection, path traversal and IDOR. No external target was tested.
+ 
+-On 21 October 2026, the two application implementations passed 26 local Flask/SQLite/process tests and 36 requests-based HTTP checks on Windows. The WAF container was **not run**, because Docker CLI/Desktop was not available in the execution environment. Consequently, this report contains no invented blocking result, rule ID or audit screenshot. Browser automation was unavailable; XSS evidence is executable versus escaped HTML, not an observed browser dialog.
++Updated 22 October 2026 (Asia/Qyzylorda). Docker is installed and all three application/WAF containers are healthy. The final `scripts/lab.ps1 test` passed **54/54 HTTP checks and 5/5 correlated audit checks** on Linux. Ordinary loopback ping also passed in both applications as UID/GID 10001. Structural verification passed 55/55 checks. Browser JavaScript execution has not been observed; XSS evidence remains raw versus escaped HTML and cross-session persistence.
+ 
+-Raw evidence: `generated/local-checks.json`, `generated/local-http/http-vulnerable.json`, `generated/local-http/http-fixed.json`. The HTTP reports explicitly identify their platform as Windows. Container runs will produce separate `generated/http-*.json` and `generated/waf-evidence.json` files.
++Current evidence: `generated/http-vulnerable.json`, `generated/http-waf.json`, `generated/http-fixed.json`, `generated/waf-evidence.json`, `generated/ping-runtime.json`, `logs/waf.log`. Earlier Windows results (26 local and 36 HTTP checks) remain in `generated/local-checks.json` and `generated/local-http/`; they were not rerun. SonarQube remains NOT RUN.
+ 
+ ## Architecture
+ 
+@@ -24,7 +24,7 @@
+ 
+ Ports 8080 and 8081 target exactly the same backend and SQLite database; the fixed implementation has its own volume, initialized from equivalent fixtures. Application sessions are signed cookies, and passwords are hashed. Alice and Bob have separate real sessions in the tests. The shared ticket #1003 authorizes both users, independently of the IDOR flaw.
+ 
+-The default Compose stack contains only the applications and WAF. Analysis tools and HTTP checks use separate profiles. The application containers run as UID 10001, with a read-only root filesystem, only a dedicated data volume, no Docker socket, no host source mount, restricted resources and an internal network. Those are verified configuration properties, not a claim that container isolation was tested on this machine.
++The default Compose stack contains only the applications and WAF. Analysis tools and HTTP checks use separate profiles. The application containers run as UID 10001, with a read-only root filesystem, only a dedicated data volume, no Docker socket, no host source mount, restricted resources, cap_drop ALL and no-new-privileges. The lab bridge network explicitly has internal=false, allowing external routing. Ports 8080/8081/8082 are published only on 127.0.0.1. Runtime inspect and /proc confirmed these application restrictions; this is not an exhaustive container-isolation assessment.
+ 
+ ## WAF configuration and experiment design
+ 
+@@ -40,20 +40,26 @@
+ 
+ | Scenario | Request and cause | Observed direct result | Observed fixed result | WAF status |
+ |---|---|---|---|---|
+-| SQLi | `/employees?q=`; f-string changes SQL syntax; input `' OR 1=1 -- ` | Normal `Алиса` returns 1 employee; injection returns 4 | Parameterized LIKE returns 0 for the injection | NOT RUN; expected block |
+-| Reflected XSS | `/greeting?name=` renders input with Jinja `safe`; `<script>alert("LAB_XSS")</script>` | Script tag present unescaped in HTML | Tag rendered as text via autoescaping; CSP also present | NOT RUN; expected block |
+-| Stored XSS | POST `/tickets/1003`; script stored and rendered with `safe` | Bob's independent session receives Alice's unescaped script | Bob receives escaped literal script text | NOT RUN; expected block on POST |
+-| Command injection | POST `/diagnostics`; host appended to a shell command | Actual extra `LAB_TEST` command output on Windows with `&` | Input rejected with 400 before process execution | NOT RUN; Linux `;` variant pending |
+-| Path traversal | `/download?file=..%2Flab-only.txt`; untrusted relative path joined to documents | `LAB_TRAVERSAL_PROOF` returned from outside documents | 400, marker absent; resolved path must remain inside documents | NOT RUN; expected block |
+-| IDOR | Alice changes `/tickets/1001` to `/tickets/1002` | Alice reads `BOB_PRIVATE`; Bob's owner session independently succeeds | Alice gets 403; Bob and shared-ticket participants retain access | NOT RUN; expected to pass through WAF |
++| SQLi | `/employees?q=`; f-string changes SQL syntax; input `' OR 1=1 -- ` | Normal `Алиса` returns 1 employee; injection returns 4 | Parameterized LIKE returns 0 for the injection | 403; 942100 + 949110 |
++| Reflected XSS | `/greeting?name=` renders input with Jinja `safe`; `<script>alert("LAB_XSS")</script>` | Script tag present unescaped in HTML | Tag rendered as text via autoescaping; CSP also present | 403; 941100/941110/941160/941390 + 949110 |
++| Stored XSS | POST `/tickets/1003`; script stored and rendered with `safe` | Bob's independent session receives Alice's unescaped script | Bob receives escaped literal script text | POST 403; 941100/941110/941160/941390 + 949110 |
++| Command injection | POST `/diagnostics`; host appended to a shell command | Actual extra `LAB_TEST` command output on Linux with `;` | Input rejected with 400 before process execution | 403; 932235 + 949110 |
++| Path traversal | `/download?file=..%2Flab-only.txt`; untrusted relative path joined to documents | `LAB_TRAVERSAL_PROOF` returned from outside documents | 400, marker absent; resolved path must remain inside documents | 403; 930110 + 949110 |
++| IDOR | Alice changes `/tickets/1001` to `/tickets/1002` | Alice reads `BOB_PRIVATE`; Bob's owner session independently succeeds | Alice gets 403; Bob and shared-ticket participants retain access | 200; IDOR passed through WAF |
+ 
+-The shell payload for the primary Linux-container demonstration is `127.0.0.1; echo LAB_TEST`. The Windows fallback uses `127.0.0.1 & echo LAB_TEST`. The latter was actually executed against the local Windows preview; it is not evidence that the Linux image or its ping permissions have been tested. Runtime is limited to approximately three seconds and captured output to 8192 bytes plus a short status message. A subprocess unit check also verified timeout and output limits.
++The shell payload for the primary Linux-container demonstration is `127.0.0.1; echo LAB_TEST`. The Windows fallback uses `127.0.0.1 & echo LAB_TEST`. The Windows fallback was tested earlier; the new run independently confirms Linux execution and ordinary ping permissions. Runtime is limited to approximately three seconds and captured output to 8192 bytes plus a short status message. A subprocess unit check also verified timeout and output limits.
+ 
+ Path traversal is carried in the query parameter, so URL path normalization cannot remove `../` before it reaches Flask. The requests library performs query encoding. The prepared file contains no real secret. The fixed implementation resolves the path and validates containment with `relative_to`, and its document tree is read-only in the container. Tests also covered absolute and alternate traversal paths.
+ 
+-For IDOR, both reading and writing comments on another user's private ticket were checked. The fixed implementation requires ownership or a participants-table entry before either GET or POST. Shared-ticket comments remain functional.
++Earlier local tests checked both reading and writing comments on another user's private ticket. The new container HTTP IDOR scenario checks GET with separate Alice/Bob sessions. The fixed implementation requires ownership or a participants-table entry before either GET or POST. Shared-ticket comments remain functional.
+ 
+-## Reproduction and completion of WAF evidence
++## Container runtime fixes
++
++The packaged /usr/bin/ping carried cap_net_raw=ep while the application capability bounding set was empty. exec failed with EPERM before sending a packet. The shared Dockerfile now removes that file capability with `RUN /usr/sbin/setcap -r /usr/bin/ping`, before USER 10001:10001. Both rebuilt images have no security.capability xattr; all process capability sets remain zero, NoNewPrivs=1 and Seccomp=2. The unchanged ping_group_range is 0 2147483647, enabling unprivileged ICMP ping sockets. No NET_RAW, root, privileged mode or loader workaround was added.
++
++The first post-fix run passed 53/54 HTTP checks: ping worked, but IDOR through WAF unexpectedly returned 403. Preserved evidence in `generated/ping-fix-first-run/` shows nexus_fixed cookies and the fixed application's CSP, without a CRS block message for that IDOR request. The old nginx process retained the backend address across app recreation and reached fixed. start/test now use `compose up --build --force-recreate`, preserving volumes and starting WAF after the healthy vulnerable backend. The final run passed 54/54; port 8081 was separately confirmed to issue nexus_vulnerable cookies. Application code, WAF rules and test expectations were not changed.
++
++## Reproduction and WAF evidence
+ 
+ On Windows with Docker Desktop ready:
+ 
+@@ -65,7 +71,7 @@
+ 
+ The tests exercise login, normal pages, employee search, attachment content, ticket creation, persistent comments and loopback ping through all three entry points. They then check each attack's content or persisted effect. A failing check returns a non-zero exit code. The PowerShell wrapper cleans old shared-ticket comments before each mode, gathers genuine audit output and runs correlation checks.
+ 
+-Afterward attach the actual `http-waf.json`, `waf-evidence.json` and relevant audit transaction excerpts. Record each actual rule ID and reason, the input, response and any configuration adjustment. If a selected payload is not blocked, report that outcome and investigate it; do not silently change the expected result to PASS or create a fake Flask filter. Standard CRS behavior must be measured on the pinned image.
++The actual `http-waf.json`, `waf-evidence.json` and audit log are now present. Each of the five chosen attacks has a matching 403 transaction and the detection IDs shown in the scenario table; 949110 evaluates the combined score (5 for SQLi/command/traversal, 20 for each XSS). Attach these files and relevant excerpts to the submission. Record each actual rule ID and reason, the input, response and any configuration adjustment. If a selected payload is not blocked, report that outcome and investigate it; do not silently change the expected result to PASS or create a fake Flask filter. Standard CRS behavior must be measured on the pinned image.
+ 
+ ## Browser validation still required
+ 
+@@ -73,4 +79,4 @@
+ 
+ ## Limitations and conclusion
+ 
+-The local tests demonstrate the vulnerable code paths and their remediations without a WAF. The portal is an educational fixture, not a production security certification. WAF outcomes and Linux container behavior remain unmeasured in this environment. Even if all chosen inputs are blocked later, that proves protection only for those requests under that configuration. IDOR illustrates why perimeter inspection cannot replace application-level authorization. Stored XSS illustrates why blocking new requests cannot repair an already contaminated database.
++The local tests demonstrate the vulnerable code paths and their remediations without a WAF. The portal is an educational fixture, not a production security certification. The new Linux and WAF measurements confirm the chosen cases under this configuration. They do not prove protection against all variants. Browser execution and SonarQube results remain unverified. IDOR illustrates why perimeter inspection cannot replace application-level authorization. Stored XSS illustrates why blocking new requests cannot repair an already contaminated database.
+--- a/reports/TASK-2-SAST.md
++++ b/reports/TASK-2-SAST.md
+@@ -6,7 +6,7 @@
+ 
+ **Semgrep Community Edition 1.181.0 actually ran on Windows.** The scan used `--oss-only`, disabled metrics/version checks and `--strict`. The official `p/python` Registry response was preserved locally, with 151 rules and their metadata/licenses. Four clearly identified educational rules were run separately. JSON, SARIF and tool logs are retained for all four scans. No Semgrep Pro engine or service login was used.
+ 
+-**SonarQube Community Build was not executed:** Docker was unavailable. Two project configurations, persistent services, a scanner and a paginated API export script are prepared. Its counts and rule IDs are **NOT RUN**, never zero-by-assumption. After initial setup, run `scripts/lab.ps1 scan-sonar` and append actual observations. See [setup](SONAR-SETUP.md).
++**SonarQube Community Build was not executed.** Docker is now installed and the application/WAF stack is running, but SonarQube setup, scanning and export have not been performed. Two project configurations, persistent services, a scanner and a paginated API export script are prepared. Its counts and rule IDs are **NOT RUN**, never zero-by-assumption. After initial setup, run `scripts/lab.ps1 scan-sonar` and append actual observations. See [setup](SONAR-SETUP.md).
+ 
+ | Actual Semgrep run | Files scanned | Findings | Technical result |
+ |---|---:|---:|---|
+@@ -15,7 +15,7 @@
+ | Vulnerable / custom | 22 files | 5 | PASS |
+ | Fixed / custom | 22 files | 1 | PASS |
+ 
+-The generic template rule accounts for the larger custom scan scope. All four JSON reports have no scanner errors. A successful scan can contain findings: the wrapper does not use `--error`, but does fail for a non-zero technical exit, parse errors or zero scanned files. Exact results and rule-set hashes are in `generated/semgrep-summary.json`.
++The generic template rule accounts for the larger custom scan scope. All four JSON reports have no scanner errors. A successful scan can contain findings: the wrapper does not use `--error`, but does fail for a non-zero technical exit, parse errors or zero scanned files. Exact results and rule-set hashes are in `generated/semgrep-summary.json`. These are the earlier Windows Semgrep results, retained unchanged; Semgrep was not rerun during the 22 October ping/container fix.
+ 
+ ## Classification and free-edition limits
+ 
+@@ -65,7 +65,7 @@
+ - Location: `app/main.py:191`; command assembly immediately above.
+ - Unsafe code: `command = " ".join(ping_arguments()) + " " + host`; `bounded_run(command, shell=True)` reaches `subprocess.Popen`.
+ - Cause/consequence: shell metacharacters supplied as host input start an additional command. Process/output limits reduce resource impact but do not remove injection.
+-- Confirmation: a real Windows subprocess returned `LAB_TEST` for `127.0.0.1 & echo LAB_TEST`. The Linux demonstration uses `;` and still requires the Docker runtime test.
++- Confirmation: a real Windows subprocess returned `LAB_TEST` for `127.0.0.1 & echo LAB_TEST`. The new Linux-container run also returned `LAB_TEST` for `127.0.0.1; echo LAB_TEST`; fixed returned 400 and WAF blocked the request with rule 932235.
+ - Fix: parse with `ipaddress.ip_address`, restrict the diagnostic to loopback, pass a list of arguments and set `shell=False`.
+ - Retest: malicious input returned 400 before execution; normal loopback ping succeeded; alternate commands, command options, external IPs and hostnames were rejected. The custom finding disappeared. Registry zero/zero; SonarQube not run.
+ 
+@@ -99,10 +99,10 @@
+ 
+ | Scenario | SonarQube | Semgrep Registry | Semgrep custom | Manual review + behavior | Remaining limitation |
+ |---|---|---|---|---|---|
+-| SQLi | NOT RUN | Missed in this run | Confirmed finding, gone after fix | 1 → 4 rows; fixed 0 | WAF/Linux stack pending |
++| SQLi | NOT RUN | Missed in this run | Confirmed finding, gone after fix | 1 → 4 rows; fixed 0 | Tested payload only; no general bypass guarantee |
+ | Reflected XSS | NOT RUN | Missed in this run | Confirmed unsafe sink, gone after fix | Raw vs escaped HTML | Browser JS pending |
+ | Stored XSS | NOT RUN | Missed in this run | Confirmed unsafe sink, gone after fix | Two legitimate sessions, stored raw vs escaped HTML | Browser JS pending |
+-| Command injection | NOT RUN | Missed in this run | Confirmed finding, gone after fix | Actual Windows echo; fixed 400 | Linux `;` variant pending |
++| Command injection | NOT RUN | Missed in this run | Confirmed finding, gone after fix | Actual Windows and Linux echo; fixed 400, WAF 403 | Tested payload only |
+ | Path traversal | NOT RUN | Missed in this run | Confirmed before; residual false positive after | Outside marker vs 400 | Immutable-tree assumption |
+ | IDOR | NOT RUN | Missed | Missed | Cross-user GET/POST vs 403 | Business policy requires human review |
+ 
+--- a/reports/VERIFICATION.md
++++ b/reports/VERIFICATION.md
+@@ -1,41 +1,70 @@
+ # Фактически выполненные проверки
+ 
+-Состояние на 21.10.2026. Все результаты относятся к текущему исходному коду; версия Python локального проверяющего окружения — 3.10 на Windows, целевого образа — 3.12.15.
++Обновлено 22.10.2026, Asia/Qyzylorda (UTC+5). В машинных журналах время UTC, поэтому дата поздних проверок там ещё 21.10.2026. Docker Desktop установлен; vulnerable, fixed и waf запущены и healthy. SonarQube в этом сеансе не запускался.
+ 
+-| Проверка | Результат | Доказательство / границы |
++| Проверка | Результат | Доказательства / границы |
+ |---|---|---|
+-| Flask/SQLite/процессы | **26/26 PASS** | `generated/local-checks.json`; реальные БД и subprocess, отдельные сессии, альтернативные вводы, сохранение данных, cleanup, timeout/output limit |
+-| HTTP, уязвимая версия | **18/18 PASS** | `generated/local-http/http-vulnerable.json`; реальный Waitress на 127.0.0.1:8080 |
+-| HTTP, исправленная версия | **18/18 PASS** | `generated/local-http/http-fixed.json`; реальный Waitress на 127.0.0.1:8082 |
+-| Semgrep CE 1.181.0 | **4 запуска PASS** | Registry 0/0, custom 5/1; JSON/SARIF/log + `semgrep-summary.json` |
+-| Python syntax / YAML / структура | **PASS** | `scripts/verify-project.py`: loopback-порты, тома, WAF backend/режим, non-root, internal network, правила, отсутствие safe в исправленных шаблонах |
+-| PowerShell parse | **PASS** | Оба управляющих .ps1 разобраны PowerShell Parser без ошибок |
+-| Официальная JSON Schema Compose | **PASS** | Валидация compose.yaml по сохранённой compose-spec schema; это не запуск Docker Compose |
+-| Официальные теги образов | **6/6 доступны в Registry** | `generated/versions.json`; digest metadata, не загрузка/запуск образов |
+-| Docker build / Compose runtime | **НЕ ВЫПОЛНЕНО** | Docker CLI не найден в PATH и стандартном каталоге Docker Desktop |
+-| ModSecurity / CRS блокировки | **НЕ ВЫПОЛНЕНО** | Нет запущенного Docker; нет фактических WAF rule IDs или audit |
+-| SonarQube / SonarScanner | **НЕ ВЫПОЛНЕНО** | Нет Docker; initial login/token требуют локальной настройки |
+-| Выполнение XSS в браузере | **НЕ ВЫПОЛНЕНО** | Список подключённых браузеров пуст, попытка in-app browser вернула «Browser is not available: iab» |
+-| Визуальная проверка / скриншоты | **НЕ ВЫПОЛНЕНО** | Нет доступного браузера; изображения не выдумывались |
++| Пересборка vulnerable и fixed | **PASS** | Общий Dockerfile; снятие capability выполнено для обоих образов |
++| Обычный ping 127.0.0.1 | **2/2 PASS** | `generated/ping-runtime.json`: штатный UID/GID 10001, exit 0, 1 received, 0% packet loss |
++| Docker HTTP: vulnerable | **18/18 PASS** | `generated/http-vulnerable.json`, Linux |
++| Docker HTTP: WAF | **18/18 PASS** | `generated/http-waf.json`, Linux |
++| Docker HTTP: fixed | **18/18 PASS** | `generated/http-fixed.json`, Linux |
++| Полный `scripts/lab.ps1 test` | **PASS, exit 0** | 54/54 HTTP-проверки, включая normal_ping во всех трёх вариантах |
++| Корреляция audit ModSecurity/CRS | **5/5 PASS** | `generated/waf-evidence.json`, `logs/waf.log`; case_id + 403 + сообщение детектирующего правила |
++| Структура / Python syntax / Compose Schema | **55/55 PASS, exit 0** | `scripts/verify-project.py`, вывод `generated/structure-check.txt` |
++| Синтаксис изменённого PowerShell-скрипта | **PASS** | PowerShell Parser: 0 ошибок в `scripts/lab.ps1` |
++| Runtime-порты, сеть, ограничения приложений | **PASS** | `generated/ping-runtime.json`; Docker inspect и /proc, не только YAML |
++| Страница входа с хоста на 8080/8081/8082 | **3/3 PASS** | HTTP 200; cookie vulnerable на 8080/8081, fixed на 8082; без запуска браузера |
++| Ранее: Flask/SQLite/процессы, Windows | **26/26 PASS**, исторический результат | `generated/local-checks.json`, в этом сеансе не перезапускались |
++| Ранее: HTTP Windows preview | **36/36 PASS**, исторический результат | `generated/local-http/`, по 18 на две версии; не смешивать с 54 контейнерными |
++| Ранее: Semgrep CE 1.181.0 | **4 успешных запуска**, без изменений | Registry 0/0, custom 5/1; JSON/SARIF/log и `semgrep-summary.json` сохранены, нового сканирования не было |
++| SonarQube / SonarScanner | **НЕ ВЫПОЛНЕНО** | Нужны запуск, первоначальная настройка, сканирование и экспорт |
++| Исполнение XSS в браузере | **НЕ ПРОВЕРЕНО** | HTTP-проверки изучают HTML и сохранение данных, не исполняют JavaScript |
++| Визуальная проверка / скриншоты | **НЕ ПРОВЕРЕНО** | В этом сеансе браузерная демонстрация не выполнялась |
+ 
+-Локальная проверка Command Injection использует разделитель Windows `&`. Контейнерный сценарий подготовлен с разделителем Linux `;`, но не считается выполненным. XSS проверен по сырым/экранированным HTML-ответам и сохранению между двумя сессиями; это не наблюдение alert.
++## Причина и исправление ping
+ 
+-Semgrep сначала не смог инициализировать системное хранилище сертификатов из ограниченной песочницы Windows. После разрешённого локального запуска вне песочницы сканер завершил все четыре анализа. Готовые правила уже были сохранены; отправка метрик выключена. Техническая ошибка первого запуска не представлена как успешное сканирование.
++До исправления `/usr/bin/ping` имел файловую capability `cap_net_raw=ep`, а capability bounding set процесса был пустым из-за `cap_drop: ALL`. Попытка исполнения такого файла завершалась EPERM (`operation not permitted`) ещё до работы ping. Это не потеря ICMP-пакета и не следствие `lab.internal`.
+ 
+-Предварительные локальные серверы использовались для HTTP-проверок, учебные данные после них восстановлены, оба процесса preview остановлены. Для рабочего стенда используйте Docker-команды ниже.
++В общий Dockerfile после установки пакета и до `USER 10001:10001` добавлено:
+ 
+-## Как завершить неподтверждённые части
++```dockerfile
++RUN /usr/sbin/setcap -r /usr/bin/ping
++```
++
++После пересборки в обоих контейнерах `getcap /usr/bin/ping` пуст, атрибут `security.capability` отсутствует. UID/GID — 10001, CapInh/CapPrm/CapEff/CapBnd/CapAmb равны нулю, NoNewPrivs=1, Seccomp=2. Сохранены read-only rootfs, `cap_drop: ALL`, `no-new-privileges:true`, отсутствие cap_add и privileged. Значение `net.ipv4.ping_group_range` — `0 2147483647`, `icmp_echo_ignore_all` — 0. Рабочий ping использует непривилегированные ICMP-сокеты. Root, NET_RAW и запуск через системный загрузчик не понадобились.
++
++Проверены обычные команды без `-u` и обходных способов запуска:
+ 
+ ```powershell
+-cd C:\Users\Shwepes\wafwebsite
+-docker version
+-docker compose up --build -d
+-.\scripts\lab.ps1 test
+-.\scripts\lab.ps1 logs
+-.\scripts\lab.ps1 sonar
+-.\scripts\lab.ps1 scan-semgrep
+-# Вход в SonarQube, два проекта, временный token: SONAR-SETUP.md
+-.\scripts\lab.ps1 scan-sonar
++docker compose exec -T vulnerable ping -c 1 -W 2 127.0.0.1
++docker compose exec -T fixed ping -c 1 -W 2 127.0.0.1
+ ```
+ 
+-Затем выполните браузерные шаги из `DEMO-RU.md`, сохраните настоящие скриншоты по `SCREENSHOTS.md`, перенесите фактические результаты WAF/SonarQube в отчёты. Если тест упал, оставьте FAIL и причину до исправления. В доступной среде системные настройки Windows/WSL не менялись, Docker не устанавливался, публичного размещения не было.
++Сеть `nexus-security-lab_lab` имеет Driver=bridge, Internal=false. Публикации: только `127.0.0.1:8080:5000`, `127.0.0.1:8081:8080`, `127.0.0.1:8082:5000`. Внешняя маршрутизация сети разрешена. Это проверено через Docker inspect; полной проверки всех границ контейнерной изоляции не проводилось.
++
++## Промежуточный FAIL и устранение причины
++
++Первый прогон после исправления ping дал **53/54 HTTP и 5/5 audit**: ping уже прошёл, но IDOR через WAF неожиданно вернул 403. Этот результат сохранён в `generated/ping-fix-first-run/`, включая исходный журнал; он не подменён успешным.
++
++В его журнале запросы через WAF использовали cookie `nexus_fixed`, а ответ на `/tickets/1002` содержал CSP исправленного приложения и 403 без сообщения блокировки CRS. Это подтверждает обращение WAF к fixed вместо vulnerable. Конфигурация nginx содержит буквальный `proxy_pass http://vulnerable:5000`; старый процесс nginx удерживал адрес, разрешённый до пересоздания приложений. Наличие `resolver` само по себе не делает такой буквальный proxy_pass динамическим.
++
++В `scripts/lab.ps1` команды start/test теперь выполняют `compose up --build --force-recreate`: весь стенд пересоздаётся с сохранением томов, WAF стартует после healthy vulnerable и заново определяет адрес. Правила WAF, код приложений и ожидания тестов не менялись. После этого полный прогон дал **54/54 + 5/5**, IDOR через WAF — 200, fixed — 403. Дополнительный запрос с хоста подтвердил cookie `nexus_vulnerable` на 8081. Во время диагностики Docker Engine также временно остановился; Docker Desktop был запущен снова.
++
++## Подтверждённые правила WAF
++
++| Сценарий | Детектирующие правила | Итог |
++|---|---|---|
++| SQLi | 942100 — libinjection SQLi | 403, score 5 |
++| Reflected XSS | 941100, 941110, 941160, 941390 — libinjection, script tag, HTML injection, JavaScript method | 403, score 20 |
++| Stored XSS | 941100, 941110, 941160, 941390 | POST 403, score 20; payload не сохранён |
++| Command Injection | 932235 — Unix command injection | 403, score 5 |
++| Path Traversal | 930110 — traversal pattern | 403, score 5 |
++
++Во всех пяти транзакциях также присутствует 949110 — превышение порога inbound anomaly score. Это правило принимает решение по сумме; самостоятельным доказательством распознавания класса атаки его не считали. Полные сообщения и уникальные case_id находятся в `generated/waf-evidence.json`. IDOR через WAF остался доступен: WAF не проверяет владельца заявки.
++
++## Границы проверки и оставшиеся шаги
++
++В каждом режиме 18 HTTP-проверок: два входа, четыре обычные страницы, поиск/скачивание/создание заявки/комментарий/ping, чистое состояние перед Stored XSS и шесть демонстраций. Linux Command Injection подтверждён реальным `LAB_TEST` от shell с разделителем `;`. XSS проверен по raw/escaped HTML и сохранению между отдельными сессиями. Браузерные alert и отсутствие исполнения в fixed этим не доказаны. Пять audit-проверок идут отдельно от 54 HTTP-проверок.
++
++Для завершения сдачи: выполнить браузерные шаги `DEMO-RU.md`, сохранить настоящие скриншоты по `SCREENSHOTS.md`; запустить и настроить SonarQube по `SONAR-SETUP.md`, просканировать обе версии, экспортировать и вручную разобрать Issues/Hotspots. Semgrep уже выполнялся ранее; повторный запуск не является частью этого исправления. Успех выбранных тестов не доказывает блокировку всех вариантов атак.
+--- a/reports/VERSIONS.md
++++ b/reports/VERSIONS.md
+@@ -1,6 +1,6 @@
+ # Зафиксированные версии и официальные источники
+ 
+-Проверено 21.10.2026. Docker Hub API подтвердил существование **каждого** выбранного тега и вернул digest. Машиночитаемые ответы (выбранные поля, архитектуры, дата обновления, ссылки) находятся в `generated/versions.json`. Образы пока не скачивались и не запускались — доступность metadata не доказывает готовность контейнера.
++Проверено 21.10.2026. Docker Hub API подтвердил существование **каждого** выбранного тега и вернул digest. Машиночитаемые ответы (выбранные поля, архитектуры, дата обновления, ссылки) находятся в `generated/versions.json`. Это исторический снимок Registry от 21.10.2026. На 22.10.2026 образы приложений и checks собраны, приложения и WAF реально запущены; см. VERIFICATION.md и generated/ping-runtime.json. SonarQube, PostgreSQL и Scanner в этой проверке не запускались; прежний Semgrep запускался локально, не в Docker. Метаданные versions.json не переписаны как runtime-доказательство.
+ 
+ | Компонент | Зафиксированный выбор |
+ |---|---|
+--- a/waf/README.md
++++ b/waf/README.md
+@@ -10,6 +10,8 @@
+ 
+ `scripts/lab.ps1 logs` сохраняет реальные журналы в `logs/waf.log`. `tests/check_waf_logs.py` связывает пять заблокированных запросов из `http-waf.json` с транзакциями audit, требует 403 и сообщения детектирующего правила (одного только anomaly evaluation недостаточно). Поддерживаются Native-разделители ModSecurity v2 и v3. IDOR проверяется отдельно и не должен блокироваться искусственным правилом по номеру заявки.
+ 
+-**Текущее состояние:** Docker отсутствовал при создании проекта. Контейнер не запускался, фактических ID сработавших правил и audit-логов ещё нет. Ожидаемые блокировки не выданы за полученные результаты. После установки Docker выполните `scripts/lab.ps1 test`. Если конкретная строка проходит, сохраните FAIL, изучите журнал и настройки, затем документируйте любое изменение. Нельзя писать, что CRS блокирует все варианты данного класса атак.
++**Текущее состояние на 22.10.2026:** WAF запущен. Полный `scripts/lab.ps1 test` дал 54/54 HTTP и 5/5 audit PASS. Фактические детектирующие правила: SQLi 942100; оба XSS 941100/941110/941160/941390; Command Injection 932235; Path Traversal 930110. Во всех пяти транзакциях есть итоговое 949110. IDOR через WAF возвращает 200. Подтверждения: `reports/generated/waf-evidence.json`, `logs/waf.log`. Это результаты выбранных запросов, а не доказательство блокировки всех вариантов атак.
+ 
+-Источник параметров: [официальный README образа OWASP CRS](https://github.com/coreruleset/modsecurity-crs-docker). Доступность выбранного тега проверена через Docker Hub API; это не проверка запуска образа.
++После пересборки backend старый nginx может удерживать прежний IP; при первой проверке он обратился к fixed, что выдало cookie nexus_fixed и неожиданный 403 IDOR. Команды start/test теперь пересоздают весь стенд через `--force-recreate`, сохраняя тома; после этого 8081 снова обслуживает vulnerable. Настройки фильтрации и правила не менялись. Сеть lab: internal=false; порт WAF опубликован только как 127.0.0.1:8081:8080.
++
++Источник параметров: [официальный README образа OWASP CRS](https://github.com/coreruleset/modsecurity-crs-docker). Доступность выбранного тега первоначально проверялась через Docker Hub API; запуск и блокировки теперь подтверждены отдельно в VERIFICATION.md.
+--- a/scripts/lab.ps1
++++ b/scripts/lab.ps1
+@@ -45,7 +45,9 @@
+     $engine = & docker info --format '{{.OSType}}'
+     if ($engine -ne 'linux') { throw 'Switch Docker Desktop to Linux containers.' }
+     switch ($Action) {
+-        'start' { Invoke-Docker -DockerArgs @('compose','up','--build','-d','--wait','--wait-timeout','180') }
++        # nginx resolves its literal proxy_pass backend at startup. Recreate the
++        # whole stand so WAF cannot retain an old backend IP after an app rebuild.
++        'start' { Invoke-Docker -DockerArgs @('compose','up','--build','--force-recreate','-d','--wait','--wait-timeout','180') }
+         'stop' { Invoke-Docker -DockerArgs @('compose','--profile','analysis','stop') }
+         'status' { Invoke-Docker -DockerArgs @('compose','--profile','analysis','ps') }
+         'reset' {
+@@ -57,7 +59,7 @@
+         'clean-comments' { Clean-Comments }
+         'logs' { Save-WafLogs; Get-Content -LiteralPath (Join-Path $projectRoot 'logs\waf.log') -Tail 100 -Encoding UTF8 }
+         'test' {
+-            Invoke-Docker -DockerArgs @('compose','up','--build','-d','--wait','--wait-timeout','180')
++            Invoke-Docker -DockerArgs @('compose','up','--build','--force-recreate','-d','--wait','--wait-timeout','180')
+             Invoke-Docker -DockerArgs @('compose','--profile','checks','build','checks')
+             $failed = $false
+             foreach ($mode in @('vulnerable','waf','fixed')) {

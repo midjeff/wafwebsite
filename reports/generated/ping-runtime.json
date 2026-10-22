@@ -1,0 +1,177 @@
+{
+  "utc": "2026-10-21T19:02:54.317034+00:00",
+  "services": {
+    "vulnerable": {
+      "image_id": "sha256:3d984b25539f5d093f37440beffcb406bd45ec508610d8571440e6dc52da12a4",
+      "user": "10001:10001",
+      "health": "healthy",
+      "host_config": {
+        "CapDrop": [
+          "ALL"
+        ],
+        "CapAdd": null,
+        "SecurityOpt": [
+          "no-new-privileges:true"
+        ],
+        "Privileged": false,
+        "ReadonlyRootfs": true,
+        "Sysctls": {
+          "net.ipv4.ping_group_range": "0 2147483647"
+        },
+        "PortBindings": {
+          "5000/tcp": [
+            {
+              "HostIp": "127.0.0.1",
+              "HostPort": "8080"
+            }
+          ]
+        }
+      },
+      "runtime_ports": {
+        "5000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "8080"
+          }
+        ]
+      },
+      "host_http": {
+        "url": "http://127.0.0.1:8080/login",
+        "status": 200,
+        "cookie_names": [
+          "nexus_vulnerable"
+        ]
+      },
+      "probe": {
+        "uid": 10001,
+        "gid": 10001,
+        "getcap": "",
+        "capability_xattr_present": false,
+        "status": {
+          "CapInh": "0000000000000000",
+          "CapPrm": "0000000000000000",
+          "CapEff": "0000000000000000",
+          "CapBnd": "0000000000000000",
+          "CapAmb": "0000000000000000",
+          "NoNewPrivs": "1",
+          "Seccomp": "2"
+        },
+        "ping_group_range": [
+          "0",
+          "2147483647"
+        ],
+        "icmp_echo_ignore_all": "0"
+      },
+      "ping_command": "docker compose exec -T vulnerable ping -c 1 -W 2 127.0.0.1",
+      "ping_output": "PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.088 ms\n\n--- 127.0.0.1 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.088/0.088/0.088/0.000 ms",
+      "ping_exit_code": 0
+    },
+    "fixed": {
+      "image_id": "sha256:d0beaff9a94501c0039ad78d5688f5c18bde9f45738ea3f1af0e072bc52827cb",
+      "user": "10001:10001",
+      "health": "healthy",
+      "host_config": {
+        "CapDrop": [
+          "ALL"
+        ],
+        "CapAdd": null,
+        "SecurityOpt": [
+          "no-new-privileges:true"
+        ],
+        "Privileged": false,
+        "ReadonlyRootfs": true,
+        "Sysctls": {
+          "net.ipv4.ping_group_range": "0 2147483647"
+        },
+        "PortBindings": {
+          "5000/tcp": [
+            {
+              "HostIp": "127.0.0.1",
+              "HostPort": "8082"
+            }
+          ]
+        }
+      },
+      "runtime_ports": {
+        "5000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "8082"
+          }
+        ]
+      },
+      "host_http": {
+        "url": "http://127.0.0.1:8082/login",
+        "status": 200,
+        "cookie_names": [
+          "nexus_fixed"
+        ]
+      },
+      "probe": {
+        "uid": 10001,
+        "gid": 10001,
+        "getcap": "",
+        "capability_xattr_present": false,
+        "status": {
+          "CapInh": "0000000000000000",
+          "CapPrm": "0000000000000000",
+          "CapEff": "0000000000000000",
+          "CapBnd": "0000000000000000",
+          "CapAmb": "0000000000000000",
+          "NoNewPrivs": "1",
+          "Seccomp": "2"
+        },
+        "ping_group_range": [
+          "0",
+          "2147483647"
+        ],
+        "icmp_echo_ignore_all": "0"
+      },
+      "ping_command": "docker compose exec -T fixed ping -c 1 -W 2 127.0.0.1",
+      "ping_output": "PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.033 ms\n\n--- 127.0.0.1 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.033/0.033/0.033/0.000 ms",
+      "ping_exit_code": 0
+    },
+    "waf": {
+      "image_id": "sha256:7698c48a41a43138ae317feeec964d1515b861cc1d9e50617bc1cdfe9f314e1d",
+      "user": "nginx",
+      "health": "healthy",
+      "host_config": {
+        "CapDrop": null,
+        "CapAdd": null,
+        "SecurityOpt": null,
+        "Privileged": false,
+        "ReadonlyRootfs": false,
+        "Sysctls": null,
+        "PortBindings": {
+          "8080/tcp": [
+            {
+              "HostIp": "127.0.0.1",
+              "HostPort": "8081"
+            }
+          ]
+        }
+      },
+      "runtime_ports": {
+        "8080/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "8081"
+          }
+        ]
+      },
+      "host_http": {
+        "url": "http://127.0.0.1:8081/login",
+        "status": 200,
+        "cookie_names": [
+          "nexus_vulnerable"
+        ]
+      }
+    }
+  },
+  "network": {
+    "Name": "nexus-security-lab_lab",
+    "Driver": "bridge",
+    "Internal": false
+  },
+  "complete": true
+}

@@ -1,0 +1,4 @@
+<div class="table-wrap"><table><thead><tr><th>Заявка</th><th>Категория</th><th>Приоритет</th><th>Статус</th><th></th></tr></thead><tbody>
+{% for item in tickets %}<tr><td><a class="ticket-title" href="{{ url_for('ticket', ticket_id=item.id) }}">{{ item.title }}</a><small>#{{ item.id }} · {{ item.created_at[:10] }}</small></td><td>{{ item.category }}</td><td><span class="priority {% if item.priority == 'Высокий' %}high{% endif %}">●</span> {{ item.priority }}</td><td><span class="pill {% if item.status == 'Решена' %}green{% elif item.status == 'В работе' %}blue{% else %}amber{% endif %}">{{ item.status }}</span></td><td><a class="row-arrow" aria-label="Открыть заявку {{ item.id }}" href="{{ url_for('ticket', ticket_id=item.id) }}">↗</a></td></tr>
+{% else %}<tr><td colspan="5">Пока нет заявок. Создайте первую — мы поможем.</td></tr>{% endfor %}
+</tbody></table></div>

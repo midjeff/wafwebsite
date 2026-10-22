@@ -1,0 +1,3094 @@
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/01-check-low-port.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-generate-certificate.sh
+/usr/local/bin/generate-certificate: generating new certificate
+Warning: Not placing -key in cert or request since request is used
+Warning: No -copy_extensions given; ignoring any extensions in the request
+/usr/local/bin/generate-certificate: generated /etc/nginx/conf/server.key and /etc/nginx/conf/server.crt
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf differs from the packaged version
+/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+20-envsubst-on-templates.sh: Running envsubst on /etc/nginx/templates/modsecurity.d/modsecurity.conf.template to /etc/nginx/modsecurity.d/modsecurity.conf
+20-envsubst-on-templates.sh: Running envsubst on /etc/nginx/templates/modsecurity.d/modsecurity-override.conf.template to /etc/nginx/modsecurity.d/modsecurity-override.conf
+20-envsubst-on-templates.sh: Running envsubst on /etc/nginx/templates/modsecurity.d/setup.conf.template to /etc/nginx/modsecurity.d/setup.conf
+20-envsubst-on-templates.sh: Running envsubst on /etc/nginx/templates/nginx.conf.template to /etc/nginx/nginx.conf
+20-envsubst-on-templates.sh: Running envsubst on /etc/nginx/templates/conf.d/modsecurity.conf.template to /etc/nginx/conf.d/modsecurity.conf
+20-envsubst-on-templates.sh: Running envsubst on /etc/nginx/templates/conf.d/default.conf.template to /etc/nginx/conf.d/default.conf
+20-envsubst-on-templates.sh: Running envsubst on /etc/nginx/templates/conf.d/logging.conf.template to /etc/nginx/conf.d/logging.conf
+20-envsubst-on-templates.sh: Running envsubst on /etc/nginx/templates/includes/proxy_backend.conf.template to /etc/nginx/includes/proxy_backend.conf
+20-envsubst-on-templates.sh: Running envsubst on /etc/nginx/templates/includes/proxy_backend_ssl.conf.template to /etc/nginx/includes/proxy_backend_ssl.conf
+20-envsubst-on-templates.sh: Running envsubst on /etc/nginx/templates/includes/cors.conf.template to /etc/nginx/includes/cors.conf
+20-envsubst-on-templates.sh: Running envsubst on /etc/nginx/templates/includes/location_common.conf.template to /etc/nginx/includes/location_common.conf
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/90-copy-modsecurity-config.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/91-update-resolver.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/92-update-real_ip.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/93-update-proxy-ssl-config.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/94-activate-plugins.sh
+# # #
+Running CRS plugin activation
+- - -
+
+- - -
+Finished CRS plugin activation
+# # #
+
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/95-configure-rules.sh
+# # #
+Running CRS rule configuration
+- - -
+Detected CRS config file version: v4
+Configuring 900000 for BLOCKING_PARANOIA with blocking_paranoia_level=1
+Configuring 900001 for DETECTION_PARANOIA with detection_paranoia_level=1
+Configuring 900110 for ANOMALY_INBOUND with inbound_anomaly_score_threshold=5
+Configuring 900110 for ANOMALY_OUTBOUND with outbound_anomaly_score_threshold=4
+- - -
+Finished CRS rule configuration
+# # #
+
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/96-update-http3-config.sh
+/docker-entrypoint.sh: Ignoring /docker-entrypoint.d/configure-rules.v3.conf
+/docker-entrypoint.sh: Ignoring /docker-entrypoint.d/configure-rules.v4.conf
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2026/10/21 14:33:07 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+nginx: [warn] "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/10/21 14:33:07 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/856/0)
+2026/10/21 14:33:07 [notice] 1#1: libmodsecurity3 version 3.0.17
+---jjs8lP0B---A--
+[21/Oct/2026:14:33:12 +0000] 179259319224.907372 127.0.0.1 49964 127.0.0.1 8080
+---jjs8lP0B---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---jjs8lP0B---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:33:12 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---jjs8lP0B---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259319224.907372"] [ref "o0,14o0,9o9,5v28,14"]
+
+---jjs8lP0B---Z--
+
+---9wBu2Zih---A--
+[21/Oct/2026:14:33:22 +0000] 179259320213.925088 127.0.0.1 39908 127.0.0.1 8080
+---9wBu2Zih---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---9wBu2Zih---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:33:22 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---9wBu2Zih---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259320213.925088"] [ref "o0,14o0,9o9,5v28,14"]
+
+---9wBu2Zih---Z--
+
+---s9bRzu2K---A--
+[21/Oct/2026:14:33:32 +0000] 179259321267.576845 127.0.0.1 46334 127.0.0.1 8080
+---s9bRzu2K---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---s9bRzu2K---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:33:32 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---s9bRzu2K---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259321267.576845"] [ref "o0,14o0,9o9,5v28,14"]
+
+---s9bRzu2K---Z--
+
+172.18.0.1 - - [21/Oct/2026:14:33:38 +0000] "GET / HTTP/1.1" 302 199 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36" "-"
+172.18.0.1 - - [21/Oct/2026:14:33:38 +0000] "GET /login HTTP/1.1" 200 3488 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36" "-"
+172.18.0.1 - - [21/Oct/2026:14:33:38 +0000] "GET /static/portal.css HTTP/1.1" 200 13172 "http://localhost:8081/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36" "-"
+172.18.0.1 - - [21/Oct/2026:14:33:38 +0000] "GET /favicon.ico HTTP/1.1" 404 2440 "http://localhost:8081/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36" "-"
+---en3Js1fr---A--
+[21/Oct/2026:14:33:42 +0000] 179259322296.489236 127.0.0.1 43498 127.0.0.1 8080
+---en3Js1fr---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---en3Js1fr---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:33:42 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---en3Js1fr---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259322296.489236"] [ref "o0,14o0,9o9,5v28,14"]
+
+---en3Js1fr---Z--
+
+---G3YsK020---A--
+[21/Oct/2026:14:33:52 +0000] 179259323274.867643 127.0.0.1 46932 127.0.0.1 8080
+---G3YsK020---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---G3YsK020---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:33:52 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---G3YsK020---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259323274.867643"] [ref "o0,14o0,9o9,5v28,14"]
+
+---G3YsK020---Z--
+
+---fLGythx6---A--
+[21/Oct/2026:14:34:02 +0000] 179259324271.895023 127.0.0.1 35470 127.0.0.1 8080
+---fLGythx6---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---fLGythx6---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:34:02 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---fLGythx6---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259324271.895023"] [ref "o0,14o0,9o9,5v28,14"]
+
+---fLGythx6---Z--
+
+---ZwgRF3x7---A--
+[21/Oct/2026:14:34:12 +0000] 179259325210.737204 127.0.0.1 35196 127.0.0.1 8080
+---ZwgRF3x7---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---ZwgRF3x7---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:34:12 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---ZwgRF3x7---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259325210.737204"] [ref "o0,14o0,9o9,5v28,14"]
+
+---ZwgRF3x7---Z--
+
+---pdadOXjd---A--
+[21/Oct/2026:14:34:22 +0000] 179259326235.532969 127.0.0.1 50046 127.0.0.1 8080
+---pdadOXjd---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---pdadOXjd---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:34:22 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---pdadOXjd---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259326235.532969"] [ref "o0,14o0,9o9,5v28,14"]
+
+---pdadOXjd---Z--
+
+---kotnu2b6---A--
+[21/Oct/2026:14:34:32 +0000] 17925932729.709901 127.0.0.1 55894 127.0.0.1 8080
+---kotnu2b6---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---kotnu2b6---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:34:32 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---kotnu2b6---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "17925932729.709901"] [ref "o0,14o0,9o9,5v28,14"]
+
+---kotnu2b6---Z--
+
+---Ab5FCCYj---A--
+[21/Oct/2026:14:34:42 +0000] 179259328298.704044 127.0.0.1 37408 127.0.0.1 8080
+---Ab5FCCYj---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---Ab5FCCYj---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:34:42 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---Ab5FCCYj---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259328298.704044"] [ref "o0,14o0,9o9,5v28,14"]
+
+---Ab5FCCYj---Z--
+
+---haZ5dbN6---A--
+[21/Oct/2026:14:34:52 +0000] 17925932923.890797 127.0.0.1 39212 127.0.0.1 8080
+---haZ5dbN6---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---haZ5dbN6---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:34:52 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---haZ5dbN6---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "17925932923.890797"] [ref "o0,14o0,9o9,5v28,14"]
+
+---haZ5dbN6---Z--
+
+---gLmcs3Ky---A--
+[21/Oct/2026:14:35:02 +0000] 179259330213.386194 127.0.0.1 54314 127.0.0.1 8080
+---gLmcs3Ky---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---gLmcs3Ky---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:35:02 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---gLmcs3Ky---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259330213.386194"] [ref "o0,14o0,9o9,5v28,14"]
+
+---gLmcs3Ky---Z--
+
+---2vMTql38---A--
+[21/Oct/2026:14:35:12 +0000] 179259331287.410668 127.0.0.1 42750 127.0.0.1 8080
+---2vMTql38---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---2vMTql38---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:35:12 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---2vMTql38---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259331287.410668"] [ref "o0,14o0,9o9,5v28,14"]
+
+---2vMTql38---Z--
+
+---xZHNKxhk---A--
+[21/Oct/2026:14:35:22 +0000] 179259332286.632999 127.0.0.1 51646 127.0.0.1 8080
+---xZHNKxhk---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---xZHNKxhk---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:35:22 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---xZHNKxhk---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259332286.632999"] [ref "o0,14o0,9o9,5v28,14"]
+
+---xZHNKxhk---Z--
+
+---XvdK4V7B---A--
+[21/Oct/2026:14:35:32 +0000] 179259333242.685638 127.0.0.1 45010 127.0.0.1 8080
+---XvdK4V7B---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---XvdK4V7B---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:35:32 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---XvdK4V7B---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259333242.685638"] [ref "o0,14o0,9o9,5v28,14"]
+
+---XvdK4V7B---Z--
+
+---HHpfJknb---A--
+[21/Oct/2026:14:35:42 +0000] 179259334272.392840 127.0.0.1 60950 127.0.0.1 8080
+---HHpfJknb---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---HHpfJknb---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:35:43 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---HHpfJknb---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259334272.392840"] [ref "o0,14o0,9o9,5v28,14"]
+
+---HHpfJknb---Z--
+
+---faFDdmcH---A--
+[21/Oct/2026:14:35:53 +0000] 179259335375.983272 127.0.0.1 36172 127.0.0.1 8080
+---faFDdmcH---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---faFDdmcH---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:35:53 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---faFDdmcH---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259335375.983272"] [ref "o0,14o0,9o9,5v28,14"]
+
+---faFDdmcH---Z--
+
+---aAcrghtI---A--
+[21/Oct/2026:14:36:03 +0000] 179259336391.059019 127.0.0.1 50434 127.0.0.1 8080
+---aAcrghtI---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---aAcrghtI---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:36:03 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---aAcrghtI---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259336391.059019"] [ref "o0,14o0,9o9,5v28,14"]
+
+---aAcrghtI---Z--
+
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /health HTTP/1.1" 200 39 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /login HTTP/1.1" 200 3488 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "POST /login HTTP/1.1" 302 189 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET / HTTP/1.1" 200 6660 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /login HTTP/1.1" 200 3488 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "POST /login HTTP/1.1" 302 189 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET / HTTP/1.1" 200 5903 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET / HTTP/1.1" 200 6660 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /tickets HTTP/1.1" 200 4651 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /documents HTTP/1.1" 200 4093 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /lab HTTP/1.1" 200 6548 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /employees?q=%D0%90%D0%BB%D0%B8%D1%81%D0%B0 HTTP/1.1" 200 3853 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /download?file=onboarding.txt&attachment=1 HTTP/1.1" 200 337 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /tickets/new HTTP/1.1" 200 3850 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "POST /tickets/new HTTP/1.1" 302 213 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /tickets/1006 HTTP/1.1" 200 3681 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /tickets HTTP/1.1" 200 5011 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /tickets/1003 HTTP/1.1" 200 4420 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "POST /tickets/1003 HTTP/1.1" 302 213 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /tickets/1003 HTTP/1.1" 200 4632 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /tickets/1003 HTTP/1.1" 200 4632 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /diagnostics HTTP/1.1" 200 3351 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "POST /diagnostics HTTP/1.1" 200 3540 "-" "python-requests/2.32.5" "-"
+2026/10/21 14:36:07 [error] 579#579: *27 [client 172.18.0.5] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/employees"] [unique_id "179259336771.775731"] [ref ""], client: 172.18.0.5, server: localhost, request: "GET /employees?q=%27+OR+1%3D1+--+&lab_case=7928ff5cfa324cfe8349b18fc303a92e HTTP/1.1", host: "waf:8080"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /employees?q=%27+OR+1%3D1+--+&lab_case=7928ff5cfa324cfe8349b18fc303a92e HTTP/1.1" 403 146 "-" "python-requests/2.32.5" "-"
+---MSwzu3We---A--
+[21/Oct/2026:14:36:07 +0000] 179259336771.775731 172.18.0.5 60258 172.18.0.4 8080
+---MSwzu3We---B--
+GET /employees?q=%27+OR+1%3D1+--+&lab_case=7928ff5cfa324cfe8349b18fc303a92e HTTP/1.1
+Host: waf:8080
+User-Agent: python-requests/2.32.5
+Cookie: nexus_vulnerable=eyJjc3JmIjoiN2U5N2JkNDhhOTBkNmUwYzNlMGY2NDQ4OTRmZDNjNDI5MzdiYmVmMzkzYTk1YmY3IiwidWlkIjoxfQ.atjN1w.dPBLLmXvTFP5i574J7lV-Vl7-uw
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+
+---MSwzu3We---F--
+HTTP/1.1 403
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:36:07 GMT
+Content-Length: 146
+Content-Type: text/html
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Access-Control-Max-Age: 3600
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: *
+
+---MSwzu3We---H--
+ModSecurity: Warning. detected SQLi using libinjection. [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-942-APPLICATION-ATTACK-SQLI.conf"] [line "46"] [id "942100"] [rev ""] [msg "SQL Injection Attack Detected via libinjection"] [data "Matched Data: s&1c found within ARGS:q: ' OR 1=1 -- "] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-sqli"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-SQLI"] [tag "capec/1000/152/248/66"] [hostname "waf"] [uri "/employees"] [unique_id "179259336771.775731"] [ref "v17,12"]
+ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/employees"] [unique_id "179259336771.775731"] [ref ""]
+
+---MSwzu3We---Z--
+
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /greeting?name=%3Cscript%3Ealert%28%22LAB_XSS%22%29%3C%2Fscript%3E&lab_case=59a5bd76eb6b471a9689b0f008271274 HTTP/1.1" 403 146 "-" "python-requests/2.32.5" "-"
+2026/10/21 14:36:07 [error] 579#579: *27 [client 172.18.0.5] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `20' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 20)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/greeting"] [unique_id "179259336732.635816"] [ref ""], client: 172.18.0.5, server: localhost, request: "GET /greeting?name=%3Cscript%3Ealert%28%22LAB_XSS%22%29%3C%2Fscript%3E&lab_case=59a5bd76eb6b471a9689b0f008271274 HTTP/1.1", host: "waf:8080"
+---kMkTkkfP---A--
+[21/Oct/2026:14:36:07 +0000] 179259336732.635816 172.18.0.5 60258 172.18.0.4 8080
+---kMkTkkfP---B--
+GET /greeting?name=%3Cscript%3Ealert%28%22LAB_XSS%22%29%3C%2Fscript%3E&lab_case=59a5bd76eb6b471a9689b0f008271274 HTTP/1.1
+Host: waf:8080
+User-Agent: python-requests/2.32.5
+Cookie: nexus_vulnerable=eyJjc3JmIjoiN2U5N2JkNDhhOTBkNmUwYzNlMGY2NDQ4OTRmZDNjNDI5MzdiYmVmMzkzYTk1YmY3IiwidWlkIjoxfQ.atjN1w.dPBLLmXvTFP5i574J7lV-Vl7-uw
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+
+---kMkTkkfP---F--
+HTTP/1.1 403
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:36:07 GMT
+Content-Length: 146
+Content-Type: text/html
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Access-Control-Max-Age: 3600
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: *
+
+---kMkTkkfP---H--
+ModSecurity: Warning. detected XSS using libinjection. [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "83"] [id "941100"] [rev ""] [msg "XSS Attack Detected via libinjection"] [data "Matched Data: XSS data found within ARGS:name: <script>alert(\x22LAB_XSS\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/greeting"] [unique_id "179259336732.635816"] [ref "v19,33t:utf8toUnicode,t:urlDecodeUni,t:htmlEntityDecode,t:jsDecode,t:cssDecode,t:removeNulls"]
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)<script[^>]*>[\s\S]*?' against variable `ARGS:name' (Value: `<script>alert("LAB_XSS")</script>' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "110"] [id "941110"] [rev ""] [msg "XSS Filter - Category 1: Script Tag Vector"] [data "Matched Data: <script> found within ARGS:name: <script>alert(\x22LAB_XSS\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/greeting"] [unique_id "179259336732.635816"] [ref "o0,8v19,33t:utf8toUnicode,t:urlDecodeUni,t:htmlEntityDecode,t:jsDecode,t:cssDecode,t:removeNulls"]
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)<[^0-9<>A-Z_a-z]*(?:[^\s\x0b\"'<>]*:)?[^0-9<>A-Z_a-z]*[^0-9A-Z_a-z]*?(?:s[^0-9A-Z_a-z]*?(?:c[^0-9A-Z_a-z]*?r[^0-9A-Z_a-z]*?i[^0-9A-Z_a-z]*?p[^0-9A-Z_a-z]*?t|t[^0-9A-Z_a-z]*?y[^0-9A-Z_a-z]*?l[^0-9A (4396 characters omitted)' against variable `ARGS:name' (Value: `<script>alert("LAB_XSS")</script>' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "253"] [id "941160"] [rev ""] [msg "NoScript XSS InjectionChecker: HTML Injection"] [data "Matched Data: <script found within ARGS:name: <script>alert(\x22LAB_XSS\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/greeting"] [unique_id "179259336732.635816"] [ref "o0,7v19,33t:utf8toUnicode,t:urlDecodeUni,t:htmlEntityDecode,t:jsDecode,t:cssDecode,t:removeNulls"]
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)\b(?:eval|set(?:timeout|interval)|new[\s\x0b]+Function|a(?:lert|tob)|btoa|(?:promp|impor)t|con(?:firm|sole\.(?:log|dir))|fetch)[\s\x0b]*[\(\{]' against variable `ARGS:name' (Value: `<script>alert("LAB_XSS")</script>' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "826"] [id "941390"] [rev ""] [msg "Javascript method detected"] [data "Matched Data: alert( found within ARGS:name: <script>alert(\x22LAB_XSS\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-nodejs"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/greeting"] [unique_id "179259336732.635816"] [ref "o8,6v19,33t:htmlEntityDecode,t:jsDecode"]
+ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `20' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 20)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/greeting"] [unique_id "179259336732.635816"] [ref ""]
+
+---kMkTkkfP---Z--
+
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /tickets/1003 HTTP/1.1" 200 4632 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /tickets/1003 HTTP/1.1" 200 4632 "-" "python-requests/2.32.5" "-"
+2026/10/21 14:36:07 [error] 579#579: *27 [client 172.18.0.5] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `20' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 20)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/tickets/1003"] [unique_id "17925933674.349128"] [ref ""], client: 172.18.0.5, server: localhost, request: "POST /tickets/1003?lab_case=d58dc4c509ae4990a6bc1b9996cc6895 HTTP/1.1", host: "waf:8080"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "POST /tickets/1003?lab_case=d58dc4c509ae4990a6bc1b9996cc6895 HTTP/1.1" 403 146 "-" "python-requests/2.32.5" "-"
+---JsaueAAC---A--
+[21/Oct/2026:14:36:07 +0000] 17925933674.349128 172.18.0.5 60258 172.18.0.4 8080
+---JsaueAAC---B--
+POST /tickets/1003?lab_case=d58dc4c509ae4990a6bc1b9996cc6895 HTTP/1.1
+Host: waf:8080
+User-Agent: python-requests/2.32.5
+Cookie: nexus_vulnerable=eyJjc3JmIjoiN2U5N2JkNDhhOTBkNmUwYzNlMGY2NDQ4OTRmZDNjNDI5MzdiYmVmMzkzYTk1YmY3IiwidWlkIjoxfQ.atjN1w.dPBLLmXvTFP5i574J7lV-Vl7-uw
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Content-Length: 119
+Content-Type: application/x-www-form-urlencoded
+
+---JsaueAAC---F--
+HTTP/1.1 403
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:36:07 GMT
+Content-Length: 146
+Content-Type: text/html
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Access-Control-Max-Age: 3600
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: *
+
+---JsaueAAC---H--
+ModSecurity: Warning. detected XSS using libinjection. [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "83"] [id "941100"] [rev ""] [msg "XSS Attack Detected via libinjection"] [data "Matched Data: XSS data found within ARGS:body: <script>alert(\x22LAB_STORED\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/tickets/1003"] [unique_id "17925933674.349128"] [ref "v411,36t:utf8toUnicode,t:urlDecodeUni,t:htmlEntityDecode,t:jsDecode,t:cssDecode,t:removeNulls"]
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)<script[^>]*>[\s\S]*?' against variable `ARGS:body' (Value: `<script>alert("LAB_STORED")</script>' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "110"] [id "941110"] [rev ""] [msg "XSS Filter - Category 1: Script Tag Vector"] [data "Matched Data: <script> found within ARGS:body: <script>alert(\x22LAB_STORED\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/tickets/1003"] [unique_id "17925933674.349128"] [ref "o0,8v411,36t:utf8toUnicode,t:urlDecodeUni,t:htmlEntityDecode,t:jsDecode,t:cssDecode,t:removeNulls"]
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)<[^0-9<>A-Z_a-z]*(?:[^\s\x0b\"'<>]*:)?[^0-9<>A-Z_a-z]*[^0-9A-Z_a-z]*?(?:s[^0-9A-Z_a-z]*?(?:c[^0-9A-Z_a-z]*?r[^0-9A-Z_a-z]*?i[^0-9A-Z_a-z]*?p[^0-9A-Z_a-z]*?t|t[^0-9A-Z_a-z]*?y[^0-9A-Z_a-z]*?l[^0-9A (4396 characters omitted)' against variable `ARGS:body' (Value: `<script>alert("LAB_STORED")</script>' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "253"] [id "941160"] [rev ""] [msg "NoScript XSS InjectionChecker: HTML Injection"] [data "Matched Data: <script found within ARGS:body: <script>alert(\x22LAB_STORED\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/tickets/1003"] [unique_id "17925933674.349128"] [ref "o0,7v411,36t:utf8toUnicode,t:urlDecodeUni,t:htmlEntityDecode,t:jsDecode,t:cssDecode,t:removeNulls"]
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)\b(?:eval|set(?:timeout|interval)|new[\s\x0b]+Function|a(?:lert|tob)|btoa|(?:promp|impor)t|con(?:firm|sole\.(?:log|dir))|fetch)[\s\x0b]*[\(\{]' against variable `ARGS:body' (Value: `<script>alert("LAB_STORED")</script>' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "826"] [id "941390"] [rev ""] [msg "Javascript method detected"] [data "Matched Data: alert( found within ARGS:body: <script>alert(\x22LAB_STORED\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-nodejs"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/tickets/1003"] [unique_id "17925933674.349128"] [ref "o8,6v411,36t:htmlEntityDecode,t:jsDecode"]
+ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `20' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 20)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/tickets/1003"] [unique_id "17925933674.349128"] [ref ""]
+
+---JsaueAAC---Z--
+
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /tickets/1003 HTTP/1.1" 200 4632 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /diagnostics HTTP/1.1" 200 3351 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "POST /diagnostics?lab_case=9c7705988f9f4680b14f9e2a6b7d1398 HTTP/1.1" 403 146 "-" "python-requests/2.32.5" "-"
+2026/10/21 14:36:07 [error] 579#579: *27 [client 172.18.0.5] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/diagnostics"] [unique_id "179259336719.119417"] [ref ""], client: 172.18.0.5, server: localhost, request: "POST /diagnostics?lab_case=9c7705988f9f4680b14f9e2a6b7d1398 HTTP/1.1", host: "waf:8080"
+---Jm1zRvHo---A--
+[21/Oct/2026:14:36:07 +0000] 179259336719.119417 172.18.0.5 60258 172.18.0.4 8080
+---Jm1zRvHo---B--
+POST /diagnostics?lab_case=9c7705988f9f4680b14f9e2a6b7d1398 HTTP/1.1
+Host: waf:8080
+User-Agent: python-requests/2.32.5
+Cookie: nexus_vulnerable=eyJjc3JmIjoiN2U5N2JkNDhhOTBkNmUwYzNlMGY2NDQ4OTRmZDNjNDI5MzdiYmVmMzkzYTk1YmY3IiwidWlkIjoxfQ.atjN1w.dPBLLmXvTFP5i574J7lV-Vl7-uw
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Content-Length: 91
+Content-Type: application/x-www-form-urlencoded
+
+---Jm1zRvHo---F--
+HTTP/1.1 403
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:36:07 GMT
+Content-Length: 146
+Content-Type: text/html
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Access-Control-Max-Age: 3600
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: *
+
+---Jm1zRvHo---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)(?:b[\"'\)\[\x5c]*(?:(?:(?:\|\||&&)[\s\x0b]*)?\$[!#\(\*\-0-9\?@_a-\{]*)?\x5c?u[\"'\)\[\x5c]*(?:(?:(?:\|\||&&)[\s\x0b]*)?\$[!#\(\*\-0-9\?@_a-\{]*)?\x5c?s[\"'\)\[\x5c]*(?:(?:(?:\|\||&&)[\s\x0b]*)?\$ (10193 characters omitted)' against variable `ARGS:host' (Value: `127.0.0.1; echo LAB_TEST' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-932-APPLICATION-ATTACK-RCE.conf"] [line "186"] [id "932235"] [rev ""] [msg "Remote Command Execution: Unix Command Injection (command without evasion)"] [data "Matched Data: ; echo  found within ARGS:host: 127.0.0.1; echo LAB_TEST"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-shell"] [tag "platform-unix"] [tag "attack-rce"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-RCE"] [tag "capec/1000/152/248/88"] [hostname "waf"] [uri "/diagnostics"] [unique_id "179259336719.119417"] [ref "o9,7v409,24"]
+ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/diagnostics"] [unique_id "179259336719.119417"] [ref ""]
+
+---Jm1zRvHo---Z--
+
+2026/10/21 14:36:07 [error] 579#579: *27 [client 172.18.0.5] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/download"] [unique_id "17925933670.821707"] [ref ""], client: 172.18.0.5, server: localhost, request: "GET /download?file=..%2Flab-only.txt&lab_case=03554c35f013481fb7e70a5a89d97cfd HTTP/1.1", host: "waf:8080"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /download?file=..%2Flab-only.txt&lab_case=03554c35f013481fb7e70a5a89d97cfd HTTP/1.1" 403 146 "-" "python-requests/2.32.5" "-"
+---LBlGEHsw---A--
+[21/Oct/2026:14:36:07 +0000] 17925933670.821707 172.18.0.5 60258 172.18.0.4 8080
+---LBlGEHsw---B--
+GET /download?file=..%2Flab-only.txt&lab_case=03554c35f013481fb7e70a5a89d97cfd HTTP/1.1
+Host: waf:8080
+User-Agent: python-requests/2.32.5
+Cookie: nexus_vulnerable=eyJjc3JmIjoiN2U5N2JkNDhhOTBkNmUwYzNlMGY2NDQ4OTRmZDNjNDI5MzdiYmVmMzkzYTk1YmY3IiwidWlkIjoxfQ.atjN1w.dPBLLmXvTFP5i574J7lV-Vl7-uw
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+
+---LBlGEHsw---F--
+HTTP/1.1 403
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:36:07 GMT
+Content-Length: 146
+Content-Type: text/html
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Access-Control-Max-Age: 3600
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: *
+
+---LBlGEHsw---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^|[/;\x5c])\.{2,3}[/;\x5c]' against variable `ARGS:file' (Value: `../lab-only.txt' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf"] [line "73"] [id "930110"] [rev ""] [msg "Path Traversal Attack (/../) or (/.../)"] [data "Matched Data: ../ found within ARGS:file: ../lab-only.txt"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-lfi"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-LFI"] [tag "capec/1000/255/153/126"] [hostname "waf"] [uri "/download"] [unique_id "17925933670.821707"] [ref "o0,3v19,15"]
+ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/download"] [unique_id "17925933670.821707"] [ref ""]
+
+---LBlGEHsw---Z--
+
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /tickets/1002 HTTP/1.1" 200 3769 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:36:07 +0000] "GET /tickets/1002 HTTP/1.1" 200 3769 "-" "python-requests/2.32.5" "-"
+---dcQLL5kc---A--
+[21/Oct/2026:14:36:13 +0000] 179259337322.492146 127.0.0.1 54998 127.0.0.1 8080
+---dcQLL5kc---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---dcQLL5kc---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:36:13 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---dcQLL5kc---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259337322.492146"] [ref "o0,14o0,9o9,5v28,14"]
+
+---dcQLL5kc---Z--
+
+---vKWaTgmm---A--
+[21/Oct/2026:14:36:23 +0000] 179259338344.893283 127.0.0.1 34672 127.0.0.1 8080
+---vKWaTgmm---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---vKWaTgmm---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:36:23 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---vKWaTgmm---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259338344.893283"] [ref "o0,14o0,9o9,5v28,14"]
+
+---vKWaTgmm---Z--
+
+---Tmluh2g0---A--
+[21/Oct/2026:14:36:33 +0000] 179259339375.735476 127.0.0.1 43474 127.0.0.1 8080
+---Tmluh2g0---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---Tmluh2g0---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:36:33 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---Tmluh2g0---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259339375.735476"] [ref "o0,14o0,9o9,5v28,14"]
+
+---Tmluh2g0---Z--
+
+---CREOg6LI---A--
+[21/Oct/2026:14:36:43 +0000] 179259340356.812493 127.0.0.1 47424 127.0.0.1 8080
+---CREOg6LI---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---CREOg6LI---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:36:43 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---CREOg6LI---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259340356.812493"] [ref "o0,14o0,9o9,5v28,14"]
+
+---CREOg6LI---Z--
+
+---hld2oMcj---A--
+[21/Oct/2026:14:36:53 +0000] 179259341318.568696 127.0.0.1 33902 127.0.0.1 8080
+---hld2oMcj---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---hld2oMcj---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:36:53 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---hld2oMcj---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259341318.568696"] [ref "o0,14o0,9o9,5v28,14"]
+
+---hld2oMcj---Z--
+
+---g8H9n2tE---A--
+[21/Oct/2026:14:37:03 +0000] 179259342352.447226 127.0.0.1 49806 127.0.0.1 8080
+---g8H9n2tE---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---g8H9n2tE---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:37:03 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---g8H9n2tE---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259342352.447226"] [ref "o0,14o0,9o9,5v28,14"]
+
+---g8H9n2tE---Z--
+
+---oe6TfnTr---A--
+[21/Oct/2026:14:37:13 +0000] 17925934330.916261 127.0.0.1 56422 127.0.0.1 8080
+---oe6TfnTr---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---oe6TfnTr---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:37:13 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---oe6TfnTr---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "17925934330.916261"] [ref "o0,14o0,9o9,5v28,14"]
+
+---oe6TfnTr---Z--
+
+---CiFrmY9T---A--
+[21/Oct/2026:14:37:23 +0000] 179259344399.092648 127.0.0.1 33878 127.0.0.1 8080
+---CiFrmY9T---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---CiFrmY9T---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:37:23 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---CiFrmY9T---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259344399.092648"] [ref "o0,14o0,9o9,5v28,14"]
+
+---CiFrmY9T---Z--
+
+---JmT565pn---A--
+[21/Oct/2026:14:37:33 +0000] 179259345358.885090 127.0.0.1 54964 127.0.0.1 8080
+---JmT565pn---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---JmT565pn---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:37:33 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---JmT565pn---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259345358.885090"] [ref "o0,14o0,9o9,5v28,14"]
+
+---JmT565pn---Z--
+
+---E6uz6oDu---A--
+[21/Oct/2026:14:37:43 +0000] 179259346345.811042 127.0.0.1 41618 127.0.0.1 8080
+---E6uz6oDu---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---E6uz6oDu---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:37:43 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---E6uz6oDu---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259346345.811042"] [ref "o0,14o0,9o9,5v28,14"]
+
+---E6uz6oDu---Z--
+
+---QJN54ruH---A--
+[21/Oct/2026:14:37:53 +0000] 179259347388.240356 127.0.0.1 38644 127.0.0.1 8080
+---QJN54ruH---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---QJN54ruH---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:37:53 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---QJN54ruH---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259347388.240356"] [ref "o0,14o0,9o9,5v28,14"]
+
+---QJN54ruH---Z--
+
+---X88JgFny---A--
+[21/Oct/2026:14:38:03 +0000] 179259348330.221478 127.0.0.1 41298 127.0.0.1 8080
+---X88JgFny---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---X88JgFny---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:38:03 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---X88JgFny---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259348330.221478"] [ref "o0,14o0,9o9,5v28,14"]
+
+---X88JgFny---Z--
+
+---mB7NiFTy---A--
+[21/Oct/2026:14:38:13 +0000] 179259349356.711475 127.0.0.1 49372 127.0.0.1 8080
+---mB7NiFTy---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---mB7NiFTy---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:38:13 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---mB7NiFTy---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259349356.711475"] [ref "o0,14o0,9o9,5v28,14"]
+
+---mB7NiFTy---Z--
+
+---xDewiif0---A--
+[21/Oct/2026:14:38:23 +0000] 179259350336.574122 127.0.0.1 60074 127.0.0.1 8080
+---xDewiif0---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---xDewiif0---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:38:23 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---xDewiif0---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259350336.574122"] [ref "o0,14o0,9o9,5v28,14"]
+
+---xDewiif0---Z--
+
+---5pwSA5CI---A--
+[21/Oct/2026:14:38:33 +0000] 179259351358.341126 127.0.0.1 54314 127.0.0.1 8080
+---5pwSA5CI---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---5pwSA5CI---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:38:34 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---5pwSA5CI---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259351358.341126"] [ref "o0,14o0,9o9,5v28,14"]
+
+---5pwSA5CI---Z--
+
+---zLCzusge---A--
+[21/Oct/2026:14:38:44 +0000] 179259352441.602611 127.0.0.1 59916 127.0.0.1 8080
+---zLCzusge---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---zLCzusge---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:38:44 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---zLCzusge---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259352441.602611"] [ref "o0,14o0,9o9,5v28,14"]
+
+---zLCzusge---Z--
+
+---3m2j1Tfz---A--
+[21/Oct/2026:14:38:54 +0000] 17925935344.684565 127.0.0.1 44006 127.0.0.1 8080
+---3m2j1Tfz---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---3m2j1Tfz---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:38:54 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---3m2j1Tfz---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "17925935344.684565"] [ref "o0,14o0,9o9,5v28,14"]
+
+---3m2j1Tfz---Z--
+
+---fJtN0WO5---A--
+[21/Oct/2026:14:39:04 +0000] 179259354465.546270 127.0.0.1 40836 127.0.0.1 8080
+---fJtN0WO5---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---fJtN0WO5---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:39:04 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---fJtN0WO5---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259354465.546270"] [ref "o0,14o0,9o9,5v28,14"]
+
+---fJtN0WO5---Z--
+
+---MKVUNhmN---A--
+[21/Oct/2026:14:39:14 +0000] 179259355456.856777 127.0.0.1 38776 127.0.0.1 8080
+---MKVUNhmN---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---MKVUNhmN---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:39:14 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---MKVUNhmN---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259355456.856777"] [ref "o0,14o0,9o9,5v28,14"]
+
+---MKVUNhmN---Z--
+
+---0wMto1Xs---A--
+[21/Oct/2026:14:39:24 +0000] 179259356480.682733 127.0.0.1 60498 127.0.0.1 8080
+---0wMto1Xs---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---0wMto1Xs---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:39:24 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---0wMto1Xs---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259356480.682733"] [ref "o0,14o0,9o9,5v28,14"]
+
+---0wMto1Xs---Z--
+
+---nXZo1Flg---A--
+[21/Oct/2026:14:39:34 +0000] 179259357410.416736 127.0.0.1 52404 127.0.0.1 8080
+---nXZo1Flg---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---nXZo1Flg---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:39:34 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---nXZo1Flg---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259357410.416736"] [ref "o0,14o0,9o9,5v28,14"]
+
+---nXZo1Flg---Z--
+
+---Wc3W9PaT---A--
+[21/Oct/2026:14:39:44 +0000] 179259358416.801691 127.0.0.1 34510 127.0.0.1 8080
+---Wc3W9PaT---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---Wc3W9PaT---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:39:44 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---Wc3W9PaT---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259358416.801691"] [ref "o0,14o0,9o9,5v28,14"]
+
+---Wc3W9PaT---Z--
+
+---h5x5liQl---A--
+[21/Oct/2026:14:39:54 +0000] 179259359436.054934 127.0.0.1 39432 127.0.0.1 8080
+---h5x5liQl---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---h5x5liQl---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:39:54 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---h5x5liQl---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259359436.054934"] [ref "o0,14o0,9o9,5v28,14"]
+
+---h5x5liQl---Z--
+
+---emeTnAJY---A--
+[21/Oct/2026:14:40:04 +0000] 179259360442.588695 127.0.0.1 37312 127.0.0.1 8080
+---emeTnAJY---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---emeTnAJY---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:40:04 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---emeTnAJY---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259360442.588695"] [ref "o0,14o0,9o9,5v28,14"]
+
+---emeTnAJY---Z--
+
+---hsLi56Mc---A--
+[21/Oct/2026:14:40:14 +0000] 179259361487.461906 127.0.0.1 42600 127.0.0.1 8080
+---hsLi56Mc---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---hsLi56Mc---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:40:14 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---hsLi56Mc---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259361487.461906"] [ref "o0,14o0,9o9,5v28,14"]
+
+---hsLi56Mc---Z--
+
+---jO8qngJV---A--
+[21/Oct/2026:14:40:24 +0000] 179259362441.092984 127.0.0.1 41548 127.0.0.1 8080
+---jO8qngJV---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---jO8qngJV---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:40:24 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---jO8qngJV---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259362441.092984"] [ref "o0,14o0,9o9,5v28,14"]
+
+---jO8qngJV---Z--
+
+---mEYVuyEZ---A--
+[21/Oct/2026:14:40:34 +0000] 179259363410.592347 127.0.0.1 49208 127.0.0.1 8080
+---mEYVuyEZ---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---mEYVuyEZ---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:40:34 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---mEYVuyEZ---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259363410.592347"] [ref "o0,14o0,9o9,5v28,14"]
+
+---mEYVuyEZ---Z--
+
+---ir0U1J2g---A--
+[21/Oct/2026:14:40:44 +0000] 179259364481.257089 127.0.0.1 41314 127.0.0.1 8080
+---ir0U1J2g---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---ir0U1J2g---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:40:44 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---ir0U1J2g---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259364481.257089"] [ref "o0,14o0,9o9,5v28,14"]
+
+---ir0U1J2g---Z--
+
+---r9UEy7vH---A--
+[21/Oct/2026:14:40:54 +0000] 179259365446.254898 127.0.0.1 37202 127.0.0.1 8080
+---r9UEy7vH---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---r9UEy7vH---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:40:54 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---r9UEy7vH---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259365446.254898"] [ref "o0,14o0,9o9,5v28,14"]
+
+---r9UEy7vH---Z--
+
+---9jqAKZ2c---A--
+[21/Oct/2026:14:41:05 +0000] 179259366593.403134 127.0.0.1 51462 127.0.0.1 8080
+---9jqAKZ2c---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---9jqAKZ2c---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:41:05 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---9jqAKZ2c---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259366593.403134"] [ref "o0,14o0,9o9,5v28,14"]
+
+---9jqAKZ2c---Z--
+
+---TeU6TZmL---A--
+[21/Oct/2026:14:41:15 +0000] 17925936757.371097 127.0.0.1 41972 127.0.0.1 8080
+---TeU6TZmL---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---TeU6TZmL---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:41:15 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---TeU6TZmL---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "17925936757.371097"] [ref "o0,14o0,9o9,5v28,14"]
+
+---TeU6TZmL---Z--
+
+---hLkgGl07---A--
+[21/Oct/2026:14:41:25 +0000] 179259368573.821535 127.0.0.1 43622 127.0.0.1 8080
+---hLkgGl07---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---hLkgGl07---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:41:25 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---hLkgGl07---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259368573.821535"] [ref "o0,14o0,9o9,5v28,14"]
+
+---hLkgGl07---Z--
+
+---sSKqaD7h---A--
+[21/Oct/2026:14:41:35 +0000] 179259369580.040687 127.0.0.1 54538 127.0.0.1 8080
+---sSKqaD7h---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---sSKqaD7h---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:41:35 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---sSKqaD7h---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259369580.040687"] [ref "o0,14o0,9o9,5v28,14"]
+
+---sSKqaD7h---Z--
+
+---uysEVsqx---A--
+[21/Oct/2026:14:41:45 +0000] 179259370544.345865 127.0.0.1 41184 127.0.0.1 8080
+---uysEVsqx---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---uysEVsqx---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:41:45 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---uysEVsqx---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259370544.345865"] [ref "o0,14o0,9o9,5v28,14"]
+
+---uysEVsqx---Z--
+
+---VI3yqnHX---A--
+[21/Oct/2026:14:41:55 +0000] 179259371560.897559 127.0.0.1 54162 127.0.0.1 8080
+---VI3yqnHX---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---VI3yqnHX---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:41:55 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---VI3yqnHX---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259371560.897559"] [ref "o0,14o0,9o9,5v28,14"]
+
+---VI3yqnHX---Z--
+
+---91BNkBSc---A--
+[21/Oct/2026:14:42:05 +0000] 179259372561.633789 127.0.0.1 34316 127.0.0.1 8080
+---91BNkBSc---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---91BNkBSc---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:42:05 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---91BNkBSc---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259372561.633789"] [ref "o0,14o0,9o9,5v28,14"]
+
+---91BNkBSc---Z--
+
+---dkSBxYtr---A--
+[21/Oct/2026:14:42:15 +0000] 179259373567.010009 127.0.0.1 42348 127.0.0.1 8080
+---dkSBxYtr---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---dkSBxYtr---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:42:15 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---dkSBxYtr---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259373567.010009"] [ref "o0,14o0,9o9,5v28,14"]
+
+---dkSBxYtr---Z--
+
+---Uj3xZtu4---A--
+[21/Oct/2026:14:42:25 +0000] 179259374570.619425 127.0.0.1 50370 127.0.0.1 8080
+---Uj3xZtu4---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---Uj3xZtu4---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:42:25 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---Uj3xZtu4---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259374570.619425"] [ref "o0,14o0,9o9,5v28,14"]
+
+---Uj3xZtu4---Z--
+
+---Aw00hHVo---A--
+[21/Oct/2026:14:42:35 +0000] 179259375598.076474 127.0.0.1 53062 127.0.0.1 8080
+---Aw00hHVo---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---Aw00hHVo---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:42:35 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---Aw00hHVo---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259375598.076474"] [ref "o0,14o0,9o9,5v28,14"]
+
+---Aw00hHVo---Z--
+
+---Hg91paeQ---A--
+[21/Oct/2026:14:42:45 +0000] 179259376567.776678 127.0.0.1 36012 127.0.0.1 8080
+---Hg91paeQ---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---Hg91paeQ---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:42:45 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---Hg91paeQ---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259376567.776678"] [ref "o0,14o0,9o9,5v28,14"]
+
+---Hg91paeQ---Z--
+
+---K4cGaT54---A--
+[21/Oct/2026:14:42:55 +0000] 179259377558.885340 127.0.0.1 51852 127.0.0.1 8080
+---K4cGaT54---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---K4cGaT54---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:42:55 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---K4cGaT54---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259377558.885340"] [ref "o0,14o0,9o9,5v28,14"]
+
+---K4cGaT54---Z--
+
+---A90h0sm8---A--
+[21/Oct/2026:14:43:05 +0000] 179259378519.789352 127.0.0.1 57178 127.0.0.1 8080
+---A90h0sm8---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---A90h0sm8---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:43:05 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---A90h0sm8---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259378519.789352"] [ref "o0,14o0,9o9,5v28,14"]
+
+---A90h0sm8---Z--
+
+---ok6U2bGH---A--
+[21/Oct/2026:14:43:15 +0000] 179259379552.184235 127.0.0.1 48670 127.0.0.1 8080
+---ok6U2bGH---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---ok6U2bGH---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:43:15 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---ok6U2bGH---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259379552.184235"] [ref "o0,14o0,9o9,5v28,14"]
+
+---ok6U2bGH---Z--
+
+---HQI4yuVG---A--
+[21/Oct/2026:14:43:25 +0000] 179259380589.806993 127.0.0.1 40900 127.0.0.1 8080
+---HQI4yuVG---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---HQI4yuVG---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:43:25 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---HQI4yuVG---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259380589.806993"] [ref "o0,14o0,9o9,5v28,14"]
+
+---HQI4yuVG---Z--
+
+---Azt55xIw---A--
+[21/Oct/2026:14:43:35 +0000] 179259381587.594624 127.0.0.1 52014 127.0.0.1 8080
+---Azt55xIw---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---Azt55xIw---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:43:35 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---Azt55xIw---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259381587.594624"] [ref "o0,14o0,9o9,5v28,14"]
+
+---Azt55xIw---Z--
+
+---ezrLZkxZ---A--
+[21/Oct/2026:14:43:45 +0000] 179259382580.393074 127.0.0.1 44358 127.0.0.1 8080
+---ezrLZkxZ---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---ezrLZkxZ---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:43:45 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---ezrLZkxZ---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259382580.393074"] [ref "o0,14o0,9o9,5v28,14"]
+
+---ezrLZkxZ---Z--
+
+---wN9YCsTi---A--
+[21/Oct/2026:14:43:55 +0000] 179259383596.880409 127.0.0.1 44452 127.0.0.1 8080
+---wN9YCsTi---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---wN9YCsTi---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:43:55 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---wN9YCsTi---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259383596.880409"] [ref "o0,14o0,9o9,5v28,14"]
+
+---wN9YCsTi---Z--
+
+---GuM2fkun---A--
+[21/Oct/2026:14:44:05 +0000] 179259384597.760029 127.0.0.1 36986 127.0.0.1 8080
+---GuM2fkun---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---GuM2fkun---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:44:05 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---GuM2fkun---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259384597.760029"] [ref "o0,14o0,9o9,5v28,14"]
+
+---GuM2fkun---Z--
+
+---hmsnj9jO---A--
+[21/Oct/2026:14:44:15 +0000] 179259385565.750730 127.0.0.1 47248 127.0.0.1 8080
+---hmsnj9jO---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---hmsnj9jO---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:44:15 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---hmsnj9jO---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259385565.750730"] [ref "o0,14o0,9o9,5v28,14"]
+
+---hmsnj9jO---Z--
+
+---8YhfJcFF---A--
+[21/Oct/2026:14:44:26 +0000] 179259386650.449898 127.0.0.1 37454 127.0.0.1 8080
+---8YhfJcFF---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---8YhfJcFF---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:44:26 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---8YhfJcFF---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259386650.449898"] [ref "o0,14o0,9o9,5v28,14"]
+
+---8YhfJcFF---Z--
+
+---0MlCEEsS---A--
+[21/Oct/2026:14:44:36 +0000] 179259387674.906950 127.0.0.1 33272 127.0.0.1 8080
+---0MlCEEsS---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---0MlCEEsS---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:44:36 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---0MlCEEsS---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259387674.906950"] [ref "o0,14o0,9o9,5v28,14"]
+
+---0MlCEEsS---Z--
+
+---6FTlxNWf---A--
+[21/Oct/2026:14:44:46 +0000] 179259388664.332124 127.0.0.1 40478 127.0.0.1 8080
+---6FTlxNWf---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---6FTlxNWf---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:44:46 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---6FTlxNWf---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259388664.332124"] [ref "o0,14o0,9o9,5v28,14"]
+
+---6FTlxNWf---Z--
+
+---9OQrX9De---A--
+[21/Oct/2026:14:44:56 +0000] 179259389693.784038 127.0.0.1 52326 127.0.0.1 8080
+---9OQrX9De---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---9OQrX9De---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:44:56 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---9OQrX9De---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259389693.784038"] [ref "o0,14o0,9o9,5v28,14"]
+
+---9OQrX9De---Z--
+
+---fsJyVWBV---A--
+[21/Oct/2026:14:45:06 +0000] 179259390626.522058 127.0.0.1 52640 127.0.0.1 8080
+---fsJyVWBV---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---fsJyVWBV---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:45:06 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---fsJyVWBV---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259390626.522058"] [ref "o0,14o0,9o9,5v28,14"]
+
+---fsJyVWBV---Z--
+
+---rwf38XWE---A--
+[21/Oct/2026:14:45:16 +0000] 179259391672.015612 127.0.0.1 46964 127.0.0.1 8080
+---rwf38XWE---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---rwf38XWE---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:45:16 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---rwf38XWE---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259391672.015612"] [ref "o0,14o0,9o9,5v28,14"]
+
+---rwf38XWE---Z--
+
+---kxxiITNQ---A--
+[21/Oct/2026:14:45:26 +0000] 179259392625.913515 127.0.0.1 36520 127.0.0.1 8080
+---kxxiITNQ---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---kxxiITNQ---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:45:26 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---kxxiITNQ---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259392625.913515"] [ref "o0,14o0,9o9,5v28,14"]
+
+---kxxiITNQ---Z--
+
+---qlHLsSzX---A--
+[21/Oct/2026:14:45:36 +0000] 179259393649.619965 127.0.0.1 37788 127.0.0.1 8080
+---qlHLsSzX---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---qlHLsSzX---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:45:36 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---qlHLsSzX---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259393649.619965"] [ref "o0,14o0,9o9,5v28,14"]
+
+---qlHLsSzX---Z--
+
+---KHUnlfIa---A--
+[21/Oct/2026:14:45:46 +0000] 179259394659.773585 127.0.0.1 53658 127.0.0.1 8080
+---KHUnlfIa---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---KHUnlfIa---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:45:46 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---KHUnlfIa---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259394659.773585"] [ref "o0,14o0,9o9,5v28,14"]
+
+---KHUnlfIa---Z--
+
+---axegT8vD---A--
+[21/Oct/2026:14:45:56 +0000] 179259395654.417069 127.0.0.1 54812 127.0.0.1 8080
+---axegT8vD---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---axegT8vD---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:45:56 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---axegT8vD---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259395654.417069"] [ref "o0,14o0,9o9,5v28,14"]
+
+---axegT8vD---Z--
+
+---5qtNKEn8---A--
+[21/Oct/2026:14:46:06 +0000] 17925939665.264494 127.0.0.1 35170 127.0.0.1 8080
+---5qtNKEn8---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---5qtNKEn8---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:46:06 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---5qtNKEn8---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "17925939665.264494"] [ref "o0,14o0,9o9,5v28,14"]
+
+---5qtNKEn8---Z--
+
+---4sxHflOR---A--
+[21/Oct/2026:14:46:16 +0000] 179259397611.903994 127.0.0.1 53578 127.0.0.1 8080
+---4sxHflOR---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---4sxHflOR---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:46:16 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---4sxHflOR---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259397611.903994"] [ref "o0,14o0,9o9,5v28,14"]
+
+---4sxHflOR---Z--
+
+---dRqXdaD0---A--
+[21/Oct/2026:14:46:26 +0000] 179259398672.089738 127.0.0.1 55404 127.0.0.1 8080
+---dRqXdaD0---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---dRqXdaD0---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:46:26 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---dRqXdaD0---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259398672.089738"] [ref "o0,14o0,9o9,5v28,14"]
+
+---dRqXdaD0---Z--
+
+---o8BWXwoB---A--
+[21/Oct/2026:14:46:36 +0000] 179259399658.091110 127.0.0.1 34324 127.0.0.1 8080
+---o8BWXwoB---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---o8BWXwoB---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:46:36 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---o8BWXwoB---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259399658.091110"] [ref "o0,14o0,9o9,5v28,14"]
+
+---o8BWXwoB---Z--
+
+---8CFPrR9v---A--
+[21/Oct/2026:14:46:46 +0000] 179259400618.551943 127.0.0.1 52296 127.0.0.1 8080
+---8CFPrR9v---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---8CFPrR9v---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:46:46 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---8CFPrR9v---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259400618.551943"] [ref "o0,14o0,9o9,5v28,14"]
+
+---8CFPrR9v---Z--
+
+---H4CwqZNR---A--
+[21/Oct/2026:14:46:56 +0000] 179259401610.857663 127.0.0.1 40268 127.0.0.1 8080
+---H4CwqZNR---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---H4CwqZNR---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:46:56 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---H4CwqZNR---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259401610.857663"] [ref "o0,14o0,9o9,5v28,14"]
+
+---H4CwqZNR---Z--
+
+---0ByblBZX---A--
+[21/Oct/2026:14:47:06 +0000] 179259402684.437935 127.0.0.1 35388 127.0.0.1 8080
+---0ByblBZX---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---0ByblBZX---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:47:06 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---0ByblBZX---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259402684.437935"] [ref "o0,14o0,9o9,5v28,14"]
+
+---0ByblBZX---Z--
+
+---Hk2ogoxn---A--
+[21/Oct/2026:14:47:16 +0000] 179259403645.520707 127.0.0.1 39896 127.0.0.1 8080
+---Hk2ogoxn---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---Hk2ogoxn---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:47:16 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---Hk2ogoxn---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259403645.520707"] [ref "o0,14o0,9o9,5v28,14"]
+
+---Hk2ogoxn---Z--
+
+---1CCsdLnu---A--
+[21/Oct/2026:14:47:26 +0000] 179259404659.399837 127.0.0.1 56948 127.0.0.1 8080
+---1CCsdLnu---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---1CCsdLnu---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:47:26 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---1CCsdLnu---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259404659.399837"] [ref "o0,14o0,9o9,5v28,14"]
+
+---1CCsdLnu---Z--
+
+---QyoEXAfV---A--
+[21/Oct/2026:14:47:36 +0000] 179259405622.212598 127.0.0.1 51602 127.0.0.1 8080
+---QyoEXAfV---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---QyoEXAfV---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:47:36 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---QyoEXAfV---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259405622.212598"] [ref "o0,14o0,9o9,5v28,14"]
+
+---QyoEXAfV---Z--
+
+---Jb63mga3---A--
+[21/Oct/2026:14:47:46 +0000] 179259406651.884560 127.0.0.1 48668 127.0.0.1 8080
+---Jb63mga3---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---Jb63mga3---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:47:46 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---Jb63mga3---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259406651.884560"] [ref "o0,14o0,9o9,5v28,14"]
+
+---Jb63mga3---Z--
+
+---Ocp3RnqQ---A--
+[21/Oct/2026:14:47:56 +0000] 179259407679.241183 127.0.0.1 58688 127.0.0.1 8080
+---Ocp3RnqQ---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---Ocp3RnqQ---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:47:56 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---Ocp3RnqQ---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259407679.241183"] [ref "o0,14o0,9o9,5v28,14"]
+
+---Ocp3RnqQ---Z--
+
+---x2GbM1Tk---A--
+[21/Oct/2026:14:48:06 +0000] 179259408693.844783 127.0.0.1 42176 127.0.0.1 8080
+---x2GbM1Tk---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---x2GbM1Tk---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:48:06 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---x2GbM1Tk---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259408693.844783"] [ref "o0,14o0,9o9,5v28,14"]
+
+---x2GbM1Tk---Z--
+
+---zGyUQbzh---A--
+[21/Oct/2026:14:48:16 +0000] 17925940965.469207 127.0.0.1 40010 127.0.0.1 8080
+---zGyUQbzh---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---zGyUQbzh---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:48:16 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---zGyUQbzh---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "17925940965.469207"] [ref "o0,14o0,9o9,5v28,14"]
+
+---zGyUQbzh---Z--
+
+---C4kwiLx6---A--
+[21/Oct/2026:14:48:26 +0000] 179259410671.394291 127.0.0.1 39328 127.0.0.1 8080
+---C4kwiLx6---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---C4kwiLx6---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:48:26 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---C4kwiLx6---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259410671.394291"] [ref "o0,14o0,9o9,5v28,14"]
+
+---C4kwiLx6---Z--
+
+---vm9KXzkV---A--
+[21/Oct/2026:14:48:36 +0000] 179259411664.222043 127.0.0.1 60212 127.0.0.1 8080
+---vm9KXzkV---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---vm9KXzkV---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:48:36 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---vm9KXzkV---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259411664.222043"] [ref "o0,14o0,9o9,5v28,14"]
+
+---vm9KXzkV---Z--
+
+172.18.0.1 - - [21/Oct/2026:14:48:42 +0000] "GET / HTTP/1.1" 200 7020 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36" "-"
+172.18.0.1 - - [21/Oct/2026:14:48:42 +0000] "GET /static/portal.css HTTP/1.1" 200 13172 "http://localhost:8081/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36" "-"
+172.18.0.1 - - [21/Oct/2026:14:48:45 +0000] "GET /employees HTTP/1.1" 200 4656 "http://localhost:8081/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36" "-"
+172.18.0.1 - - [21/Oct/2026:14:48:45 +0000] "GET /static/portal.css HTTP/1.1" 200 13172 "http://localhost:8081/employees" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36" "-"
+---pXL5mVjQ---A--
+[21/Oct/2026:14:48:47 +0000] 179259412760.817457 127.0.0.1 60330 127.0.0.1 8080
+---pXL5mVjQ---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---pXL5mVjQ---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:48:47 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---pXL5mVjQ---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259412760.817457"] [ref "o0,14o0,9o9,5v28,14"]
+
+---pXL5mVjQ---Z--
+
+---gBbeZOdn---A--
+[21/Oct/2026:14:48:57 +0000] 179259413730.051771 127.0.0.1 49798 127.0.0.1 8080
+---gBbeZOdn---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---gBbeZOdn---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:48:57 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---gBbeZOdn---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259413730.051771"] [ref "o0,14o0,9o9,5v28,14"]
+
+---gBbeZOdn---Z--
+
+2026/10/21 14:48:58 [error] 583#583: *133 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "localhost"] [uri "/employees"] [unique_id "179259413863.958872"] [ref ""], client: 172.18.0.1, server: localhost, request: "GET /employees?q=%27+OR+1%3D1+-- HTTP/1.1", host: "localhost:8081", referrer: "http://localhost:8081/employees"
+172.18.0.1 - - [21/Oct/2026:14:48:58 +0000] "GET /employees?q=%27+OR+1%3D1+-- HTTP/1.1" 403 548 "http://localhost:8081/employees" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36" "-"
+---004K2V4z---A--
+[21/Oct/2026:14:48:58 +0000] 179259413863.958872 172.18.0.1 60606 172.18.0.4 8080
+---004K2V4z---B--
+GET /employees?q=%27+OR+1%3D1+-- HTTP/1.1
+Sec-Fetch-User: ?1
+sec-ch-ua: "Not;A=Brand";v="8", "Chromium";v="150", "YaBrowser";v="26.8", "Yowser";v="2.5"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36
+Sec-Fetch-Site: same-origin
+sec-ch-ua-platform: "Windows"
+Referer: http://localhost:8081/employees
+Upgrade-Insecure-Requests: 1
+sec-ch-ua-mobile: ?0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Mode: navigate
+Connection: keep-alive
+Host: localhost:8081
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
+Cookie: nexus_fixed=eyJjc3JmIjoiOTcwYjlkNDcxOWU2M2VjZGEyMDdlZjllOGU1ZDJlZDJjZDJlZDY3MTc0MTJmZjRlIn0.atjNRg.r4ShT5anU6rx_wvLD_lKkAjg82s; nexus_vulnerable=eyJjc3JmIjoiODY3NzYxMDBlYzFmYWJmMjc1MmJhMjZkMjY1MmQyNWFkZDNmZjc5MjRiYmYxMDI4IiwidWlkIjoxfQ.atjNbQ.xcZ2K4ONCzWGyit9JfDXL6A_t0M
+Accept-Language: ru,en;q=0.9,kk;q=0.8
+
+---004K2V4z---F--
+HTTP/1.1 403
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:48:58 GMT
+Content-Length: 548
+Content-Type: text/html
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Access-Control-Max-Age: 3600
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: *
+
+---004K2V4z---H--
+ModSecurity: Warning. detected SQLi using libinjection. [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-942-APPLICATION-ATTACK-SQLI.conf"] [line "46"] [id "942100"] [rev ""] [msg "SQL Injection Attack Detected via libinjection"] [data "Matched Data: s&1c found within ARGS:q: ' OR 1=1 --"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-sqli"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-SQLI"] [tag "capec/1000/152/248/66"] [hostname "localhost"] [uri "/employees"] [unique_id "179259413863.958872"] [ref "v17,11"]
+ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "localhost"] [uri "/employees"] [unique_id "179259413863.958872"] [ref ""]
+
+---004K2V4z---Z--
+
+---ut7f0lBB---A--
+[21/Oct/2026:14:49:07 +0000] 179259414755.032597 127.0.0.1 57370 127.0.0.1 8080
+---ut7f0lBB---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---ut7f0lBB---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:49:07 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---ut7f0lBB---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259414755.032597"] [ref "o0,14o0,9o9,5v28,14"]
+
+---ut7f0lBB---Z--
+
+---462ugdxV---A--
+[21/Oct/2026:14:49:17 +0000] 179259415770.628501 127.0.0.1 38028 127.0.0.1 8080
+---462ugdxV---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---462ugdxV---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:49:17 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---462ugdxV---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259415770.628501"] [ref "o0,14o0,9o9,5v28,14"]
+
+---462ugdxV---Z--
+
+---BGYvlHLQ---A--
+[21/Oct/2026:14:49:27 +0000] 17925941676.726630 127.0.0.1 39478 127.0.0.1 8080
+---BGYvlHLQ---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---BGYvlHLQ---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:49:27 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---BGYvlHLQ---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "17925941676.726630"] [ref "o0,14o0,9o9,5v28,14"]
+
+---BGYvlHLQ---Z--
+
+---Qv4xJglD---A--
+[21/Oct/2026:14:49:37 +0000] 179259417754.380413 127.0.0.1 59918 127.0.0.1 8080
+---Qv4xJglD---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---Qv4xJglD---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:49:37 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---Qv4xJglD---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259417754.380413"] [ref "o0,14o0,9o9,5v28,14"]
+
+---Qv4xJglD---Z--
+
+---XstVb2hg---A--
+[21/Oct/2026:14:49:47 +0000] 179259418719.616054 127.0.0.1 57584 127.0.0.1 8080
+---XstVb2hg---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---XstVb2hg---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:49:47 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---XstVb2hg---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259418719.616054"] [ref "o0,14o0,9o9,5v28,14"]
+
+---XstVb2hg---Z--
+
+---8jYmMVFV---A--
+[21/Oct/2026:14:49:57 +0000] 179259419711.507282 127.0.0.1 49410 127.0.0.1 8080
+---8jYmMVFV---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---8jYmMVFV---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:49:57 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---8jYmMVFV---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259419711.507282"] [ref "o0,14o0,9o9,5v28,14"]
+
+---8jYmMVFV---Z--
+
+---lnQV3ktT---A--
+[21/Oct/2026:14:50:07 +0000] 179259420758.781597 127.0.0.1 54392 127.0.0.1 8080
+---lnQV3ktT---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---lnQV3ktT---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:50:07 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---lnQV3ktT---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259420758.781597"] [ref "o0,14o0,9o9,5v28,14"]
+
+---lnQV3ktT---Z--
+
+---fvRwbA89---A--
+[21/Oct/2026:14:50:17 +0000] 179259421792.876669 127.0.0.1 37640 127.0.0.1 8080
+---fvRwbA89---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---fvRwbA89---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:50:17 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---fvRwbA89---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259421792.876669"] [ref "o0,14o0,9o9,5v28,14"]
+
+---fvRwbA89---Z--
+
+---2zcd1JH7---A--
+[21/Oct/2026:14:50:27 +0000] 179259422718.098484 127.0.0.1 34126 127.0.0.1 8080
+---2zcd1JH7---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---2zcd1JH7---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:50:27 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---2zcd1JH7---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259422718.098484"] [ref "o0,14o0,9o9,5v28,14"]
+
+---2zcd1JH7---Z--
+
+---2nuNG7s0---A--
+[21/Oct/2026:14:50:37 +0000] 179259423743.286992 127.0.0.1 49498 127.0.0.1 8080
+---2nuNG7s0---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---2nuNG7s0---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:50:37 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---2nuNG7s0---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259423743.286992"] [ref "o0,14o0,9o9,5v28,14"]
+
+---2nuNG7s0---Z--
+
+---vHTyzMPc---A--
+[21/Oct/2026:14:50:47 +0000] 179259424717.692455 127.0.0.1 55708 127.0.0.1 8080
+---vHTyzMPc---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---vHTyzMPc---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:50:47 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---vHTyzMPc---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259424717.692455"] [ref "o0,14o0,9o9,5v28,14"]
+
+---vHTyzMPc---Z--
+
+---HoYryey0---A--
+[21/Oct/2026:14:50:57 +0000] 179259425797.793391 127.0.0.1 56204 127.0.0.1 8080
+---HoYryey0---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---HoYryey0---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:50:57 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---HoYryey0---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259425797.793391"] [ref "o0,14o0,9o9,5v28,14"]
+
+---HoYryey0---Z--
+
+---daceurku---A--
+[21/Oct/2026:14:51:07 +0000] 179259426753.279259 127.0.0.1 55870 127.0.0.1 8080
+---daceurku---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---daceurku---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:51:07 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---daceurku---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259426753.279259"] [ref "o0,14o0,9o9,5v28,14"]
+
+---daceurku---Z--
+
+---xhhFrwt7---A--
+[21/Oct/2026:14:51:17 +0000] 179259427754.610701 127.0.0.1 55652 127.0.0.1 8080
+---xhhFrwt7---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---xhhFrwt7---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:51:17 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---xhhFrwt7---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259427754.610701"] [ref "o0,14o0,9o9,5v28,14"]
+
+---xhhFrwt7---Z--
+
+---P0Hb21HN---A--
+[21/Oct/2026:14:51:27 +0000] 179259428710.374471 127.0.0.1 48724 127.0.0.1 8080
+---P0Hb21HN---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---P0Hb21HN---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:51:27 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---P0Hb21HN---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259428710.374471"] [ref "o0,14o0,9o9,5v28,14"]
+
+---P0Hb21HN---Z--
+
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /health HTTP/1.1" 200 34 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /login HTTP/1.1" 200 3491 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "POST /login HTTP/1.1" 302 189 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET / HTTP/1.1" 200 6663 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /login HTTP/1.1" 200 3491 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "POST /login HTTP/1.1" 302 189 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET / HTTP/1.1" 200 5906 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET / HTTP/1.1" 200 6663 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /tickets HTTP/1.1" 200 4654 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /documents HTTP/1.1" 200 4096 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /lab HTTP/1.1" 200 6551 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /employees?q=%D0%90%D0%BB%D0%B8%D1%81%D0%B0 HTTP/1.1" 200 3856 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /download?file=onboarding.txt&attachment=1 HTTP/1.1" 200 337 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /tickets/new HTTP/1.1" 200 3853 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "POST /tickets/new HTTP/1.1" 302 213 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /tickets/1006 HTTP/1.1" 200 3684 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /tickets HTTP/1.1" 200 5014 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /tickets/1003 HTTP/1.1" 200 4423 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "POST /tickets/1003 HTTP/1.1" 302 213 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /tickets/1003 HTTP/1.1" 200 4635 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /tickets/1003 HTTP/1.1" 200 4635 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /diagnostics HTTP/1.1" 200 3354 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "POST /diagnostics HTTP/1.1" 200 3752 "-" "python-requests/2.32.5" "-"
+2026/10/21 14:51:37 [error] 585#585: *157 [client 172.18.0.5] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/employees"] [unique_id "179259429767.218927"] [ref ""], client: 172.18.0.5, server: localhost, request: "GET /employees?q=%27+OR+1%3D1+--+&lab_case=b2b3ab94914640bbb9f2c6309aa7b48f HTTP/1.1", host: "waf:8080"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /employees?q=%27+OR+1%3D1+--+&lab_case=b2b3ab94914640bbb9f2c6309aa7b48f HTTP/1.1" 403 146 "-" "python-requests/2.32.5" "-"
+---Pg7cozoZ---A--
+[21/Oct/2026:14:51:37 +0000] 179259429767.218927 172.18.0.5 43388 172.18.0.4 8080
+---Pg7cozoZ---B--
+GET /employees?q=%27+OR+1%3D1+--+&lab_case=b2b3ab94914640bbb9f2c6309aa7b48f HTTP/1.1
+Host: waf:8080
+User-Agent: python-requests/2.32.5
+Cookie: nexus_fixed=eyJjc3JmIjoiZWY5MGY3YjUzZjk2NDAxYTk0MjMwMjhmYjM2ZDdlODhiMTJlYTE4ZjU5YmNiOTU2IiwidWlkIjoxfQ.atjReQ.aOE1UbUb76X0e0JCgKwOO-9jbiU
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+
+---Pg7cozoZ---F--
+HTTP/1.1 403
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:51:37 GMT
+Content-Length: 146
+Content-Type: text/html
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Access-Control-Max-Age: 3600
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: *
+
+---Pg7cozoZ---H--
+ModSecurity: Warning. detected SQLi using libinjection. [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-942-APPLICATION-ATTACK-SQLI.conf"] [line "46"] [id "942100"] [rev ""] [msg "SQL Injection Attack Detected via libinjection"] [data "Matched Data: s&1c found within ARGS:q: ' OR 1=1 -- "] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-sqli"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-SQLI"] [tag "capec/1000/152/248/66"] [hostname "waf"] [uri "/employees"] [unique_id "179259429767.218927"] [ref "v17,12"]
+ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/employees"] [unique_id "179259429767.218927"] [ref ""]
+
+---Pg7cozoZ---Z--
+
+2026/10/21 14:51:37 [error] 585#585: *157 [client 172.18.0.5] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `20' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 20)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/greeting"] [unique_id "179259429791.482847"] [ref ""], client: 172.18.0.5, server: localhost, request: "GET /greeting?name=%3Cscript%3Ealert%28%22LAB_XSS%22%29%3C%2Fscript%3E&lab_case=aca8d1bb6a07426c9332bd9a44e3f0c9 HTTP/1.1", host: "waf:8080"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /greeting?name=%3Cscript%3Ealert%28%22LAB_XSS%22%29%3C%2Fscript%3E&lab_case=aca8d1bb6a07426c9332bd9a44e3f0c9 HTTP/1.1" 403 146 "-" "python-requests/2.32.5" "-"
+---1BglnJCl---A--
+[21/Oct/2026:14:51:37 +0000] 179259429791.482847 172.18.0.5 43388 172.18.0.4 8080
+---1BglnJCl---B--
+GET /greeting?name=%3Cscript%3Ealert%28%22LAB_XSS%22%29%3C%2Fscript%3E&lab_case=aca8d1bb6a07426c9332bd9a44e3f0c9 HTTP/1.1
+Host: waf:8080
+User-Agent: python-requests/2.32.5
+Cookie: nexus_fixed=eyJjc3JmIjoiZWY5MGY3YjUzZjk2NDAxYTk0MjMwMjhmYjM2ZDdlODhiMTJlYTE4ZjU5YmNiOTU2IiwidWlkIjoxfQ.atjReQ.aOE1UbUb76X0e0JCgKwOO-9jbiU
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+
+---1BglnJCl---F--
+HTTP/1.1 403
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:51:37 GMT
+Content-Length: 146
+Content-Type: text/html
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Access-Control-Max-Age: 3600
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: *
+
+---1BglnJCl---H--
+ModSecurity: Warning. detected XSS using libinjection. [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "83"] [id "941100"] [rev ""] [msg "XSS Attack Detected via libinjection"] [data "Matched Data: XSS data found within ARGS:name: <script>alert(\x22LAB_XSS\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/greeting"] [unique_id "179259429791.482847"] [ref "v19,33t:utf8toUnicode,t:urlDecodeUni,t:htmlEntityDecode,t:jsDecode,t:cssDecode,t:removeNulls"]
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)<script[^>]*>[\s\S]*?' against variable `ARGS:name' (Value: `<script>alert("LAB_XSS")</script>' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "110"] [id "941110"] [rev ""] [msg "XSS Filter - Category 1: Script Tag Vector"] [data "Matched Data: <script> found within ARGS:name: <script>alert(\x22LAB_XSS\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/greeting"] [unique_id "179259429791.482847"] [ref "o0,8v19,33t:utf8toUnicode,t:urlDecodeUni,t:htmlEntityDecode,t:jsDecode,t:cssDecode,t:removeNulls"]
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)<[^0-9<>A-Z_a-z]*(?:[^\s\x0b\"'<>]*:)?[^0-9<>A-Z_a-z]*[^0-9A-Z_a-z]*?(?:s[^0-9A-Z_a-z]*?(?:c[^0-9A-Z_a-z]*?r[^0-9A-Z_a-z]*?i[^0-9A-Z_a-z]*?p[^0-9A-Z_a-z]*?t|t[^0-9A-Z_a-z]*?y[^0-9A-Z_a-z]*?l[^0-9A (4396 characters omitted)' against variable `ARGS:name' (Value: `<script>alert("LAB_XSS")</script>' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "253"] [id "941160"] [rev ""] [msg "NoScript XSS InjectionChecker: HTML Injection"] [data "Matched Data: <script found within ARGS:name: <script>alert(\x22LAB_XSS\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/greeting"] [unique_id "179259429791.482847"] [ref "o0,7v19,33t:utf8toUnicode,t:urlDecodeUni,t:htmlEntityDecode,t:jsDecode,t:cssDecode,t:removeNulls"]
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)\b(?:eval|set(?:timeout|interval)|new[\s\x0b]+Function|a(?:lert|tob)|btoa|(?:promp|impor)t|con(?:firm|sole\.(?:log|dir))|fetch)[\s\x0b]*[\(\{]' against variable `ARGS:name' (Value: `<script>alert("LAB_XSS")</script>' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "826"] [id "941390"] [rev ""] [msg "Javascript method detected"] [data "Matched Data: alert( found within ARGS:name: <script>alert(\x22LAB_XSS\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-nodejs"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/greeting"] [unique_id "179259429791.482847"] [ref "o8,6v19,33t:htmlEntityDecode,t:jsDecode"]
+ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `20' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 20)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/greeting"] [unique_id "179259429791.482847"] [ref ""]
+
+---1BglnJCl---Z--
+
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /tickets/1003 HTTP/1.1" 200 4635 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /tickets/1003 HTTP/1.1" 200 4635 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "POST /tickets/1003?lab_case=0ea0ef0222024087b6a3c5c201cb8d28 HTTP/1.1" 403 146 "-" "python-requests/2.32.5" "-"
+---0t0qntxA---A--
+[21/Oct/2026:14:51:37 +0000] 179259429773.921982 172.18.0.5 43388 172.18.0.4 8080
+---0t0qntxA---B--
+POST /tickets/1003?lab_case=0ea0ef0222024087b6a3c5c201cb8d28 HTTP/1.1
+Host: waf:8080
+User-Agent: python-requests/2.32.5
+Cookie: nexus_fixed=eyJjc3JmIjoiZWY5MGY3YjUzZjk2NDAxYTk0MjMwMjhmYjM2ZDdlODhiMTJlYTE4ZjU5YmNiOTU2IiwidWlkIjoxfQ.atjReQ.aOE1UbUb76X0e0JCgKwOO-9jbiU
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+2026/10/21 14:51:37 [error] 585#585: *157 [client 172.18.0.5] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `20' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 20)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/tickets/1003"] [unique_id "179259429773.921982"] [ref ""], client: 172.18.0.5, server: localhost, request: "POST /tickets/1003?lab_case=0ea0ef0222024087b6a3c5c201cb8d28 HTTP/1.1", host: "waf:8080"
+Content-Length: 119
+Content-Type: application/x-www-form-urlencoded
+
+---0t0qntxA---F--
+HTTP/1.1 403
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:51:37 GMT
+Content-Length: 146
+Content-Type: text/html
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Access-Control-Max-Age: 3600
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: *
+
+---0t0qntxA---H--
+ModSecurity: Warning. detected XSS using libinjection. [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "83"] [id "941100"] [rev ""] [msg "XSS Attack Detected via libinjection"] [data "Matched Data: XSS data found within ARGS:body: <script>alert(\x22LAB_STORED\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/tickets/1003"] [unique_id "179259429773.921982"] [ref "v406,36t:utf8toUnicode,t:urlDecodeUni,t:htmlEntityDecode,t:jsDecode,t:cssDecode,t:removeNulls"]
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)<script[^>]*>[\s\S]*?' against variable `ARGS:body' (Value: `<script>alert("LAB_STORED")</script>' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "110"] [id "941110"] [rev ""] [msg "XSS Filter - Category 1: Script Tag Vector"] [data "Matched Data: <script> found within ARGS:body: <script>alert(\x22LAB_STORED\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/tickets/1003"] [unique_id "179259429773.921982"] [ref "o0,8v406,36t:utf8toUnicode,t:urlDecodeUni,t:htmlEntityDecode,t:jsDecode,t:cssDecode,t:removeNulls"]
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)<[^0-9<>A-Z_a-z]*(?:[^\s\x0b\"'<>]*:)?[^0-9<>A-Z_a-z]*[^0-9A-Z_a-z]*?(?:s[^0-9A-Z_a-z]*?(?:c[^0-9A-Z_a-z]*?r[^0-9A-Z_a-z]*?i[^0-9A-Z_a-z]*?p[^0-9A-Z_a-z]*?t|t[^0-9A-Z_a-z]*?y[^0-9A-Z_a-z]*?l[^0-9A (4396 characters omitted)' against variable `ARGS:body' (Value: `<script>alert("LAB_STORED")</script>' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "253"] [id "941160"] [rev ""] [msg "NoScript XSS InjectionChecker: HTML Injection"] [data "Matched Data: <script found within ARGS:body: <script>alert(\x22LAB_STORED\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/tickets/1003"] [unique_id "179259429773.921982"] [ref "o0,7v406,36t:utf8toUnicode,t:urlDecodeUni,t:htmlEntityDecode,t:jsDecode,t:cssDecode,t:removeNulls"]
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)\b(?:eval|set(?:timeout|interval)|new[\s\x0b]+Function|a(?:lert|tob)|btoa|(?:promp|impor)t|con(?:firm|sole\.(?:log|dir))|fetch)[\s\x0b]*[\(\{]' against variable `ARGS:body' (Value: `<script>alert("LAB_STORED")</script>' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] [line "826"] [id "941390"] [rev ""] [msg "Javascript method detected"] [data "Matched Data: alert( found within ARGS:body: <script>alert(\x22LAB_STORED\x22)</script>"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-nodejs"] [tag "attack-xss"] [tag "xss-perf-disable"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-XSS"] [tag "capec/1000/152/242"] [hostname "waf"] [uri "/tickets/1003"] [unique_id "179259429773.921982"] [ref "o8,6v406,36t:htmlEntityDecode,t:jsDecode"]
+ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `20' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 20)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/tickets/1003"] [unique_id "179259429773.921982"] [ref ""]
+
+---0t0qntxA---Z--
+
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /tickets/1003 HTTP/1.1" 200 4635 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /diagnostics HTTP/1.1" 200 3354 "-" "python-requests/2.32.5" "-"
+2026/10/21 14:51:37 [error] 585#585: *157 [client 172.18.0.5] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/diagnostics"] [unique_id "179259429734.908143"] [ref ""], client: 172.18.0.5, server: localhost, request: "POST /diagnostics?lab_case=511b2f1e42a84d1aa91f3dc37968546a HTTP/1.1", host: "waf:8080"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "POST /diagnostics?lab_case=511b2f1e42a84d1aa91f3dc37968546a HTTP/1.1" 403 146 "-" "python-requests/2.32.5" "-"
+---sCjuD1Hc---A--
+[21/Oct/2026:14:51:37 +0000] 179259429734.908143 172.18.0.5 43388 172.18.0.4 8080
+---sCjuD1Hc---B--
+POST /diagnostics?lab_case=511b2f1e42a84d1aa91f3dc37968546a HTTP/1.1
+Host: waf:8080
+User-Agent: python-requests/2.32.5
+Cookie: nexus_fixed=eyJjc3JmIjoiZWY5MGY3YjUzZjk2NDAxYTk0MjMwMjhmYjM2ZDdlODhiMTJlYTE4ZjU5YmNiOTU2IiwidWlkIjoxfQ.atjReQ.aOE1UbUb76X0e0JCgKwOO-9jbiU
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Content-Length: 91
+Content-Type: application/x-www-form-urlencoded
+
+---sCjuD1Hc---F--
+HTTP/1.1 403
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:51:37 GMT
+Content-Length: 146
+Content-Type: text/html
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Access-Control-Max-Age: 3600
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: *
+
+---sCjuD1Hc---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?i)(?:b[\"'\)\[\x5c]*(?:(?:(?:\|\||&&)[\s\x0b]*)?\$[!#\(\*\-0-9\?@_a-\{]*)?\x5c?u[\"'\)\[\x5c]*(?:(?:(?:\|\||&&)[\s\x0b]*)?\$[!#\(\*\-0-9\?@_a-\{]*)?\x5c?s[\"'\)\[\x5c]*(?:(?:(?:\|\||&&)[\s\x0b]*)?\$ (10193 characters omitted)' against variable `ARGS:host' (Value: `127.0.0.1; echo LAB_TEST' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-932-APPLICATION-ATTACK-RCE.conf"] [line "186"] [id "932235"] [rev ""] [msg "Remote Command Execution: Unix Command Injection (command without evasion)"] [data "Matched Data: ; echo  found within ARGS:host: 127.0.0.1; echo LAB_TEST"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-shell"] [tag "platform-unix"] [tag "attack-rce"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-RCE"] [tag "capec/1000/152/248/88"] [hostname "waf"] [uri "/diagnostics"] [unique_id "179259429734.908143"] [ref "o9,7v404,24"]
+ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/diagnostics"] [unique_id "179259429734.908143"] [ref ""]
+
+---sCjuD1Hc---Z--
+
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /download?file=..%2Flab-only.txt&lab_case=e4bbe5c52bc04686b1f2428923b27fdc HTTP/1.1" 403 146 "-" "python-requests/2.32.5" "-"
+2026/10/21 14:51:37 [error] 585#585: *157 [client 172.18.0.5] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/download"] [unique_id "179259429735.717535"] [ref ""], client: 172.18.0.5, server: localhost, request: "GET /download?file=..%2Flab-only.txt&lab_case=e4bbe5c52bc04686b1f2428923b27fdc HTTP/1.1", host: "waf:8080"
+---fMCSL11K---A--
+[21/Oct/2026:14:51:37 +0000] 179259429735.717535 172.18.0.5 43388 172.18.0.4 8080
+---fMCSL11K---B--
+GET /download?file=..%2Flab-only.txt&lab_case=e4bbe5c52bc04686b1f2428923b27fdc HTTP/1.1
+Host: waf:8080
+User-Agent: python-requests/2.32.5
+Cookie: nexus_fixed=eyJjc3JmIjoiZWY5MGY3YjUzZjk2NDAxYTk0MjMwMjhmYjM2ZDdlODhiMTJlYTE4ZjU5YmNiOTU2IiwidWlkIjoxfQ.atjReQ.aOE1UbUb76X0e0JCgKwOO-9jbiU
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+
+---fMCSL11K---F--
+HTTP/1.1 403
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:51:37 GMT
+Content-Length: 146
+Content-Type: text/html
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Access-Control-Max-Age: 3600
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: *
+
+---fMCSL11K---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^|[/;\x5c])\.{2,3}[/;\x5c]' against variable `ARGS:file' (Value: `../lab-only.txt' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf"] [line "73"] [id "930110"] [rev ""] [msg "Path Traversal Attack (/../) or (/.../)"] [data "Matched Data: ../ found within ARGS:file: ../lab-only.txt"] [severity "2"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-lfi"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-LFI"] [tag "capec/1000/255/153/126"] [hostname "waf"] [uri "/download"] [unique_id "179259429735.717535"] [ref "o0,3v19,15"]
+ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE' (Value: `5' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 5)"] [data ""] [severity "0"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "anomaly-evaluation"] [tag "OWASP_CRS"] [hostname "waf"] [uri "/download"] [unique_id "179259429735.717535"] [ref ""]
+
+---fMCSL11K---Z--
+
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /tickets/1002 HTTP/1.1" 200 3772 "-" "python-requests/2.32.5" "-"
+172.18.0.5 - - [21/Oct/2026:14:51:37 +0000] "GET /tickets/1002 HTTP/1.1" 403 2703 "-" "python-requests/2.32.5" "-"
+---Af5xyFiz---A--
+[21/Oct/2026:14:51:37 +0000] 179259429718.845776 172.18.0.5 43388 172.18.0.4 8080
+---Af5xyFiz---B--
+GET /tickets/1002 HTTP/1.1
+Host: waf:8080
+User-Agent: python-requests/2.32.5
+Cookie: nexus_fixed=eyJjc3JmIjoiZWY5MGY3YjUzZjk2NDAxYTk0MjMwMjhmYjM2ZDdlODhiMTJlYTE4ZjU5YmNiOTU2IiwidWlkIjoxfQ.atjReQ.aOE1UbUb76X0e0JCgKwOO-9jbiU
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+
+---Af5xyFiz---F--
+HTTP/1.1 403
+X-Frame-Options: DENY
+Access-Control-Max-Age: 3600
+Referrer-Policy: same-origin
+Vary: Cookie
+Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'
+Cache-Control: no-store
+Connection: keep-alive
+X-Content-Type-Options: nosniff
+Content-Type: text/html
+Content-Length: 2703
+Date: Wed, 21 Oct 2026 14:51:37 GMT
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Server: nginx
+Server: nginx
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: *
+
+---Af5xyFiz---H--
+
+---Af5xyFiz---Z--
+
+---6hntYk2Q---A--
+[21/Oct/2026:14:51:37 +0000] 179259429735.225031 127.0.0.1 43796 127.0.0.1 8080
+---6hntYk2Q---B--
+GET /healthz HTTP/1.1
+Host: 127.0.0.1:8080
+User-Agent: curl/8.14.1
+Accept: */*
+
+---6hntYk2Q---F--
+HTTP/1.1 200
+Server: nginx
+Server: nginx
+Date: Wed, 21 Oct 2026 14:51:37 GMT
+Content-Length: 2
+Content-Type: application/octet-stream
+Content-Type: text/plain
+Connection: keep-alive
+
+---6hntYk2Q---H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:^([\d.]+|\[[\da-f:]+\]|[\da-f:]+)(:[\d]+)?$)' against variable `REQUEST_HEADERS:Host' (Value: `127.0.0.1:8080' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [rev ""] [msg "Host header is a numeric IP address"] [data "127.0.0.1:8080"] [severity "4"] [ver "OWASP_CRS/4.30.0"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-protocol"] [tag "paranoia-level/1"] [tag "OWASP_CRS"] [tag "OWASP_CRS/PROTOCOL-ENFORCEMENT"] [tag "capec/1000/210/272"] [hostname "127.0.0.1"] [uri "/healthz"] [unique_id "179259429735.225031"] [ref "o0,14o0,9o9,5v28,14"]
+
+---6hntYk2Q---Z--
+

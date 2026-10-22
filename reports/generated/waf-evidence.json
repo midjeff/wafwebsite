@@ -1,0 +1,104 @@
+{
+  "complete": true,
+  "evidence": [
+    {
+      "name": "SQLi",
+      "case_id": "37abea45235245c59e5255a2fcb15d64",
+      "passed": true,
+      "rules": [
+        {
+          "rule_id": "942100",
+          "message": "SQL Injection Attack Detected via libinjection"
+        },
+        {
+          "rule_id": "949110",
+          "message": "Inbound Anomaly Score Exceeded (Total Score: 5)"
+        }
+      ]
+    },
+    {
+      "name": "Reflected XSS",
+      "case_id": "84f3d34bf2fb49d1bba2db9513ba6657",
+      "passed": true,
+      "rules": [
+        {
+          "rule_id": "941100",
+          "message": "XSS Attack Detected via libinjection"
+        },
+        {
+          "rule_id": "941110",
+          "message": "XSS Filter - Category 1: Script Tag Vector"
+        },
+        {
+          "rule_id": "941160",
+          "message": "NoScript XSS InjectionChecker: HTML Injection"
+        },
+        {
+          "rule_id": "941390",
+          "message": "Javascript method detected"
+        },
+        {
+          "rule_id": "949110",
+          "message": "Inbound Anomaly Score Exceeded (Total Score: 20)"
+        }
+      ]
+    },
+    {
+      "name": "Stored XSS",
+      "case_id": "a2bfd846b4d14881b4e4c9a1b9826a45",
+      "passed": true,
+      "rules": [
+        {
+          "rule_id": "941100",
+          "message": "XSS Attack Detected via libinjection"
+        },
+        {
+          "rule_id": "941110",
+          "message": "XSS Filter - Category 1: Script Tag Vector"
+        },
+        {
+          "rule_id": "941160",
+          "message": "NoScript XSS InjectionChecker: HTML Injection"
+        },
+        {
+          "rule_id": "941390",
+          "message": "Javascript method detected"
+        },
+        {
+          "rule_id": "949110",
+          "message": "Inbound Anomaly Score Exceeded (Total Score: 20)"
+        }
+      ]
+    },
+    {
+      "name": "Command Injection",
+      "case_id": "8b427058bcac41039fdf5e9ae08349f7",
+      "passed": true,
+      "rules": [
+        {
+          "rule_id": "932235",
+          "message": "Remote Command Execution: Unix Command Injection (command without evasion)"
+        },
+        {
+          "rule_id": "949110",
+          "message": "Inbound Anomaly Score Exceeded (Total Score: 5)"
+        }
+      ]
+    },
+    {
+      "name": "Path Traversal",
+      "case_id": "e699def8e1854be987a7da3ece1ba7e7",
+      "passed": true,
+      "rules": [
+        {
+          "rule_id": "930110",
+          "message": "Path Traversal Attack (/../) or (/.../)"
+        },
+        {
+          "rule_id": "949110",
+          "message": "Inbound Anomaly Score Exceeded (Total Score: 5)"
+        }
+      ]
+    }
+  ]
+}

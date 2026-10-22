@@ -1,0 +1,114 @@
+{
+  "mode": "vulnerable",
+  "base": "http://vulnerable:5000",
+  "platform": "linux",
+  "results": [
+    {
+      "name": "login_alice",
+      "passed": true,
+      "detail": "Separate authenticated cookie jar"
+    },
+    {
+      "name": "login_bob",
+      "passed": true,
+      "detail": "Separate authenticated cookie jar"
+    },
+    {
+      "name": "normal_/",
+      "passed": true,
+      "detail": "Page content verified"
+    },
+    {
+      "name": "normal_/tickets",
+      "passed": true,
+      "detail": "Page content verified"
+    },
+    {
+      "name": "normal_/documents",
+      "passed": true,
+      "detail": "Page content verified"
+    },
+    {
+      "name": "normal_/lab",
+      "passed": true,
+      "detail": "Page content verified"
+    },
+    {
+      "name": "normal_search",
+      "passed": true,
+      "detail": "Normal search returns exactly one employee"
+    },
+    {
+      "name": "normal_download",
+      "passed": true,
+      "detail": "Document content and attachment header"
+    },
+    {
+      "name": "normal_create",
+      "passed": true,
+      "detail": "Ticket saved and visible in a later GET"
+    },
+    {
+      "name": "normal_comment",
+      "passed": true,
+      "detail": "Bob sees Alice's saved comment on shared ticket"
+    },
+    {
+      "name": "normal_ping",
+      "passed": true,
+      "detail": "linux: loopback ping receives a reply"
+    },
+    {
+      "name": "SQLi",
+      "passed": true,
+      "detail": "Exploitation effect observed in response or persisted data",
+      "status": 200,
+      "case_id": "bf39c5b77cd84d18a7ace85ea79cab69",
+      "attack": true
+    },
+    {
+      "name": "Reflected XSS",
+      "passed": true,
+      "detail": "Exploitation effect observed in response or persisted data",
+      "status": 200,
+      "case_id": "633819a074514fda916bd6eddad89c33",
+      "attack": true
+    },
+    {
+      "name": "stored_clean_precondition",
+      "passed": true,
+      "detail": "No old stored payload; run clean-comments before each mode"
+    },
+    {
+      "name": "Stored XSS",
+      "passed": true,
+      "detail": "Exploitation effect observed in response or persisted data",
+      "status": 302,
+      "case_id": "7ea37fbcb2b44249a0c077da34bfbe00",
+      "attack": true
+    },
+    {
+      "name": "Command Injection",
+      "passed": true,
+      "detail": "Exploitation effect observed in response or persisted data",
+      "status": 200,
+      "case_id": "8683631e81d0498e94bdc1a670ea3aba",
+      "attack": true
+    },
+    {
+      "name": "Path Traversal",
+      "passed": true,
+      "detail": "Exploitation effect observed in response or persisted data",
+      "status": 200,
+      "case_id": "20ea1776f4aa441f9b293e45aeff0cec",
+      "attack": true
+    },
+    {
+      "name": "IDOR",
+      "passed": true,
+      "detail": "Alice reads Bob's ticket; WAF does not enforce ownership",
+      "status": 200
+    }
+  ],
+  "xss_scope": "HTTP markup only; browser JavaScript execution requires the documented manual check"
+}

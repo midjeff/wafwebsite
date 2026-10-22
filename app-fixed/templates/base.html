@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ title }} · NEXUS</title><link rel="stylesheet" href="{{ url_for('static', filename='portal.css') }}"></head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="{{ url_for('dashboard') }}"><span class="brand-icon">n</span> NEXUS<span class="brand-dot">•</span></a>
+  <div class="workspace"><span class="workspace-icon">N</span><div>Рабочее пространство<small>Учебная компания</small></div></div>
+  <p class="nav-label">РАБОЧЕЕ МЕСТО</p>
+  <nav aria-label="Основное меню">
+  {% for endpoint, icon, label in [('dashboard','◈','Обзор'),('tickets','▤','Мои заявки'),('employees','◎','Сотрудники'),('documents','▧','База знаний'),('diagnostics','⌁','Диагностика')] %}
+    <a class="nav-link {% if request.endpoint == endpoint or (endpoint == 'tickets' and request.endpoint in ['ticket','new_ticket']) %}active{% endif %}" href="{{ url_for(endpoint) }}"><span aria-hidden="true">{{ icon }}</span>{{ label }}</a>
+  {% endfor %}
+  </nav>
+  <p class="nav-label lab-label">УЧЕБНЫЙ СТЕНД</p>
+  <a class="nav-link {% if request.endpoint == 'lab' %}active{% endif %}" href="{{ url_for('lab') }}"><span aria-hidden="true">⌘</span>Лабораторная работа</a>
+  <div class="sidebar-bottom"><span class="status-dot"></span> Локальная среда<small>Только искусственные данные</small></div>
+</aside>
+<div class="main-shell">
+  <header class="topbar"><div class="breadcrumb">Портал сотрудников <span>/</span> <strong>{{ title }}</strong></div><div class="profile">{% if g.user %}<span class="avatar small">{{ g.user.initials }}</span><div>{{ g.user.name }}<small>{{ g.user.role }}</small></div><form method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="logout" aria-label="Выйти">↗</button></form>{% else %}<a href="{{ url_for('login') }}">Войти в портал ↗</a>{% endif %}</div></header>
+  <main id="main"><div class="environment"><span class="env-badge {{ config.VERSION_STYLE }}"><span class="status-dot"></span>{{ config.VERSION_LABEL }}</span><span>Локальная лаборатория · Flask / SQLite</span></div>{% block content %}{% endblock %}</main>
+  <footer>NEXUS · IT рядом, работа в порядке.<span>Учебный портал / 2026</span></footer>
+</div>
+</body></html>

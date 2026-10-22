@@ -1,0 +1,114 @@
+{
+  "mode": "waf",
+  "base": "http://waf:8080",
+  "platform": "linux",
+  "results": [
+    {
+      "name": "login_alice",
+      "passed": true,
+      "detail": "Separate authenticated cookie jar"
+    },
+    {
+      "name": "login_bob",
+      "passed": true,
+      "detail": "Separate authenticated cookie jar"
+    },
+    {
+      "name": "normal_/",
+      "passed": true,
+      "detail": "Page content verified"
+    },
+    {
+      "name": "normal_/tickets",
+      "passed": true,
+      "detail": "Page content verified"
+    },
+    {
+      "name": "normal_/documents",
+      "passed": true,
+      "detail": "Page content verified"
+    },
+    {
+      "name": "normal_/lab",
+      "passed": true,
+      "detail": "Page content verified"
+    },
+    {
+      "name": "normal_search",
+      "passed": true,
+      "detail": "Normal search returns exactly one employee"
+    },
+    {
+      "name": "normal_download",
+      "passed": true,
+      "detail": "Document content and attachment header"
+    },
+    {
+      "name": "normal_create",
+      "passed": true,
+      "detail": "Ticket saved and visible in a later GET"
+    },
+    {
+      "name": "normal_comment",
+      "passed": true,
+      "detail": "Bob sees Alice's saved comment on shared ticket"
+    },
+    {
+      "name": "normal_ping",
+      "passed": true,
+      "detail": "linux: loopback ping receives a reply"
+    },
+    {
+      "name": "SQLi",
+      "passed": true,
+      "detail": "HTTP block observed; correlated audit evidence is checked separately",
+      "status": 403,
+      "case_id": "b2b3ab94914640bbb9f2c6309aa7b48f",
+      "attack": true
+    },
+    {
+      "name": "Reflected XSS",
+      "passed": true,
+      "detail": "HTTP block observed; correlated audit evidence is checked separately",
+      "status": 403,
+      "case_id": "aca8d1bb6a07426c9332bd9a44e3f0c9",
+      "attack": true
+    },
+    {
+      "name": "stored_clean_precondition",
+      "passed": true,
+      "detail": "No old stored payload; run clean-comments before each mode"
+    },
+    {
+      "name": "Stored XSS",
+      "passed": true,
+      "detail": "HTTP block observed; correlated audit evidence is checked separately",
+      "status": 403,
+      "case_id": "0ea0ef0222024087b6a3c5c201cb8d28",
+      "attack": true
+    },
+    {
+      "name": "Command Injection",
+      "passed": true,
+      "detail": "HTTP block observed; correlated audit evidence is checked separately",
+      "status": 403,
+      "case_id": "511b2f1e42a84d1aa91f3dc37968546a",
+      "attack": true
+    },
+    {
+      "name": "Path Traversal",
+      "passed": true,
+      "detail": "HTTP block observed; correlated audit evidence is checked separately",
+      "status": 403,
+      "case_id": "e4bbe5c52bc04686b1f2428923b27fdc",
+      "attack": true
+    },
+    {
+      "name": "IDOR",
+      "passed": false,
+      "detail": "Alice reads Bob's ticket; WAF does not enforce ownership",
+      "status": 403
+    }
+  ],
+  "xss_scope": "HTTP markup only; browser JavaScript execution requires the documented manual check"
+}

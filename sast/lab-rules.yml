@@ -1,0 +1,49 @@
+rules:
+  - id: lab-sql-string-construction
+    languages: [python]
+    severity: ERROR
+    message: SQL assembled with string interpolation reaches execute; inspect parameter binding.
+    metadata:
+      origin: custom-educational
+      cwe: 'CWE-89: SQL Injection'
+    patterns:
+      - pattern-inside: |
+          $SQL = f"..."
+          ...
+      - pattern: $DB.execute($SQL)
+  - id: lab-shell-enabled
+    languages: [python]
+    severity: WARNING
+    message: Shell-enabled process execution; review whether untrusted input reaches the command.
+    metadata:
+      origin: custom-educational
+      cwe: 'CWE-78: OS Command Injection'
+    pattern: $CALL(..., shell=True, ...)
+  - id: lab-jinja-autoescape-bypass
+    languages: [generic]
+    severity: WARNING
+    message: Template explicitly disables escaping; review the origin of the rendered value.
+    metadata:
+      origin: custom-educational
+      cwe: 'CWE-79: Cross-site Scripting'
+    pattern-regex: '\{\{[^}\n]+\|\s*safe\s*\}\}'
+  - id: lab-request-to-send-file
+    languages: [python]
+    severity: WARNING
+    message: Request-controlled file path reaches send_file; validate resolved directory containment.
+    mode: taint
+    metadata:
+      origin: custom-educational
+      cwe: 'CWE-22: Path Traversal'
+    pattern-sources:
+      - pattern: request.args.get(...)
+    pattern-sinks:
+      - pattern: send_file($PATH, ...)
+        focus-metavariable: $PATH
+    pattern-sanitizers:
+      - patterns:
+          - pattern-inside: |
+              $PATH.relative_to($ROOT)
+              ...
+          - pattern: $PATH
+        by-side-effect: true

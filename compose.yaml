@@ -1,0 +1,148 @@
+name: nexus-security-lab
+
+x-app: &app
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 64
+  mem_limit: 256m
+  cpus: 1.0
+  tmpfs: ["/tmp:size=16m,mode=1777"]
+  sysctls:
+    net.ipv4.ping_group_range: "0 2147483647"
+  networks: [lab]
+
+services:
+  vulnerable:
+    <<: *app
+    build:
+      context: .
+      args: {APP_DIR: app}
+    ports: ["127.0.0.1:8080:5000"]
+    volumes: [vulnerable_data:/data]
+
+  fixed:
+    <<: *app
+    build:
+      context: .
+      args: {APP_DIR: app-fixed}
+    ports: ["127.0.0.1:8082:5000"]
+    volumes: [fixed_data:/data]
+
+  waf:
+    image: owasp/modsecurity-crs:4.30.0-nginx-202610180210@sha256:7698c48a41a43138ae317feeec964d1515b861cc1d9e50617bc1cdfe9f314e1d
+    restart: unless-stopped
+    env_file: waf/waf.env
+    ports: ["127.0.0.1:8081:8080"]
+    depends_on:
+      vulnerable: {condition: service_healthy}
+    networks: [lab]
+    mem_limit: 512m
+    pids_limit: 128
+    healthcheck:
+      test: [CMD, curl, -fsS, http://127.0.0.1:8080/healthz]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+
+  checks:
+    profiles: [checks]
+    build:
+      context: .
+      dockerfile: tests/Dockerfile
+    volumes:
+      - ./reports/generated:/reports
+      - ./logs:/logs:ro
+    networks: [lab]
+    depends_on:
+      vulnerable: {condition: service_healthy}
+      fixed: {condition: service_healthy}
+      waf: {condition: service_healthy}
+
+  sonar-db:
+    profiles: [analysis]
+    image: postgres:17.9-bookworm@sha256:47f917f7409eacd22fc5dfb1dee634e1b55cf0c01d1a7eb701be2227a03e0641
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar-lab-only
+      POSTGRES_DB: sonar
+    volumes: [sonar_db:/var/lib/postgresql/data]
+    networks: [analysis]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U sonar -d sonar"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+
+  sonarqube:
+    profiles: [analysis]
+    image: sonarqube:26.10.0.133078-community@sha256:0b3408443fb6a311253de27941b10977c9b977fd53be2265947bfe14161308b8
+    ports: ["127.0.0.1:9000:9000"]
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://sonar-db:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar-lab-only
+    volumes:
+      - sonar_data:/opt/sonarqube/data
+      - sonar_extensions:/opt/sonarqube/extensions
+      - sonar_logs:/opt/sonarqube/logs
+    depends_on:
+      sonar-db: {condition: service_healthy}
+    networks: [analysis]
+    mem_limit: 4g
+    ulimits:
+      nofile: {soft: 131072, hard: 131072}
+      nproc: 8192
+    healthcheck:
+      test: [CMD-SHELL, 'curl -fsS http://127.0.0.1:9000/api/system/status | grep -q ''"status":"UP"''']
+      interval: 15s
+      timeout: 5s
+      retries: 40
+      start_period: 60s
+
+  scanner:
+    profiles: [tools]
+    image: sonarsource/sonar-scanner-cli:12.2.0.4256_8.1.0@sha256:a3f4215076706c95a17a68c19322ee916e40a3acd081a8c1a1e839e0194afa57
+    environment:
+      SONAR_HOST_URL: http://sonarqube:9000
+      SONAR_TOKEN: ${SONAR_TOKEN:-}
+    working_dir: /usr/src
+    volumes:
+      - ./app:/usr/src/app:ro
+      - ./app-fixed:/usr/src/app-fixed:ro
+      - ./sast:/usr/src/sast:ro
+      - ./reports/generated:/reports
+      - scanner_cache:/opt/sonar-scanner/.sonar/cache
+    networks: [analysis]
+
+  semgrep:
+    profiles: [tools]
+    image: semgrep/semgrep:1.181.0@sha256:81474464c1f07483ba0682a44787fd93c91397419762a04abe2bafaae396304b
+    working_dir: /workspace
+    entrypoint: [python, /workspace/scripts/run_semgrep.py]
+    volumes:
+      - ./app:/workspace/app:ro
+      - ./app-fixed:/workspace/app-fixed:ro
+      - ./sast:/workspace/sast:ro
+      - ./scripts:/workspace/scripts:ro
+      - ./reports/generated:/workspace/reports/generated
+    networks: [analysis]
+
+volumes:
+  vulnerable_data:
+  fixed_data:
+  sonar_db:
+  sonar_data:
+  sonar_extensions:
+  sonar_logs:
+  scanner_cache:
+
+networks:
+  lab:
+    internal: false
+  analysis:

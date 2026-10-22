@@ -1,0 +1,114 @@
+{
+  "mode": "fixed",
+  "base": "http://127.0.0.1:8082",
+  "platform": "windows",
+  "results": [
+    {
+      "name": "login_alice",
+      "passed": true,
+      "detail": "Separate authenticated cookie jar"
+    },
+    {
+      "name": "login_bob",
+      "passed": true,
+      "detail": "Separate authenticated cookie jar"
+    },
+    {
+      "name": "normal_/",
+      "passed": true,
+      "detail": "Page content verified"
+    },
+    {
+      "name": "normal_/tickets",
+      "passed": true,
+      "detail": "Page content verified"
+    },
+    {
+      "name": "normal_/documents",
+      "passed": true,
+      "detail": "Page content verified"
+    },
+    {
+      "name": "normal_/lab",
+      "passed": true,
+      "detail": "Page content verified"
+    },
+    {
+      "name": "normal_search",
+      "passed": true,
+      "detail": "Normal search returns exactly one employee"
+    },
+    {
+      "name": "normal_download",
+      "passed": true,
+      "detail": "Document content and attachment header"
+    },
+    {
+      "name": "normal_create",
+      "passed": true,
+      "detail": "Ticket saved and visible in a later GET"
+    },
+    {
+      "name": "normal_comment",
+      "passed": true,
+      "detail": "Bob sees Alice's saved comment on shared ticket"
+    },
+    {
+      "name": "normal_ping",
+      "passed": true,
+      "detail": "windows: loopback ping receives a reply"
+    },
+    {
+      "name": "SQLi",
+      "passed": true,
+      "detail": "Remediation behavior checked without WAF",
+      "status": 200,
+      "case_id": "89a9a12e56f24f858933af1c81873ca8",
+      "attack": true
+    },
+    {
+      "name": "Reflected XSS",
+      "passed": true,
+      "detail": "Remediation behavior checked without WAF",
+      "status": 200,
+      "case_id": "bd0693a43662402da68a050e95cc24d0",
+      "attack": true
+    },
+    {
+      "name": "stored_clean_precondition",
+      "passed": true,
+      "detail": "No old stored payload; run clean-comments before each mode"
+    },
+    {
+      "name": "Stored XSS",
+      "passed": true,
+      "detail": "Remediation behavior checked without WAF",
+      "status": 302,
+      "case_id": "29ada726760442a897199b02aecabf4b",
+      "attack": true
+    },
+    {
+      "name": "Command Injection",
+      "passed": true,
+      "detail": "Remediation behavior checked without WAF",
+      "status": 400,
+      "case_id": "87f0568860bb4f37999a763d1abbcc46",
+      "attack": true
+    },
+    {
+      "name": "Path Traversal",
+      "passed": true,
+      "detail": "Remediation behavior checked without WAF",
+      "status": 400,
+      "case_id": "e05788d383564cf382999a4707ba92e5",
+      "attack": true
+    },
+    {
+      "name": "IDOR",
+      "passed": true,
+      "detail": "Bob owns ticket; Alice denied",
+      "status": 403
+    }
+  ],
+  "xss_scope": "HTTP markup only; browser JavaScript execution requires the documented manual check"
+}

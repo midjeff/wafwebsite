@@ -1,0 +1,2 @@
+LAB_TRAVERSAL_PROOF
+This is a synthetic training file outside the documents directory. No real secrets.

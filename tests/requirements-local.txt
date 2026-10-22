@@ -1,0 +1,4 @@
+-r ../requirements.txt
+-r requirements.txt
+PyYAML==6.0.3
+jsonschema==4.25.1

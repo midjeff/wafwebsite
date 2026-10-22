@@ -1,0 +1,46 @@
+{
+  "version": "1.181.0",
+  "utc": "2026-10-21T13:45:46.411338+00:00",
+  "results": [
+    {
+      "variant": "app",
+      "group": "registry",
+      "exit_code": 0,
+      "technical_success": true,
+      "findings": 0,
+      "files_scanned": 4,
+      "errors": [],
+      "config_sha256": "e3c25cf9b28ddfd3cb1b7f240d2fc0998734199efa539fa0b10281487a602e79"
+    },
+    {
+      "variant": "app",
+      "group": "custom",
+      "exit_code": 0,
+      "technical_success": true,
+      "findings": 5,
+      "files_scanned": 22,
+      "errors": [],
+      "config_sha256": "07bcc599e325f1839597b09e89a94753115326b3d22d782ea1da92fcc6478522"
+    },
+    {
+      "variant": "app-fixed",
+      "group": "registry",
+      "exit_code": 0,
+      "technical_success": true,
+      "findings": 0,
+      "files_scanned": 4,
+      "errors": [],
+      "config_sha256": "e3c25cf9b28ddfd3cb1b7f240d2fc0998734199efa539fa0b10281487a602e79"
+    },
+    {
+      "variant": "app-fixed",
+      "group": "custom",
+      "exit_code": 0,
+      "technical_success": true,
+      "findings": 1,
+      "files_scanned": 22,
+      "errors": [],
+      "config_sha256": "07bcc599e325f1839597b09e89a94753115326b3d22d782ea1da92fcc6478522"
+    }
+  ]
+}
