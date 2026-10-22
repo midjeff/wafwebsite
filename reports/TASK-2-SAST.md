@@ -6,22 +6,30 @@ Two complete source trees were analyzed independently: `app/` (vulnerable) and `
 
 **Semgrep Community Edition 1.181.0 actually ran on Windows.** The scan used `--oss-only`, disabled metrics/version checks and `--strict`. The official `p/python` Registry response was preserved locally, with 151 rules and their metadata/licenses. Four clearly identified educational rules were run separately. JSON, SARIF and tool logs are retained for all four scans. No Semgrep Pro engine or service login was used.
 
-**SonarQube Community Build was not executed.** Docker is now installed and the application/WAF stack is running, but SonarQube setup, scanning and export have not been performed. Two project configurations, persistent services, a scanner and a paginated API export script are prepared. Its counts and rule IDs are **NOT RUN**, never zero-by-assumption. After initial setup, run `scripts/lab.ps1 scan-sonar` and append actual observations. See [setup](SONAR-SETUP.md).
+**SonarQube Community Build 26.10.0.133078 ran on both source trees.** The current results, triage and JSON exports are below; the local server setup is documented in [setup](SONAR-SETUP.md).
 
 | Actual Semgrep run | Files scanned | Findings | Technical result |
 |---|---:|---:|---|
-| Vulnerable / Registry | 4 Python files | 0 | PASS |
-| Fixed / Registry | 4 Python files | 0 | PASS |
-| Vulnerable / custom | 22 files | 5 | PASS |
-| Fixed / custom | 22 files | 1 | PASS |
+| Vulnerable / Registry | 4 Python files | 0 before / 0 after | PASS |
+| Fixed / Registry | 4 before / 5 after Python files | 0 before / 0 after | PASS |
+| Vulnerable / custom | 22 files before / 21 after | 5 before / 5 after | PASS |
+| Fixed / custom | 22 files before / 22 after | 1 before / 1 after | PASS |
 
-The generic template rule accounts for the larger custom scan scope. All four JSON reports have no scanner errors. A successful scan can contain findings: the wrapper does not use `--error`, but does fail for a non-zero technical exit, parse errors or zero scanned files. Exact results and rule-set hashes are in `generated/semgrep-summary.json`. These are the earlier Windows Semgrep results, retained unchanged; Semgrep was not rerun during the 22 October ping/container fix.
+The generic template rule accounts for the larger custom scan scope. All JSON reports have no scanner errors. A successful scan can contain findings: the wrapper does not use `--error`, but does fail for a non-zero technical exit, parse errors or zero scanned files. The original `generated/semgrep-summary.json` is retained unchanged. A second complete Semgrep run after the portal and brute-force changes is saved separately in `generated/sast-after-bruteforce/`; the baseline is `generated/sast-before-bruteforce/`. Both runs succeeded with the same rules and the same finding counts: Registry 0/0 and custom 5/1.
 
 ## Classification and free-edition limits
 
 A confirmed vulnerability is supported by a reachable unsafe data flow and a demonstrated security failure. A Security Hotspot flags a security-sensitive operation for review; it is not proof of exploitability. A code-quality issue may concern complexity, duplication or maintainability without a security failure. These categories must remain separate during SonarQube triage.
 
 Community Build is used without paid branch-analysis or advanced taint-analysis assumptions. The two separate projects avoid needing commercial branch comparison. The [official feature comparison](https://docs.sonarsource.com/sonarqube-community-build/feature-comparison-table) and [SonarQube repository](https://github.com/SonarSource/sonarqube) distinguish Community Build from commercial capabilities. Actual detection depends on the installed analyzer and active profile, so no universal SQLi/XSS discovery is promised.
+
+**SonarQube Community Build 26.10.0.133078 was run on both current source trees.** `nexus-vulnerable` indexed 25 files; `nexus-fixed` indexed 27. Exported JSON includes Issues, Hotspots, Compute Engine task and quality gate for each project. The scan reported 3 Issues / 0 Hotspots in vulnerable and 1 Issue / 0 Hotspots in fixed. Both quality gates returned `OK`. After CSRF review, S4502 was transitioned to `FALSE_POSITIVE` in both projects; the refreshed issue exports retain the finding and its triage status. Raw JSON is in `generated/sonar-*.json`.
+
+Triage: `Web:S5247` (MAJOR, `app/templates/greeting.html:1` and `app/templates/ticket.html:1`) flags the intentional `|safe` sinks in the vulnerable templates; the fixed project has no such issues after Jinja autoescaping was restored. `python:S4502` (CRITICAL, `app/main.py:29` and `app-fixed/main.py:30`) says to check whether CSRF protection is disabled. The app factory itself does not enable Flask-WTF, but both implementations have an explicit global defense: `app/main.py:45-51` and `app-fixed/main.py:50-58` validate a random per-session token for every POST before a route executes, using `secrets.compare_digest`. Tokens are generated by `secrets.token_hex(24)` in the context processor. This includes `POST /login`, `/logout`, `/tickets/new`, `/tickets/<int:ticket_id>`, and `/diagnostics`; their forms include the hidden token. `SameSite=Lax` is an additional cookie defense, not the basis for dismissing the finding.
+
+Direct fixed-app tests bypass the WAF and use a temporary isolated SQLite database. `tests/csrf_checks.py` passed **17/17**: missing, invalid and another-session tokens were rejected with HTTP 400 on all five POST routes; valid tokens from the same session were accepted for login and ticket creation. The machine-readable results are in `generated/csrf-checks.json`. No CSRF defect was reproduced, so the Sonar findings were documented in each issue's Sonar comment and transitioned through the supported workflow to `FALSE_POSITIVE` in `nexus-vulnerable` and `nexus-fixed`. The intended vulnerable SQLi/XSS/command/path/IDOR demonstrations were not modified. There were 0 Security Hotspots.
+
+Neither this Sonar analysis nor the selected Semgrep rules reported SQL injection, command injection, path traversal, IDOR or absence of brute-force limits. Their absence is not evidence of safety: runtime behavior confirms the first five defects in the vulnerable version, and login throttling is separately verified by bounded HTTP tests. IDOR in particular needs authorization-context review.
 
 Semgrep CE findings also depend on the selected rules and analysis scope. The Registry scan's zero findings did **not** establish safety: dynamic checks demonstrate several vulnerabilities in the same source. We did not modify the source or invent rules based on known filenames to make every class appear detected. IDOR remains a contextual authorization problem, confirmed by two-session checks rather than an artificial rule.
 
@@ -37,7 +45,7 @@ The following rule IDs and locations are taken from the actual custom Semgrep JS
 - Cause: request data becomes SQL syntax rather than a bound value. An authenticated user can broaden the employee query and retrieve additional synthetic rows.
 - Confirmation: normal search `Алиса` returned one employee; `' OR 1=1 -- ` returned four, using both Flask test client and real HTTP.
 - Fix: `app-fixed/main.py:161–163` uses `WHERE name LIKE ?` and a parameter tuple. The LIKE wildcards are inside the value, not SQL source.
-- Retest: the attack returned zero employees with HTTP 200; alternate injection syntax also failed to alter the result. The custom SQL finding disappeared. Registry rules reported zero before and after; SonarQube not run.
+- Retest: the attack returned zero employees with HTTP 200; alternate injection syntax also failed to alter the result. The custom SQL finding disappeared. Registry rules reported zero before and after; SonarQube did not report this issue in the current scan.
 
 ### F2 — Reflected XSS (CWE-79)
 
@@ -45,9 +53,9 @@ The following rule IDs and locations are taken from the actual custom Semgrep JS
 - Location: `app/templates/greeting.html:1`, column 254.
 - Unsafe code: `{{ name|safe }}`; `name` originates in the request query.
 - Cause/consequence: an authenticated request can insert executable HTML into the response. The harmless demonstration is `<script>alert("LAB_XSS")</script>`.
-- Confirmation: the raw script tag was present in vulnerable HTML. Browser execution has **not** been observed in this session and remains a manual step.
+- Confirmation: headless Chrome 155 executed the reflected script and SVG handler in the vulnerable app; ModSecurity blocked both requests and fixed output caused no dialog. Evidence: `generated/browser-checks.json`.
 - Fix: `{{ name }}` with Jinja HTML autoescaping. The fixed application also sends a restrictive CSP, but escaping is the primary fix.
-- Retest: fixed HTML contains `&lt;script&gt;` and not the raw payload. The custom finding disappeared. Browser no-dialog confirmation pending; Registry zero/zero; SonarQube not run.
+- Retest: fixed HTML contains `&lt;script&gt;` and not the raw payload. Chrome showed no dialog for fixed output. The custom finding disappeared; Registry remained zero before and after. SonarQube results are recorded above.
 
 ### F3 — Stored XSS (CWE-79)
 
@@ -57,7 +65,7 @@ The following rule IDs and locations are taken from the actual custom Semgrep JS
 - Cause/consequence: comments are parameterized when stored in SQLite, but rendered as trusted HTML later. SQL parameterization does not prevent HTML injection. Another authorized participant receives the stored script.
 - Confirmation: Alice submitted `<script>alert("LAB_STORED")</script>` to shared ticket #1003; Bob's separate session received the unescaped script. Both users legitimately participate, so this test does not depend on IDOR. CLI cleanup was also verified.
 - Fix: `{{ comment.body }}` in the fixed template. Comments remain stored and usable, with escaping at the HTML output context.
-- Retest: Bob received escaped literal script text; ordinary comments remained functional. The custom finding disappeared. Browser dialog checks pending; Registry zero/zero; SonarQube not run.
+- Retest: Bob received escaped literal script text; ordinary comments remained functional. Chrome executed vulnerable stored variants in Bob's separate session and showed no dialog for fixed output. The custom finding disappeared; Registry remained zero before and after. SonarQube results are recorded above.
 
 ### F4 — OS command injection (CWE-78)
 
@@ -67,7 +75,7 @@ The following rule IDs and locations are taken from the actual custom Semgrep JS
 - Cause/consequence: shell metacharacters supplied as host input start an additional command. Process/output limits reduce resource impact but do not remove injection.
 - Confirmation: a real Windows subprocess returned `LAB_TEST` for `127.0.0.1 & echo LAB_TEST`. The new Linux-container run also returned `LAB_TEST` for `127.0.0.1; echo LAB_TEST`; fixed returned 400 and WAF blocked the request with rule 932235.
 - Fix: parse with `ipaddress.ip_address`, restrict the diagnostic to loopback, pass a list of arguments and set `shell=False`.
-- Retest: malicious input returned 400 before execution; normal loopback ping succeeded; alternate commands, command options, external IPs and hostnames were rejected. The custom finding disappeared. Registry zero/zero; SonarQube not run.
+- Retest: malicious input returned 400 before execution; normal loopback ping succeeded; alternate commands, command options, external IPs and hostnames were rejected. The custom finding disappeared. Registry zero/zero; SonarQube did not report this issue in the current scan.
 
 ### F5 — Path traversal (CWE-22)
 
@@ -77,7 +85,7 @@ The following rule IDs and locations are taken from the actual custom Semgrep JS
 - Cause/consequence: joining a directory with an untrusted path does not enforce containment. A requester can read a prepared file outside the intended documents directory.
 - Confirmation: `file=../lab-only.txt` returned `LAB_TRAVERSAL_PROOF`. Only synthetic data was read.
 - Fix: resolve the permitted root and requested path; require `target.relative_to(directory)` to succeed, aborting on errors. The immutable document tree in the container prevents an attacker from swapping a symlink between validation and open through normal portal functions.
-- Retest: traversal returned 400 and the marker was absent; ordinary download, absolute-path escape and alternate traversal checks passed. The custom warning **remains** in the fixed code and is triaged below. Registry zero/zero; SonarQube not run.
+- Retest: traversal returned 400 and the marker was absent; ordinary download, absolute-path escape and alternate traversal checks passed. The custom warning **remains** in the fixed code and is triaged below. Registry zero/zero; SonarQube did not report this issue in the current scan.
 
 ### F6 — IDOR / missing object authorization (CWE-639, CWE-862)
 
@@ -87,7 +95,7 @@ The following rule IDs and locations are taken from the actual custom Semgrep JS
 - Cause/consequence: authentication answers who the caller is, but not whether that caller may access this ticket. Alice can read Bob's `BOB_PRIVATE` ticket and write to it.
 - Confirmation: Alice and Bob use separate session clients; Bob can open #1002; Alice can also open it in the vulnerable application. A forged `user_id` query does not authenticate an anonymous client.
 - Fix: `app-fixed/main.py:136–139` checks owner ID or a participants-table row before either GET or POST.
-- Retest: Alice receives 403 and cannot write to #1002; Bob retains access. Both can read/write shared #1003. Neither Semgrep group detected IDOR; SonarQube not run. This is an explicit missed class, not a fabricated scanner success.
+- Retest: Alice receives 403 and cannot write to #1002; Bob retains access. Both can read/write shared #1003. Neither Semgrep group detected IDOR; SonarQube did not report this issue in the current scan. This is an explicit missed class, not a fabricated scanner success.
 
 ## Residual warning in the fixed implementation
 
@@ -99,20 +107,25 @@ The warning has not been hidden with `nosemgrep`, path exclusions or a filename-
 
 | Scenario | SonarQube | Semgrep Registry | Semgrep custom | Manual review + behavior | Remaining limitation |
 |---|---|---|---|---|---|
-| SQLi | NOT RUN | Missed in this run | Confirmed finding, gone after fix | 1 → 4 rows; fixed 0 | Tested payload only; no general bypass guarantee |
-| Reflected XSS | NOT RUN | Missed in this run | Confirmed unsafe sink, gone after fix | Raw vs escaped HTML | Browser JS pending |
-| Stored XSS | NOT RUN | Missed in this run | Confirmed unsafe sink, gone after fix | Two legitimate sessions, stored raw vs escaped HTML | Browser JS pending |
-| Command injection | NOT RUN | Missed in this run | Confirmed finding, gone after fix | Actual Windows and Linux echo; fixed 400, WAF 403 | Tested payload only |
-| Path traversal | NOT RUN | Missed in this run | Confirmed before; residual false positive after | Outside marker vs 400 | Immutable-tree assumption |
-| IDOR | NOT RUN | Missed | Missed | Cross-user GET/POST vs 403 | Business policy requires human review |
+| SQLi | Missed in these scans | Missed in these rules | Confirmed before, gone after | 1 → 4 rows; fixed parameterized query | Tested payload only; no general bypass guarantee |
+| Reflected XSS | `Web:S5247` in vulnerable, absent in fixed | Missed in Registry | Confirmed unsafe sink, gone after fix | Chrome execution vs escaped text | Tested variants only |
+| Stored XSS | `Web:S5247` in vulnerable, absent in fixed | Missed in Registry | Confirmed unsafe sink, gone after fix | Separate Alice/Bob browser sessions | Tested variants only |
+| Command injection | Missed in these scans | Missed in Registry | Confirmed before, gone after | Real shell output; fixed 400; WAF 403 | Tested payload only |
+| Path traversal | Missed in these scans | Custom warning remains after fix | Confirmed before; reviewed fixed path | Outside marker vs fixed rejection | Immutable application document tree assumed |
+| IDOR | Missed in these scans | Missed | Missed by SAST | Cross-user GET/POST: vulnerable 200, fixed 403 | Business policy requires human review |
 
-## Reproduce and complete
+## Reproduce and next review
 
 ```powershell
 .\scripts\lab.ps1 scan-semgrep
 .\scripts\lab.ps1 sonar
-# First-time UI setup and token entry: SONAR-SETUP.md
+# If the local token expires, follow SONAR-SETUP.md to rotate it
 .\scripts\lab.ps1 scan-sonar
 ```
 
-Attach genuine Sonar issues and hotspots separately, record rule/profile versions, distinguish security findings from code-quality issues and compare source lines with the actual scanned revision. Do not infer a clean Sonar result from a missing export. Semgrep snapshots and all current raw results are already included. Behavioral evidence remains necessary even when a scanner reports no warning.
+To reproduce the direct CSRF evidence, run `.venv\Scripts\python.exe tests\csrf_checks.py`. Sonar scan exports and issue-triage state are in `generated/sonar-*.json`; both S4502 findings are `FALSE_POSITIVE` after code review and behavioral testing. Semgrep before/after snapshots remain preserved. Behavioral evidence remains necessary even when a scanner reports no warning.
+
+
+## Local CodeQL and Bandit comparison
+
+The additional local Python SAST run, pinned toolchain, findings, coverage, reproduction evidence, and Windows PowerShell commands are documented in the [CodeQL and Bandit comparison](CODEQL-BANDIT-COMPARISON.md). Earlier Semgrep and SonarQube reports were preserved unchanged.

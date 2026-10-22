@@ -1,0 +1,116 @@
+{
+  "mode": "vulnerable",
+  "base": "http://vulnerable:5000",
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": 200,
+      "authenticated": false,
+      "identity": null,
+      "protected_status": 302,
+      "retry_after": null,
+      "fresh_session": true,
+      "forged_forwarding_headers": true
+    },
+    {
+      "attempt": 2,
+      "status": 200,
+      "authenticated": false,
+      "identity": null,
+      "protected_status": 302,
+      "retry_after": null,
+      "fresh_session": true,
+      "forged_forwarding_headers": true
+    },
+    {
+      "attempt": 3,
+      "status": 200,
+      "authenticated": false,
+      "identity": null,
+      "protected_status": 302,
+      "retry_after": null,
+      "fresh_session": true,
+      "forged_forwarding_headers": true
+    },
+    {
+      "attempt": 4,
+      "status": 200,
+      "authenticated": false,
+      "identity": null,
+      "protected_status": 302,
+      "retry_after": null,
+      "fresh_session": true,
+      "forged_forwarding_headers": true
+    },
+    {
+      "attempt": 5,
+      "status": 200,
+      "authenticated": false,
+      "identity": null,
+      "protected_status": 302,
+      "retry_after": null,
+      "fresh_session": true,
+      "forged_forwarding_headers": true
+    },
+    {
+      "attempt": 6,
+      "status": 200,
+      "authenticated": false,
+      "identity": null,
+      "protected_status": 302,
+      "retry_after": null,
+      "fresh_session": true,
+      "forged_forwarding_headers": true
+    },
+    {
+      "attempt": 7,
+      "status": 200,
+      "authenticated": false,
+      "identity": null,
+      "protected_status": 302,
+      "retry_after": null,
+      "fresh_session": true,
+      "forged_forwarding_headers": true
+    },
+    {
+      "attempt": 8,
+      "status": 200,
+      "authenticated": false,
+      "identity": null,
+      "protected_status": 302,
+      "retry_after": null,
+      "fresh_session": true,
+      "forged_forwarding_headers": true
+    },
+    {
+      "attempt": 9,
+      "status": 200,
+      "authenticated": false,
+      "identity": null,
+      "protected_status": 302,
+      "retry_after": null,
+      "fresh_session": true,
+      "forged_forwarding_headers": true
+    },
+    {
+      "attempt": 10,
+      "status": 302,
+      "authenticated": true,
+      "identity": {
+        "id": 1,
+        "name": "Алиса Морозова",
+        "username": "alice"
+      },
+      "protected_status": 200,
+      "retry_after": null,
+      "fresh_session": true,
+      "forged_forwarding_headers": true
+    }
+  ],
+  "checks": {
+    "wrong_passwords_never_authenticate": true,
+    "no_throttle": true,
+    "last_password_authenticates_correct_user": true
+  },
+  "passed": true
+}

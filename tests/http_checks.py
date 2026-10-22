@@ -61,7 +61,7 @@ class Checks:
         for client, username, password in ((self.alice, "alice", "Alice-Lab-2026!"), (self.bob, "bob", "Bob-Lab-2026!")):
             response = self.post(client, "/login", {"username": username, "password": password})
             self.record("login_" + username, response.status_code == 200 and "Мои заявки" in response.text, "Separate authenticated cookie jar")
-        for path, content in (("/", "Последние заявки"), ("/tickets", "Подключить второй монитор"), ("/documents", "Первый день"), ("/lab", "Один портал")):
+        for path, content in (("/", "Последние заявки"), ("/tickets", "Подключить второй монитор"), ("/documents", "Первый день"), ("/lab", "Первый день")):
             response = self.get(self.alice, path)
             self.record("normal_" + path, response.status_code == 200 and content in response.text, "Page content verified")
         response = self.get(self.alice, "/employees", params={"q": "Алиса"})
@@ -72,6 +72,7 @@ class Checks:
         response = self.post(self.alice, "/tickets/new", {"title": marker, "body": "Проверка сохранения заявки", "category": "Сеть", "priority": "Обычный"})
         listed = self.get(self.alice, "/tickets")
         self.record("normal_create", response.status_code == 200 and marker in response.text and marker in listed.text, "Ticket saved and visible in a later GET")
+        created_ticket_path = '/tickets/' + response.url.rstrip('/').split('/')[-1]
         response = self.post(self.alice, "/tickets/1003", {"body": marker})
         self.record("normal_comment", response.status_code == 200 and marker in self.get(self.bob, "/tickets/1003").text, "Bob sees Alice's saved comment on shared ticket")
         response = self.post(self.alice, "/diagnostics", {"host": "127.0.0.1"})
@@ -109,9 +110,48 @@ class Checks:
 
         owner = self.get(self.bob, "/tickets/1002")
         response = self.get(self.alice, "/tickets/1002")
-        expected = response.status_code == 403 and "BOB_PRIVATE" not in response.text if self.mode == "fixed" else response.status_code == 200 and "BOB_PRIVATE" in response.text
-        self.record("IDOR", expected and "BOB_PRIVATE" in owner.text,
+        expected = response.status_code == 403 and "Доступ к финансовому стенду" not in response.text if self.mode == "fixed" else response.status_code == 200 and "Доступ к финансовому стенду" in response.text
+        self.record("IDOR", expected and "Доступ к финансовому стенду" in owner.text,
                     "Bob owns ticket; Alice denied" if self.mode == "fixed" else "Alice reads Bob's ticket; WAF does not enforce ownership", status=response.status_code)
+
+        # Independent variants: actual SQL projection, different HTML contexts,
+        # a fresh shell-output nonce, path normalization and a newly allocated ID.
+        case = uuid.uuid4().hex
+        response = self.get(self.alice, '/employees', params={'q': "' AND 1=0 UNION SELECT id, username, password_hash, email, initials FROM users -- ", 'lab_case': case})
+        self.attack('SQLi alternate', response, case, response.text.count('data-person-id=') == 4 and 'scrypt:' in response.text,
+                    response.status_code == 200 and 'scrypt:' not in response.text and 'data-person-id=' not in response.text)
+        case = uuid.uuid4().hex
+        payload = '<svg onload=alert(29)>'
+        response = self.get(self.alice, '/greeting', params={'name': payload, 'lab_case': case})
+        self.attack('Reflected XSS alternate', response, case, payload in response.text,
+                    response.status_code == 200 and '&lt;svg' in response.text and payload not in response.text)
+        case = uuid.uuid4().hex
+        payload = '<img src=x onerror=alert("ALT_STORED")>'
+        response = self.post(self.alice, '/tickets/1003', {'body': payload}, case_id=case, follow=False)
+        saved = self.get(self.bob, '/tickets/1003')
+        self.attack('Stored XSS alternate', response, case, payload in saved.text,
+                    '&lt;img' in saved.text and payload not in saved.text,
+                    waf_extra=saved.status_code == 200 and 'ALT_STORED' not in saved.text)
+        case = uuid.uuid4().hex
+        nonce = 'PROCESS_' + uuid.uuid4().hex
+        response = self.post(self.alice, '/diagnostics', {'host': '127.0.0.1 && echo ' + nonce}, case_id=case, follow=False)
+        output = re.search(r'<pre id="diagnostic-output">(.*?)</pre>', response.text, re.S)
+        self.attack('Command Injection alternate', response, case, output is not None and nonce in output.group(1),
+                    response.status_code == 400 and output is None)
+        case = uuid.uuid4().hex
+        response = self.get(self.alice, '/download', params={'file': '.././lab-only.txt', 'lab_case': case})
+        self.attack('Path Traversal alternate', response, case, 'LAB_TRAVERSAL_PROOF' in response.text,
+                    response.status_code == 400 and 'LAB_TRAVERSAL_PROOF' not in response.text)
+        read = self.get(self.bob, created_ticket_path)
+        comment = 'Access check ' + uuid.uuid4().hex
+        write = self.bob.post(self.base + created_ticket_path, data={'body': comment, 'csrf_token': self.csrf(self.bob, '/tickets/1003')},
+                              allow_redirects=False, timeout=12)
+        owner = self.get(self.alice, created_ticket_path)
+        safe = read.status_code == 403 and write.status_code == 403 and comment not in owner.text
+        unsafe = read.status_code == 200 and write.status_code == 302 and comment in owner.text
+        self.record('IDOR alternate GET/POST', safe if self.mode == 'fixed' else unsafe,
+                    'Authorization on a newly created private object, independent of fixture IDs',
+                    status=read.status_code, post_status=write.status_code)
 
     def attack(self, name, response, case_id, exploited, fixed, waf_extra=True):
         if self.mode == "waf":

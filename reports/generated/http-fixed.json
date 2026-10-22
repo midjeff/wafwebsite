@@ -63,7 +63,7 @@
       "passed": true,
       "detail": "Remediation behavior checked without WAF",
       "status": 200,
-      "case_id": "3dfcd07cc47d4d69b6740e753cd06013",
+      "case_id": "6a5b22effa43463fb553f5e166c497dd",
       "attack": true
     },
     {
@@ -71,7 +71,7 @@
       "passed": true,
       "detail": "Remediation behavior checked without WAF",
       "status": 200,
-      "case_id": "e1899c07567f45e18aa77b37cc53fb7d",
+      "case_id": "0f9458690e464b219c4f3fb92a69678f",
       "attack": true
     },
     {
@@ -84,7 +84,7 @@
       "passed": true,
       "detail": "Remediation behavior checked without WAF",
       "status": 302,
-      "case_id": "2e8af3bb32c24cc8b0450196be358511",
+      "case_id": "ec380dbbc3854fcfb095b831ee0346a9",
       "attack": true
     },
     {
@@ -92,7 +92,7 @@
       "passed": true,
       "detail": "Remediation behavior checked without WAF",
       "status": 400,
-      "case_id": "5b5ae22190404ec7af572676fb7a92da",
+      "case_id": "a447e6284c8e4913820457fd0b8d4f13",
       "attack": true
     },
     {
@@ -100,7 +100,7 @@
       "passed": true,
       "detail": "Remediation behavior checked without WAF",
       "status": 400,
-      "case_id": "ca4e15e295514555907e69c839bef2a3",
+      "case_id": "936baabbe8ea40d8b144c21c8c891f79",
       "attack": true
     },
     {
@@ -108,6 +108,53 @@
       "passed": true,
       "detail": "Bob owns ticket; Alice denied",
       "status": 403
+    },
+    {
+      "name": "SQLi alternate",
+      "passed": true,
+      "detail": "Remediation behavior checked without WAF",
+      "status": 200,
+      "case_id": "6f6755c8c15a489689d078920b9ed058",
+      "attack": true
+    },
+    {
+      "name": "Reflected XSS alternate",
+      "passed": true,
+      "detail": "Remediation behavior checked without WAF",
+      "status": 200,
+      "case_id": "1376c5de21644c45a46cf9b68f0e8245",
+      "attack": true
+    },
+    {
+      "name": "Stored XSS alternate",
+      "passed": true,
+      "detail": "Remediation behavior checked without WAF",
+      "status": 302,
+      "case_id": "40b70e5a494a48bc9d743bd653e10961",
+      "attack": true
+    },
+    {
+      "name": "Command Injection alternate",
+      "passed": true,
+      "detail": "Remediation behavior checked without WAF",
+      "status": 400,
+      "case_id": "690dee4034b14c489052c421493d7cd5",
+      "attack": true
+    },
+    {
+      "name": "Path Traversal alternate",
+      "passed": true,
+      "detail": "Remediation behavior checked without WAF",
+      "status": 400,
+      "case_id": "93f9f0cf34ef4103b1220111e16ba927",
+      "attack": true
+    },
+    {
+      "name": "IDOR alternate GET/POST",
+      "passed": true,
+      "detail": "Authorization on a newly created private object, independent of fixture IDs",
+      "status": 403,
+      "post_status": 403
     }
   ],
   "xss_scope": "HTTP markup only; browser JavaScript execution requires the documented manual check"

@@ -8,13 +8,13 @@ from pathlib import Path
 
 import click
 from flask import Flask, abort, g, redirect, render_template, request, send_file, session, url_for
-from werkzeug.security import check_password_hash
 
 from .db import close_db, get_db, initialize
+from .login_limits import authenticate
 from .process import bounded_run, ping_arguments
 
 ROOT = Path(__file__).resolve().parent
-DOCUMENTS = {"onboarding.txt": "Первый день в компании", "vpn.txt": "Подключение к учебной сети", "meetings.txt": "Переговорные и видеосвязь"}
+DOCUMENTS = {"onboarding.txt": "Первый день в компании", "vpn.txt": "Подключение к корпоративной сети", "meetings.txt": "Переговорные и видеосвязь"}
 
 
 def login_required(view):
@@ -35,6 +35,10 @@ def create_app(config=None):
                       VERSION_LABEL="Исправленная версия", VERSION_STYLE="fixed")
     if config:
         app.config.update(config)
+    for key, default in [('LOGIN_MAX_FAILURES', 5), ('LOGIN_WINDOW_SECONDS', 60), ('LOGIN_BLOCK_SECONDS', 15)]:
+        app.config.setdefault(key, int(os.environ.get(key, default)))
+        if not isinstance(app.config[key], int) or app.config[key] <= 0:
+            raise ValueError(f'{key} must be a positive integer')
     initialize(app.config["DATABASE"])
     if not app.config.get("SECRET_KEY"):
         key_file = Path(app.config["DATABASE"]).parent / "session.key"
@@ -78,10 +82,22 @@ def create_app(config=None):
     def login():
         error = None
         if request.method == "POST":
-            user = get_db().execute("SELECT * FROM users WHERE username = ?", (request.form.get("username", ""),)).fetchone()
-            if user and check_password_hash(user["password_hash"], request.form.get("password", "")):
+            try:
+                user_id, retry = authenticate(
+                    app.config['DATABASE'], request.form.get('username', '').strip().lower(),
+                    request.form.get('password', ''), request.remote_addr or 'unknown',
+                    limit=app.config['LOGIN_MAX_FAILURES'], window=app.config['LOGIN_WINDOW_SECONDS'],
+                    block=app.config['LOGIN_BLOCK_SECONDS'])
+            except sqlite3.OperationalError:
+                app.logger.exception('Login accounting unavailable')
+                return render_template('login.html', title='Вход в портал',
+                                       error='Вход временно недоступен. Повторите попытку позже.'), 503, {'Retry-After': '1'}
+            if retry:
+                return render_template('login.html', title='Вход в портал',
+                                       error=f'Слишком много попыток входа. Повторите через {retry} сек.'), 429, {'Retry-After': str(retry)}
+            if user_id is not None:
                 session.clear()
-                session["uid"] = user["id"]
+                session["uid"] = user_id
                 session["csrf"] = secrets.token_hex(24)
                 return redirect(url_for("dashboard"))
             error = "Неверный логин или пароль"
@@ -91,6 +107,11 @@ def create_app(config=None):
     def logout():
         session.clear()
         return redirect(url_for("login"))
+
+    @app.get('/api/me')
+    @login_required
+    def current_user():
+        return {'id': g.user['id'], 'username': g.user['username'], 'name': g.user['name']}
 
     def visible_tickets():
         return get_db().execute("""SELECT DISTINCT t.* FROM tickets t
@@ -199,13 +220,13 @@ def create_app(config=None):
             except ValueError:
                 abort(400, "Введите корректный IP-адрес.")
             if not address.is_loopback:
-                abort(400, "Учебная диагностика разрешает только loopback-адреса.")
+                abort(400, "Диагностика разрешает только локальные loopback-адреса.")
             output = bounded_run(ping_arguments() + [str(address)], shell=False)
         return render_template("diagnostics.html", title="Диагностика сети", host=host, output=output)
 
     @app.get("/lab")
     def lab():
-        return render_template("lab.html", title="Лабораторная работа")
+        return redirect(url_for("documents"))
 
     @app.errorhandler(400)
     @app.errorhandler(403)
@@ -219,6 +240,14 @@ def create_app(config=None):
         """Reset only this application's synthetic SQLite data."""
         initialize(app.config["DATABASE"], reset=True)
         click.echo("PASS: учебная база восстановлена")
+
+    @app.cli.command('reset-login-limits')
+    def reset_login_limits():
+        """Clear login failure budgets locally; there is no HTTP reset route."""
+        db = get_db()
+        db.execute('DELETE FROM login_attempts')
+        db.commit()
+        click.echo('PASS: login limits reset')
 
     @app.cli.command("clean-comments")
     def clean_comments():

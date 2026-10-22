@@ -8,10 +8,9 @@ function Save-Json($Name, $Data) {
 }
 try {
     if (-not $env:SONAR_TOKEN) { throw 'Missing SONAR_TOKEN.' }
-    $encoded = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($env:SONAR_TOKEN + ':'))
-    $headers = @{ Authorization = "Basic $encoded" }
+    $headers = @{ Authorization = "Bearer $env:SONAR_TOKEN" }
     foreach ($variant in @('vulnerable','fixed')) {
-        $taskFile = Join-Path $outputDir "sonar-$variant\report-task.txt"
+        $taskFile = Join-Path $outputDir "sonar-$variant-report-task.txt"
         $properties = ConvertFrom-StringData ([IO.File]::ReadAllText($taskFile))
         $complete = $false
         for ($i=0; $i -lt 120; $i++) {
@@ -26,7 +25,7 @@ try {
             $all = @()
             $page = 1
             do {
-                $filter = if ($kind -eq 'issues') { "componentKeys=nexus-$variant" } else { "projectKey=nexus-$variant" }
+                $filter = if ($kind -eq 'issues') { "componentKeys=nexus-$variant" } else { "project=nexus-$variant" }
                 $data = Invoke-RestMethod -Uri "$base/api/$kind/search?$filter&ps=500&p=$page" -Headers $headers -TimeoutSec 30
                 $all += @($data.$kind)
                 $total = if ($data.paging) { $data.paging.total } else { $data.total }
@@ -47,5 +46,4 @@ try {
     exit 1
 } finally {
     $headers = $null
-    $encoded = $null
 }

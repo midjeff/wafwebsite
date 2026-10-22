@@ -8,11 +8,14 @@ import sys
 import tempfile
 import time
 import unittest
+import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def load_package(name, directory):
+    if name + '.main' in sys.modules:
+        return sys.modules[name + '.main']
     spec = importlib.util.spec_from_file_location(name, directory / "__init__.py", submodule_search_locations=[str(directory)])
     module = importlib.util.module_from_spec(spec)
     sys.modules[name] = module
@@ -52,7 +55,7 @@ class PortalChecks:
         return client.post(path, data={**data, "csrf_token": token(client.get(path))}, follow_redirects=True)
 
     def test_normal_pages_and_documents(self):
-        for path in ("/", "/tickets", "/tickets/1001", "/tickets/new", "/employees", "/greeting", "/documents", "/diagnostics", "/lab"):
+        for path in ("/", "/tickets", "/tickets/1001", "/tickets/new", "/employees", "/greeting", "/documents", "/diagnostics"):
             with self.subTest(path=path):
                 self.assertEqual(self.alice.get(path).status_code, 200)
         document = self.alice.get("/download?file=onboarding.txt")
@@ -123,10 +126,10 @@ class PortalChecks:
         response.close()
 
     def test_idor_and_post_authorization(self):
-        self.assertIn("BOB_PRIVATE", self.bob.get("/tickets/1002").get_data(as_text=True))
+        self.assertIn("Доступ к финансовому стенду", self.bob.get("/tickets/1002").get_data(as_text=True))
         attack = self.alice.get("/tickets/1002")
         self.assertEqual(attack.status_code, 403 if self.fixed else 200)
-        self.assertEqual("BOB_PRIVATE" in attack.get_data(as_text=True), not self.fixed)
+        self.assertEqual("Доступ к финансовому стенду" in attack.get_data(as_text=True), not self.fixed)
         result = self.alice.post("/tickets/1002", data={"csrf_token": token(self.alice.get("/tickets/1001")), "body": "UNAUTHORIZED_WRITE"})
         self.assertEqual(result.status_code, 403 if self.fixed else 302)
         self.assertEqual("UNAUTHORIZED_WRITE" in self.bob.get("/tickets/1002").get_data(as_text=True), not self.fixed)
@@ -139,10 +142,47 @@ class PortalChecks:
         self.assertEqual(self.alice.post("/tickets/1003", data={"body": "NO_CSRF"}).status_code, 400)
         self.assertEqual(self.post(self.alice, "/tickets/new", {"title": "", "body": ""}).status_code, 400)
 
-    def test_lab_page_has_no_active_payload(self):
-        html = self.alice.get("/lab").get_data(as_text=True)
-        self.assertNotIn("<script>", html)
-        self.assertIn("&lt;script&gt;", html)
+    def test_portal_has_no_training_ui(self):
+        self.assertEqual(self.alice.get('/lab').status_code, 302)
+        for path in ('/login', '/', '/employees', '/documents', '/diagnostics', '/tickets/1002'):
+            html = self.alice.get(path).get_data(as_text=True).lower()
+            for forbidden in ('лаборатор', 'учебн', 'демо-аккаунт', 'уязвимая версия', 'lab_xss', 'bob_private'):
+                self.assertNotIn(forbidden, html)
+
+    def test_alternative_sql_and_hash_disclosure(self):
+        for query in ("' OR 'x'='x' -- ", "' AND 1=0 UNION SELECT id, username, password_hash, email, initials FROM users -- "):
+            response = self.alice.get('/employees', query_string={'q': query})
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.text.count('data-person-id='), 0 if self.fixed else 4)
+            if 'UNION' in query and not self.fixed:
+                self.assertIn('scrypt:', response.text)
+
+    def test_alternative_reflected_and_stored_markup(self):
+        for payload in ('<img src=x onerror=alert(17)>', '<svg onload=alert(29)>'):
+            reflected = self.alice.get('/greeting', query_string={'name': payload})
+            self.assertEqual(payload in reflected.text, not self.fixed)
+            self.post(self.alice, '/tickets/1003', {'body': payload})
+            stored = self.bob.get('/tickets/1003')
+            self.assertEqual(payload in stored.text, not self.fixed)
+
+    def test_alternative_command_and_traversal(self):
+        marker = 'PROCESS_' + uuid.uuid4().hex
+        response = self.post(self.alice, '/diagnostics', {'host': '127.0.0.1 && echo ' + marker})
+        self.assertEqual(response.status_code, 400 if self.fixed else 200)
+        if not self.fixed:
+            output = re.search(r'<pre id="diagnostic-output">(.*?)</pre>', response.text, re.S).group(1)
+            self.assertIn(marker, output)
+        for path in ('.././lab-only.txt', str(self.module.ROOT / 'lab-only.txt')):
+            with self.alice.get('/download', query_string={'file': path}) as response:
+                self.assertEqual(response.status_code, 400 if self.fixed else 200)
+                self.assertEqual('LAB_TRAVERSAL_PROOF' in response.text, not self.fixed)
+
+    def test_idor_other_objects_both_methods(self):
+        for ticket_id in (1001, 1004):
+            path = f'/tickets/{ticket_id}'
+            self.assertEqual(self.bob.get(path).status_code, 403 if self.fixed else 200)
+            response = self.bob.post(path, data={'csrf_token': token(self.bob.get('/tickets/1003')), 'body': 'Object access check'})
+            self.assertEqual(response.status_code, 403 if self.fixed else 302)
 
 
 class VulnerableTests(PortalChecks, unittest.TestCase):

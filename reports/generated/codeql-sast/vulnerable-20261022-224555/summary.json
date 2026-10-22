@@ -1,0 +1,13 @@
+{
+  "variant": "vulnerable",
+  "reportDirectory": "reports/generated/codeql-sast/vulnerable-20261022-224555",
+  "discoveredFiles": 25,
+  "pythonFiles": 4,
+  "nonPythonFiles": 17,
+  "codeqlResults": 4,
+  "codeqlInvocationErrors": 0,
+  "banditResults": 4,
+  "banditErrors": 0,
+  "banditExitCode": 1,
+  "codeqlPythonLauncherNotices": 4
+}

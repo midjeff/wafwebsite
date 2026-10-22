@@ -63,7 +63,7 @@
       "passed": true,
       "detail": "HTTP block observed; correlated audit evidence is checked separately",
       "status": 403,
-      "case_id": "37abea45235245c59e5255a2fcb15d64",
+      "case_id": "8be7985604404758ac6841711ee23832",
       "attack": true
     },
     {
@@ -71,7 +71,7 @@
       "passed": true,
       "detail": "HTTP block observed; correlated audit evidence is checked separately",
       "status": 403,
-      "case_id": "84f3d34bf2fb49d1bba2db9513ba6657",
+      "case_id": "97794cbc63674622b004cba6c99222c9",
       "attack": true
     },
     {
@@ -84,7 +84,7 @@
       "passed": true,
       "detail": "HTTP block observed; correlated audit evidence is checked separately",
       "status": 403,
-      "case_id": "a2bfd846b4d14881b4e4c9a1b9826a45",
+      "case_id": "a9a18a7967f54633a655f667f373148b",
       "attack": true
     },
     {
@@ -92,7 +92,7 @@
       "passed": true,
       "detail": "HTTP block observed; correlated audit evidence is checked separately",
       "status": 403,
-      "case_id": "8b427058bcac41039fdf5e9ae08349f7",
+      "case_id": "96fd137b59b546ce82d49afc3311d844",
       "attack": true
     },
     {
@@ -100,7 +100,7 @@
       "passed": true,
       "detail": "HTTP block observed; correlated audit evidence is checked separately",
       "status": 403,
-      "case_id": "e699def8e1854be987a7da3ece1ba7e7",
+      "case_id": "60c521b1c1b44a7398b394ccd3136bf2",
       "attack": true
     },
     {
@@ -108,6 +108,53 @@
       "passed": true,
       "detail": "Alice reads Bob's ticket; WAF does not enforce ownership",
       "status": 200
+    },
+    {
+      "name": "SQLi alternate",
+      "passed": true,
+      "detail": "HTTP block observed; correlated audit evidence is checked separately",
+      "status": 403,
+      "case_id": "66ba09b2fc614f5c82ea9986ee8bd2f4",
+      "attack": true
+    },
+    {
+      "name": "Reflected XSS alternate",
+      "passed": true,
+      "detail": "HTTP block observed; correlated audit evidence is checked separately",
+      "status": 403,
+      "case_id": "61a4c2216ced44f49591899b9fbf2030",
+      "attack": true
+    },
+    {
+      "name": "Stored XSS alternate",
+      "passed": true,
+      "detail": "HTTP block observed; correlated audit evidence is checked separately",
+      "status": 403,
+      "case_id": "82e47b0c2d04481984876f258a3bbeb0",
+      "attack": true
+    },
+    {
+      "name": "Command Injection alternate",
+      "passed": true,
+      "detail": "HTTP block observed; correlated audit evidence is checked separately",
+      "status": 403,
+      "case_id": "32f3d070f2384d8681d170c6f7b1ec33",
+      "attack": true
+    },
+    {
+      "name": "Path Traversal alternate",
+      "passed": true,
+      "detail": "HTTP block observed; correlated audit evidence is checked separately",
+      "status": 403,
+      "case_id": "2d4b9dcf27f6441aa9176e135763ffbb",
+      "attack": true
+    },
+    {
+      "name": "IDOR alternate GET/POST",
+      "passed": true,
+      "detail": "Authorization on a newly created private object, independent of fixture IDs",
+      "status": 200,
+      "post_status": 302
     }
   ],
   "xss_scope": "HTTP markup only; browser JavaScript execution requires the documented manual check"

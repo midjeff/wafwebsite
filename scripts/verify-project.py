@@ -65,4 +65,18 @@ for source in [ROOT / 'sast/lab-rules.yml', ROOT / 'sast/registry-python.yml']:
     rules = yaml.safe_load(source.read_text(encoding='utf-8'))
     check(bool(rules.get('rules')), f'{source.name}: nonempty rule configuration')
 check('profiles' not in config['services']['waf'], 'Default compose starts the complete application stand')
+rate_config = (ROOT / 'waf/login-rate.conf').read_text()
+check('./waf/login-rate.conf:/etc/nginx/conf.d/login-rate.conf:ro' in config['services']['waf'].get('volumes', []),
+      'WAF mounts the real nginx login rate configuration read-only')
+check('"POST:/login" $realip_remote_addr;' in rate_config and 'limit_req_status 429;' in rate_config
+      and 'limit_req_zone $login_rate_key' in rate_config,
+      'nginx limits login POSTs by original peer and returns 429')
+check('access_log /dev/stdout login_limits if=$log_login_attempt;' in rate_config
+      and 'limit_req_log_level error;' in rate_config,
+      'nginx writes rejected login requests to the captured container log')
+check(all(int(config['services']['fixed'].get('environment', {}).get(key, 0)) > 0
+          for key in ['LOGIN_MAX_FAILURES', 'LOGIN_WINDOW_SECONDS', 'LOGIN_BLOCK_SECONDS']),
+      'Fixed login failure policy is explicitly configured with positive values')
+check(all(not (ROOT / name / 'templates/lab.html').exists() for name in ['app', 'app-fixed']),
+      'Attack instructions are absent from portal templates')
 sys.exit(1 if errors else 0)

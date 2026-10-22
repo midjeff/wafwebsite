@@ -14,9 +14,12 @@ OUT = ROOT / "reports" / "generated"
 
 
 def main():
+    global OUT
     parser = argparse.ArgumentParser()
     parser.add_argument("--custom-only", action="store_true")
+    parser.add_argument("--output-dir", type=Path, default=OUT)
     args = parser.parse_args()
+    OUT = args.output_dir.resolve()
     OUT.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ, SEMGREP_SEND_METRICS="off", SEMGREP_ENABLE_VERSION_CHECK="0", PYTHONUTF8="1")
     local_exe = Path(sys.executable).parent / ("semgrep.exe" if os.name == "nt" else "semgrep")
@@ -47,7 +50,10 @@ def main():
                    "config_sha256": hashlib.sha256(Path(config).read_bytes()).hexdigest() if Path(config).exists() else None}
             summary.append(row)
             print(f"{'PASS' if valid else 'FAIL'} {variant}/{group}: findings={row['findings']}, scanned={row['files_scanned']}, exit={result.returncode}", flush=True)
-    (OUT / "semgrep-summary.json").write_text(json.dumps({"version": version.stdout.strip(), "utc": datetime.now(timezone.utc).isoformat(), "results": summary}, indent=2), encoding="utf-8")
+    source_hashes = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(p.read_bytes()).hexdigest()
+                     for variant in ('app', 'app-fixed') for p in (ROOT / variant).rglob('*')
+                     if p.is_file() and '__pycache__' not in p.parts}
+    (OUT / "semgrep-summary.json").write_text(json.dumps({"version": version.stdout.strip(), "utc": datetime.now(timezone.utc).isoformat(), "source_sha256": source_hashes, "results": summary}, indent=2), encoding="utf-8")
     return 0 if all(row["technical_success"] for row in summary) else 2
 
 

@@ -24,6 +24,10 @@ services:
 
   fixed:
     <<: *app
+    environment:
+      LOGIN_MAX_FAILURES: "5"
+      LOGIN_WINDOW_SECONDS: "60"
+      LOGIN_BLOCK_SECONDS: "15"
     build:
       context: .
       args: {APP_DIR: app-fixed}
@@ -34,6 +38,8 @@ services:
     image: owasp/modsecurity-crs:4.30.0-nginx-202610180210@sha256:7698c48a41a43138ae317feeec964d1515b861cc1d9e50617bc1cdfe9f314e1d
     restart: unless-stopped
     env_file: waf/waf.env
+    volumes:
+      - ./waf/login-rate.conf:/etc/nginx/conf.d/login-rate.conf:ro
     ports: ["127.0.0.1:8081:8080"]
     depends_on:
       vulnerable: {condition: service_healthy}

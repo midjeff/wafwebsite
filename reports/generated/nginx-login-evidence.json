@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "expected_429": 6,
+  "nginx_rejected_records": 6,
+  "mechanism": "nginx limit_req, portal_login shared-memory zone; not ModSecurity/CRS",
+  "records": [
+    "LOGIN_LIMIT peer=172.18.0.5 method=POST uri=/login status=429 limit=REJECTED",
+    "LOGIN_LIMIT peer=172.18.0.5 method=POST uri=/login status=429 limit=REJECTED",
+    "LOGIN_LIMIT peer=172.18.0.5 method=POST uri=/login status=429 limit=REJECTED",
+    "LOGIN_LIMIT peer=172.18.0.5 method=POST uri=/login status=429 limit=REJECTED",
+    "LOGIN_LIMIT peer=172.18.0.5 method=POST uri=/login status=429 limit=REJECTED",
+    "LOGIN_LIMIT peer=172.18.0.5 method=POST uri=/login status=429 limit=REJECTED"
+  ]
+}

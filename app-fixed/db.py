@@ -28,14 +28,21 @@ def close_db(_error=None):
 def initialize(path, reset=False):
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     with connect(path) as db:
+        db.execute('PRAGMA journal_mode=WAL')
         if reset:
             db.executescript("""
+                DROP TABLE IF EXISTS login_attempts;
                 DROP TABLE IF EXISTS comments;
                 DROP TABLE IF EXISTS participants;
                 DROP TABLE IF EXISTS tickets;
                 DROP TABLE IF EXISTS users;
             """)
         db.executescript("""
+            CREATE TABLE IF NOT EXISTS login_attempts (
+                scope TEXT NOT NULL, key TEXT NOT NULL, failures INTEGER NOT NULL,
+                window_start REAL NOT NULL, blocked_until REAL NOT NULL,
+                PRIMARY KEY (scope, key)
+            );
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY, username TEXT UNIQUE NOT NULL,
                 password_hash TEXT NOT NULL, name TEXT NOT NULL,
@@ -62,6 +69,10 @@ def initialize(path, reset=False):
                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        # Migrate only untouched fixture text; preserve user-edited tickets.
+        db.execute("UPDATE tickets SET body = ? WHERE id = ? AND body = ?", ('Нужен адаптер для рабочего места в дизайн-команде.', 1001, 'Нужен адаптер для рабочего места в дизайн-команде. ALICE_PRIVATE'))
+        db.execute("UPDATE tickets SET body = ? WHERE id = ? AND body = ?", ('Нужен доступ к финансовому разделу для подготовки квартального отчёта.', 1002, 'Тестовая заявка Бориса. BOB_PRIVATE — только искусственные данные.'))
+        db.execute("UPDATE tickets SET body = ? WHERE id = ? AND body = ?", ('Проверим звук и видеосвязь в общей переговорной перед встречей.', 1003, 'Совместная заявка Алисы и Бориса. SHARED_TICKET'))
         if db.execute("SELECT COUNT(*) FROM users").fetchone()[0]:
             return
         users = [
@@ -75,9 +86,9 @@ def initialize(path, reset=False):
             for uid, login, password, name, role, email, initials in users
         ])
         db.executemany("INSERT INTO tickets (id, owner_id, title, body, category, priority, status) VALUES (?, ?, ?, ?, ?, ?, ?)", [
-            (1001, 1, "Подключить второй монитор", "Нужен адаптер для рабочего места в дизайн-команде. ALICE_PRIVATE", "Оборудование", "Обычный", "В работе"),
-            (1002, 2, "Доступ к финансовому стенду", "Тестовая заявка Бориса. BOB_PRIVATE — только искусственные данные.", "Доступы", "Высокий", "Открыта"),
-            (1003, 1, "Общая переговорная: проверка связи", "Совместная заявка Алисы и Бориса. SHARED_TICKET", "Сеть", "Обычный", "В работе"),
+            (1001, 1, "Подключить второй монитор", "Нужен адаптер для рабочего места в дизайн-команде.", "Оборудование", "Обычный", "В работе"),
+            (1002, 2, "Доступ к финансовому стенду", "Нужен доступ к финансовому разделу для подготовки квартального отчёта.", "Доступы", "Высокий", "Открыта"),
+            (1003, 1, "Общая переговорная: проверка связи", "Проверим звук и видеосвязь в общей переговорной перед встречей.", "Сеть", "Обычный", "В работе"),
             (1004, 1, "Установка редактора макетов", "Приложение установлено, лицензия учебная.", "Программы", "Низкий", "Решена"),
         ])
         db.executemany("INSERT INTO participants VALUES (?, ?)", [(1003, 1), (1003, 2)])

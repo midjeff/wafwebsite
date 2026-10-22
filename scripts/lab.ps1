@@ -1,6 +1,6 @@
 param(
     [Parameter(Position=0)]
-    [ValidateSet('start','stop','status','reset','clean-comments','logs','test','sonar','scan-semgrep','scan-sonar','scan')]
+    [ValidateSet('start','stop','status','reset','clean-comments','reset-login-limits','brute-force','logs','test','sonar','scan-semgrep','scan-sonar','scan')]
     [string]$Action = 'start'
 )
 $ErrorActionPreference = 'Stop'
@@ -17,19 +17,43 @@ function Clean-Comments {
         Invoke-Docker -DockerArgs @('compose','exec','-T',$service,'flask','--app','portal.main:create_app','clean-comments')
     }
 }
+function Clean-CheckTickets {
+    foreach ($service in @('vulnerable','fixed')) {
+        Get-Content -Raw -Encoding UTF8 (Join-Path $projectRoot 'tests/cleanup_check_data.py') | & docker compose exec -T $service python -
+        if ($LASTEXITCODE -ne 0) { throw 'Could not clean test-owned tickets.' }
+    }
+}
 function Save-WafLogs {
+    param([string]$Name = 'waf.log')
     $lines = & docker compose logs --no-color --no-log-prefix waf 2>&1
     if ($LASTEXITCODE -ne 0) { throw 'Could not read WAF logs.' }
-    $file = Join-Path $projectRoot 'logs\waf.log'
+    $file = Join-Path (Join-Path $projectRoot 'logs') $Name
     [IO.File]::WriteAllLines($file, [string[]]$lines, [Text.UTF8Encoding]::new($false))
-    Write-Host 'PASS: logs/waf.log saved (contains synthetic lab request data).'
+    Write-Host "PASS: logs/$Name saved (contains synthetic lab request data)."
+}
+function Reset-LoginLimits {
+    Invoke-Docker -DockerArgs @('compose','exec','-T','fixed','flask','--app','portal.main:create_app','reset-login-limits')
+    # A full container recreation clears nginx shared-memory counters. Reload does not.
+    Invoke-Docker -DockerArgs @('compose','up','-d','--force-recreate','--no-deps','--wait','--wait-timeout','180','waf')
+}
+function Test-BruteForce {
+    Reset-LoginLimits
+    Invoke-Docker -DockerArgs @('compose','--profile','checks','run','--rm','--no-deps','--entrypoint','python','checks','bruteforce.py','--inside-compose')
+    Save-WafLogs -Name 'login-rate.log'
+    Invoke-Docker -DockerArgs @('compose','--profile','checks','run','--rm','--no-deps','--entrypoint','python','checks','check_login_logs.py')
 }
 function Scan-Semgrep {
     Invoke-Docker -DockerArgs @('compose','--profile','tools','run','--rm','--no-deps','semgrep')
     Write-Host 'PASS: Semgrep completed. Findings are not scanner failures. See reports/generated.'
 }
 function Scan-Sonar {
-    if (-not $env:SONAR_TOKEN) { throw 'SONAR_TOKEN is missing. Follow reports/SONAR-SETUP.md; never put the token in a file.' }
+    $previousToken = $env:SONAR_TOKEN
+    if (-not $env:SONAR_TOKEN) {
+        $tokenFile = if ($env:SONAR_TOKEN_FILE) { $env:SONAR_TOKEN_FILE } else { Join-Path $projectRoot '.runtime\sonar-token.txt' }
+        if (Test-Path -LiteralPath $tokenFile) { $env:SONAR_TOKEN = [IO.File]::ReadAllText($tokenFile).Trim() }
+    }
+    if (-not $env:SONAR_TOKEN) { throw 'SONAR_TOKEN is missing. Set it locally or use ignored .runtime/sonar-token.txt; see reports/SONAR-SETUP.md.' }
+    try {
     $status = Invoke-RestMethod -Uri 'http://localhost:9000/api/system/status' -TimeoutSec 10
     if ($status.status -ne 'UP') { throw 'SonarQube is not ready. Run lab.ps1 sonar first.' }
     foreach ($variant in @('vulnerable','fixed')) {
@@ -37,6 +61,7 @@ function Scan-Sonar {
     }
     & (Join-Path $PSScriptRoot 'export-sonar.ps1')
     if ($LASTEXITCODE -ne 0) { throw 'SonarQube analysis/export failed.' }
+    } finally { $env:SONAR_TOKEN = $previousToken }
 }
 
 try {
@@ -57,10 +82,17 @@ try {
             Write-Host 'PASS: both synthetic databases reset; SonarQube data preserved.'
         }
         'clean-comments' { Clean-Comments }
+        'reset-login-limits' { Reset-LoginLimits }
+        'brute-force' {
+            Invoke-Docker -DockerArgs @('compose','up','--build','--force-recreate','-d','--wait','--wait-timeout','180')
+            Invoke-Docker -DockerArgs @('compose','--profile','checks','build','checks')
+            Test-BruteForce
+        }
         'logs' { Save-WafLogs; Get-Content -LiteralPath (Join-Path $projectRoot 'logs\waf.log') -Tail 100 -Encoding UTF8 }
         'test' {
             Invoke-Docker -DockerArgs @('compose','up','--build','--force-recreate','-d','--wait','--wait-timeout','180')
             Invoke-Docker -DockerArgs @('compose','--profile','checks','build','checks')
+            Invoke-Docker -DockerArgs @('compose','exec','-T','fixed','flask','--app','portal.main:create_app','reset-login-limits')
             $failed = $false
             foreach ($mode in @('vulnerable','waf','fixed')) {
                 Clean-Comments
@@ -72,6 +104,8 @@ try {
             & docker compose --profile checks run --rm --no-deps --entrypoint python checks check_waf_logs.py
             if ($LASTEXITCODE -ne 0) { $failed = $true }
             if ($failed) { throw 'One or more HTTP/audit checks failed. Inspect reports/generated and logs/waf.log.' }
+            Test-BruteForce
+            Clean-CheckTickets
             Write-Host 'PASS: normal operations, attacks, fixes, separate sessions and WAF audit correlation.'
         }
         'sonar' { Invoke-Docker -DockerArgs @('compose','--profile','analysis','up','-d','--wait','--wait-timeout','660','sonarqube') }

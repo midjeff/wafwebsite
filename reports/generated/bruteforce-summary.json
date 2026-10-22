@@ -1,0 +1,399 @@
+{
+  "utc": "2026-10-22T14:03:00.357624+00:00",
+  "passed": true,
+  "results": [
+    {
+      "mode": "vulnerable",
+      "base": "http://vulnerable:5000",
+      "attempts": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 2,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 3,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 4,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 5,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 6,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 7,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 8,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 9,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 10,
+          "status": 302,
+          "authenticated": true,
+          "identity": {
+            "id": 1,
+            "name": "Алиса Морозова",
+            "username": "alice"
+          },
+          "protected_status": 200,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        }
+      ],
+      "checks": {
+        "wrong_passwords_never_authenticate": true,
+        "no_throttle": true,
+        "last_password_authenticates_correct_user": true
+      },
+      "passed": true
+    },
+    {
+      "mode": "waf",
+      "base": "http://waf:8080",
+      "attempts": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 2,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 3,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 4,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 5,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 6,
+          "status": 429,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": "25",
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 7,
+          "status": 429,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": "25",
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 8,
+          "status": 429,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": "25",
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 9,
+          "status": 429,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": "25",
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 10,
+          "status": 429,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": "25",
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        }
+      ],
+      "checks": {
+        "wrong_passwords_never_authenticate": true,
+        "429_before_correct_password": true,
+        "no_success_during_burst": true,
+        "new_session_and_forged_xff_do_not_bypass": true,
+        "correct_password_after_expiry": true
+      },
+      "fresh_session_during_limit": {
+        "attempt": 11,
+        "status": 429,
+        "authenticated": false,
+        "identity": null,
+        "protected_status": 302,
+        "retry_after": "25",
+        "fresh_session": true,
+        "forged_forwarding_headers": true
+      },
+      "after_cooldown": {
+        "attempt": 12,
+        "status": 302,
+        "authenticated": true,
+        "identity": {
+          "id": 1,
+          "name": "Алиса Морозова",
+          "username": "alice"
+        },
+        "protected_status": 200,
+        "retry_after": null,
+        "fresh_session": true,
+        "forged_forwarding_headers": true
+      },
+      "passed": true
+    },
+    {
+      "mode": "fixed",
+      "base": "http://fixed:5000",
+      "attempts": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 2,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 3,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 4,
+          "status": 200,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": null,
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 5,
+          "status": 429,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": "15",
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 6,
+          "status": 429,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": "15",
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 7,
+          "status": 429,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": "15",
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 8,
+          "status": 429,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": "15",
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 9,
+          "status": 429,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": "15",
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        },
+        {
+          "attempt": 10,
+          "status": 429,
+          "authenticated": false,
+          "identity": null,
+          "protected_status": 302,
+          "retry_after": "15",
+          "fresh_session": true,
+          "forged_forwarding_headers": true
+        }
+      ],
+      "checks": {
+        "wrong_passwords_never_authenticate": true,
+        "429_before_correct_password": true,
+        "no_success_during_burst": true,
+        "new_session_and_forged_xff_do_not_bypass": true,
+        "retry_after_present": true,
+        "correct_password_after_expiry": true
+      },
+      "fresh_session_during_limit": {
+        "attempt": 11,
+        "status": 429,
+        "authenticated": false,
+        "identity": null,
+        "protected_status": 302,
+        "retry_after": "15",
+        "fresh_session": true,
+        "forged_forwarding_headers": true
+      },
+      "after_cooldown": {
+        "attempt": 12,
+        "status": 302,
+        "authenticated": true,
+        "identity": {
+          "id": 1,
+          "name": "Алиса Морозова",
+          "username": "alice"
+        },
+        "protected_status": 200,
+        "retry_after": null,
+        "fresh_session": true,
+        "forged_forwarding_headers": true
+      },
+      "passed": true
+    }
+  ]
+}

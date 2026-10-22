@@ -1,0 +1,12 @@
+﻿[2026-10-22 22:39:49] [build-stderr] No installed Python found!
+[2026-10-22 22:39:49] [build-stderr] The `py` launcher is required for CodeQL to work on Windows.Please include it when installing Python for Windows.see https://docs.python.org/3/using/windows.html#python-launcher-for-windows
+[2026-10-22 22:39:49] [ERROR] Spawned process exited abnormally (code 4; tried to run: [C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\tools\win64\runner.exe, cmd.exe, /C, type, NUL, &&, C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\python\tools\autobuild.cmd])
+Initializing database at C:\Users\Shwepes\wafwebsite\.runtime\codeql\databases\vulnerable.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by com.semmle.util.files.SubstResolver in an unnamed module (file:/C:/Users/Shwepes/wafwebsite/.runtime/tools/codeql-bundle-v2.27.2/codeql/tools/codeql.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+Running build command: []
+Running command in C:\Users\Shwepes\wafwebsite\app: [C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\python\tools\autobuild.cmd]
+A fatal error occurred: Exit status 4 from command: [C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\tools\win64\runner.exe, cmd.exe, /C, type, NUL, &&, C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\python\tools\autobuild.cmd]

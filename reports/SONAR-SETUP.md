@@ -2,39 +2,76 @@
 
 В проекте закреплена Community Build `26.10.0.133078-community`, отдельный PostgreSQL 17.9 и SonarScanner CLI Docker `12.2.0.4256_8.1.0`. Два проекта позволяют сравнивать версии без платного анализа веток.
 
-## Запуск и первичная настройка
+## Текущее состояние стенда (22.10.2026)
+
+Локальный сервер запущен и отвечает `UP` по `http://localhost:9000/api/system/status`. Первоначальная настройка выполнена `scripts/setup-sonar.py`: он проверил свежий вход `admin/admin`, заменил пароль случайным значением, записал его в игнорируемый `.runtime/sonar-admin-password.txt`, создал приватные проекты и сгенерировал токен в `.runtime/sonar-token.txt`. Срок этого токена — 7 дней; после истечения создайте новый в интерфейсе и замените локальный файл. Секреты не записаны в исходники, отчёты или логи.
+
+Оба анализа уже успешно отправлены и экспортированы: vulnerable — 3 Issues, 0 Hotspots; fixed — 1 Issue, 0 Hotspots; quality gate для обоих — `OK`. Это реальные результаты текущего SonarQube Community Build, а не Semgrep. JSON-экспорты находятся в `reports/generated/sonar-*.json`; краткая оценка — в [TASK-2-SAST.md](TASK-2-SAST.md).
+
+## Docker Compose и сохранение данных
+
+SonarQube доступен только через `127.0.0.1:9000`. PostgreSQL не публикует порт. Compose хранит базу Sonar, загруженные анализаторы и журналы в отдельных именованных томах; остановка контейнеров не стирает анализы. Не запускайте `docker compose down -v`, если хотите их сохранить.
+
+Windows PowerShell:
 
 ```powershell
 .\scripts\lab.ps1 sonar
 ```
 
-Откройте http://localhost:9000. При первом входе используйте стандартные `admin / admin`, затем **самостоятельно** задайте новый пароль администратора. Создайте два локальных проекта с ключами `nexus-vulnerable` и `nexus-fixed`. Оставьте профиль Python `Sonar way`; запишите в отчёт его фактическое название и версии анализаторов. Изменения профиля меняют результаты и требуют нового анализа.
+Linux/macOS с Docker Compose v2:
 
-В My Account → Security создайте ограниченный по сроку **user token** пользователя с Execute Analysis и Browse для обоих проектов. User token нужен также для чтения результатов API; project analysis token одного проекта может быть недостаточен. Не используйте настоящий рабочий токен — это отдельный локальный SonarQube.
-
-Введите токен скрыто и сохраните только в переменной текущего процесса PowerShell:
-
-```powershell
-$secureSonarToken = Read-Host 'Local SonarQube token' -AsSecureString
-$tokenPointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureSonarToken)
-try {
-    $env:SONAR_TOKEN = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($tokenPointer)
-} finally {
-    [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($tokenPointer)
-    Remove-Variable secureSonarToken,tokenPointer
-}
-try {
-    .\scripts\lab.ps1 scan-sonar
-} finally {
-    Remove-Item Env:\SONAR_TOKEN -ErrorAction SilentlyContinue
-}
+```sh
+docker compose --profile analysis up -d --wait --wait-timeout 660 sonarqube
+docker compose --profile analysis ps
 ```
 
-Не добавляйте токен в `.env`, properties, README, историю команд или скриншоты. Scanner получает его через environment. Локальный владелец Docker может видеть environment контейнеров — это доверенная машина лаборатории, не многопользовательский сервер.
+Первый старт может занять несколько минут. Убедитесь, что `sonarqube` имеет статус `healthy`, а `http://localhost:9000/api/system/status` показывает `UP`.
 
-Scanner сначала отправляет анализ, затем `export-sonar.ps1` ждёт SUCCESS фоновой задачи CE. Только после этого экспортируются issues, hotspots и quality gate. Непройденный quality gate у уязвимого проекта — возможный результат анализа, а не ошибка запуска сканера. FAILED/CANCELED задачи, ошибки HTTP и незавершённый экспорт дают FAIL.
+## Первый вход, проекты и локальный токен
 
-Результаты сохраняются в `reports/generated/sonar-*-{issues,hotspots,qualitygate,task}.json`. После запуска заполните колонку SonarQube в `TASK-2-SAST.md` настоящими rule IDs, файлами, строками и статусами. Сейчас она **NOT RUN**, а не «ничего не найдено».
+Первый запуск на чистой копии можно выполнить автоматически:
+
+```powershell
+.\scripts\lab.ps1 sonar
+python scripts/setup-sonar.py --initialize-default-admin
+```
+
+Флаг разрешает скрипту принять только начальные `admin/admin`; при уже изменённом пароле он остановится, не пытаясь сбрасывать существующую учётную запись. Пароль и токен сохраняются в игнорируемых локальных файлах `.runtime/sonar-admin-password.txt` и `.runtime/sonar-token.txt`. Откройте `http://localhost:9000`, чтобы войти как `admin`: прочитайте локальный пароль из файла через свой менеджер/средство секретов. Скрипт создаёт приватные проекты `nexus-vulnerable` (`NEXUS - Vulnerable`) и `nexus-fixed` (`NEXUS - Fixed`) и отдельный токен анализа. Для повторного анализа запускать инициализатор не нужно.
+
+Если автоматический инициализатор недоступен: на свежем сервере войдите `admin/admin`, смените пароль, в My Projects создайте те же два проекта, затем в My Account → Security создайте user token с правами анализа для обоих проектов. Скопируйте его сразу: SonarQube показывает значение один раз. Передайте токен только в переменную окружения текущего процесса либо в `.runtime/sonar-token.txt` (игнорируется Git). Не записывайте его в properties, исходники, отчёты или журналы.
+
+Загрузка из локального файла в environment PowerShell, без вывода секрета:
+
+```powershell
+$line = Get-Content -LiteralPath .env.sonar -Raw
+if ($line -notmatch '^SONAR_TOKEN=(.+)\s*$') { throw 'Ожидалась строка SONAR_TOKEN=...' }
+$env:SONAR_TOKEN = $Matches[1].Trim()
+try { .\scripts\lab.ps1 scan-sonar }
+finally { Remove-Item Env:\SONAR_TOKEN -ErrorAction SilentlyContinue; Remove-Variable line }
+```
+
+Или задайте переменную в текущем окне PowerShell скрытым вводом:
+
+```powershell
+$secure = Read-Host 'SonarQube token' -AsSecureString
+$ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
+try { $env:SONAR_TOKEN = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr) }
+finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr); Remove-Variable secure,ptr }
+try { .\scripts\lab.ps1 scan-sonar }
+finally { Remove-Item Env:\SONAR_TOKEN -ErrorAction SilentlyContinue }
+```
+
+`scripts/lab.ps1 scan-sonar` также может прочитать одну строку `SONAR_TOKEN=...` из исключённого из Git файла `.runtime/sonar-token.txt`. Значение не выводится в консоль и не передаётся параметром командной строки. Docker-владелец локального компьютера может прочитать environment запущенного scanner-контейнера, поэтому не используйте общую недоверенную машину.
+
+## Два анализа и сохранённые результаты
+
+Проекты используют `sast/sonar-vulnerable.properties` и `sast/sonar-fixed.properties`. Каждый задаёт свой ключ, имя и корень исходников (`app/` и `app-fixed/`). Сканер отправляет результаты раздельно; экспорт дожидается завершения анализа и отдельно сохраняет Issues, Security Hotspots и quality gate.
+
+```powershell
+.\scripts\lab.ps1 scan-sonar
+```
+
+Результаты появятся как `reports/generated/sonar-vulnerable-*.json` и `sonar-fixed-*.json`. Сравнивайте их с исходными хешами и находками Semgrep в `sast-before-bruteforce/` и `sast-after-bruteforce/`. Сохранённые результаты Semgrep сами по себе не означают, что SonarQube уже сканировал проект.
 
 ## Если Elasticsearch требует настройки Linux VM
 
@@ -63,3 +100,5 @@ wsl -d docker-desktop -u root -- sysctl -w fs.file-max=131072
 - **Замечание качества:** читаемость, сложность, дублирование и т. п.; не следует автоматически называть его уязвимостью.
 
 Community Build — бесплатный локальный вариант; не обещаем коммерческий taint analysis и обнаружение всех инъекций. Возможности сверяются с [официальным сравнением](https://docs.sonarsource.com/sonarqube-community-build/feature-comparison-table) и [репозиторием SonarQube](https://github.com/SonarSource/sonarqube). Настройки сканера: [официальная документация CLI](https://docs.sonarsource.com/sonarqube-community-build/analyzing-source-code/scanners/sonarscanner).
+
+При написании автоматического экспорта использовалась [официальная документация Web API Community Build](https://docs.sonarsource.com/sonarqube-community-build/extension-guide/web-api), включая API-токен для аутентификации.

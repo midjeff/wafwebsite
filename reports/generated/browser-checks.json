@@ -1,0 +1,144 @@
+{
+  "utc": "2026-10-22T13:56:00.417430+00:00",
+  "browser": "chrome",
+  "version": "155.0.8059.85",
+  "headless": true,
+  "results": [
+    {
+      "name": "vulnerable: separate session alice",
+      "passed": true
+    },
+    {
+      "name": "vulnerable: separate session bob",
+      "passed": true
+    },
+    {
+      "name": "vulnerable: normal UI",
+      "passed": true
+    },
+    {
+      "name": "vulnerable: BROWSER_REFLECTED",
+      "passed": true,
+      "status": 200,
+      "dialogs": [
+        "BROWSER_REFLECTED"
+      ]
+    },
+    {
+      "name": "vulnerable: BROWSER_SVG",
+      "passed": true,
+      "status": 200,
+      "dialogs": [
+        "BROWSER_SVG"
+      ]
+    },
+    {
+      "name": "vulnerable: Bob executes BROWSER_STORED",
+      "passed": true,
+      "post_status": 302,
+      "dialogs": [
+        "BROWSER_STORED"
+      ]
+    },
+    {
+      "name": "vulnerable: Bob executes BROWSER_IMAGE",
+      "passed": true,
+      "post_status": 302,
+      "dialogs": [
+        "BROWSER_IMAGE"
+      ]
+    },
+    {
+      "name": "vulnerable: mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "waf: separate session alice",
+      "passed": true
+    },
+    {
+      "name": "waf: separate session bob",
+      "passed": true
+    },
+    {
+      "name": "waf: normal UI",
+      "passed": true
+    },
+    {
+      "name": "waf: BROWSER_REFLECTED",
+      "passed": true,
+      "status": 403,
+      "dialogs": []
+    },
+    {
+      "name": "waf: BROWSER_SVG",
+      "passed": true,
+      "status": 403,
+      "dialogs": []
+    },
+    {
+      "name": "waf: Bob executes BROWSER_STORED",
+      "passed": true,
+      "post_status": 403,
+      "dialogs": []
+    },
+    {
+      "name": "waf: Bob executes BROWSER_IMAGE",
+      "passed": true,
+      "post_status": 403,
+      "dialogs": []
+    },
+    {
+      "name": "WAF serves existing Stored XSS from direct backend",
+      "passed": true,
+      "dialogs": [
+        "EXISTING_STORED"
+      ]
+    },
+    {
+      "name": "waf: mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "fixed: separate session alice",
+      "passed": true
+    },
+    {
+      "name": "fixed: separate session bob",
+      "passed": true
+    },
+    {
+      "name": "fixed: normal UI",
+      "passed": true
+    },
+    {
+      "name": "fixed: BROWSER_REFLECTED",
+      "passed": true,
+      "status": 200,
+      "dialogs": []
+    },
+    {
+      "name": "fixed: BROWSER_SVG",
+      "passed": true,
+      "status": 200,
+      "dialogs": []
+    },
+    {
+      "name": "fixed: Bob executes BROWSER_STORED",
+      "passed": true,
+      "post_status": 302,
+      "dialogs": []
+    },
+    {
+      "name": "fixed: Bob executes BROWSER_IMAGE",
+      "passed": true,
+      "post_status": 302,
+      "dialogs": []
+    },
+    {
+      "name": "fixed: mobile has no horizontal overflow",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

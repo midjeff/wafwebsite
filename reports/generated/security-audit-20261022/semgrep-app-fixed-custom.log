@@ -1,0 +1,39 @@
+                  
+                  
+┌────────────────┐
+│ 1 Code Finding │
+└────────────────┘
+                     
+    app-fixed/main.py
+    ❯❱ sast.lab-request-to-send-file
+          ❰❰ Blocking ❱❱
+          Request-controlled file path reaches send_file; validate resolved directory containment.
+                                                                                                  
+          210┆ return send_file(target, mimetype="text/plain",     
+               as_attachment=request.args.get("attachment") == "1")
+
+
+               
+               
+┌─────────────┐
+│ Scan Status │
+└─────────────┘
+  Scanning 27 files tracked by git with 4 Code rules:
+                                                                                                                        
+  Language      Rules   Files          Origin   Rules                                                                   
+ ─────────────────────────────        ────────────────                                                                  
+  <multilang>       1      27          Custom       4                                                                   
+  python            3       5                                                                                           
+                                                                                                                        
+                
+                
+┌──────────────┐
+│ Scan Summary │
+└──────────────┘
+✅ Scan completed successfully.
+ • Findings: 1 (1 blocking)
+ • Rules run: 4
+ • Targets scanned: 27
+ • Parsed lines: ~100.0%
+ • No ignore information available
+Ran 4 rules on 27 files: 1 finding.

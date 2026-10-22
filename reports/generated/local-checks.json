@@ -1,7 +1,7 @@
 {
   "suite": "Flask test client + real local OS processes",
   "platform": "win32",
-  "tests": 26,
+  "tests": 34,
   "failures": 0,
   "errors": 0,
   "skipped": 0,

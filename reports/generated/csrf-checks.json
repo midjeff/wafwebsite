@@ -1,0 +1,111 @@
+{
+  "test": "fixed-app-direct-csrf",
+  "waf": false,
+  "database": "temporary isolated SQLite database",
+  "checks": [
+    {
+      "route": "POST /login",
+      "case": "missing",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /login",
+      "case": "invalid",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /login",
+      "case": "foreign-session",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /login",
+      "case": "own-session-valid",
+      "status": 302,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /logout",
+      "case": "missing",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /logout",
+      "case": "invalid",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /logout",
+      "case": "foreign-session",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /tickets/new",
+      "case": "missing",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /tickets/new",
+      "case": "invalid",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /tickets/new",
+      "case": "foreign-session",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /tickets/<id>",
+      "case": "missing",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /tickets/<id>",
+      "case": "invalid",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /tickets/<id>",
+      "case": "foreign-session",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /diagnostics",
+      "case": "missing",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /diagnostics",
+      "case": "invalid",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /diagnostics",
+      "case": "foreign-session",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "route": "POST /tickets/new",
+      "case": "own-session-valid",
+      "status": 302,
+      "result": "PASS"
+    }
+  ],
+  "passed": 17,
+  "failed": 0
+}

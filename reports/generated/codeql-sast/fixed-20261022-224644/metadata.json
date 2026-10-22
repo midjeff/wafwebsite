@@ -1,0 +1,24 @@
+﻿{
+    "variant":  "fixed",
+    "generatedAtLocal":  "2026-10-22T22:47:28.4118155+05:00",
+    "sourceDirectory":  "app-fixed",
+    "codeqlVersion":  "CodeQL command-line toolchain release 2.27.2.\r\nCopyright (C) 2019-2026 GitHub, Inc.\r\nUnpacked in: C:\\Users\\Shwepes\\wafwebsite\\.runtime\\tools\\codeql-bundle-v2.27.2\\codeql\r\n   Analysis results depend critically on separately distributed query and\r\n   extractor modules. To list modules that are visible to the toolchain,\r\n   use \u0027codeql resolve packs\u0027 and \u0027codeql resolve languages\u0027.",
+    "codeqlPack":  "codeql/python-queries",
+    "codeqlPackVersion":  "1.8.12",
+    "codeqlBundleSha256":  "c4834b337e2db85bdd4e7e97455319ff70d28f06abb2987eff9ec0f62d51dcea",
+    "codeqlSuite":  "python-security-extended.qls (official suite from bundled codeql/python-queries pack)",
+    "codeqlDatabase":  ".runtime/codeql/databases/fixed",
+    "codeqlDatabaseCreateLog":  "codeql-database-create.log",
+    "codeqlAnalysisLog":  "codeql-analyze.log",
+    "banditVersion":  "__main__.py 1.9.4\r\n  python version = 3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+    "banditCommand":  "python -m bandit -r app-fixed --severity-level all --confidence-level all -f json",
+    "banditExitCode":  1,
+    "outputs":  [
+                    "codeql.sarif",
+                    "bandit.json",
+                    "source-inventory.json"
+                ],
+    "codeqlDatabaseCommand":  "codeql database create \u003cdb\u003e --language=python --source-root=app-fixed --build-mode=none --no-run-unnecessary-builds --extractor-option=python.python_executable_name=python --threads=0",
+    "codeqlAnalyzeCommand":  "codeql database analyze \u003cdb\u003e codeql/python-queries/codeql-suites/python-security-extended.qls --format=sarif-latest --threads=0",
+    "noUpload":  true
+}

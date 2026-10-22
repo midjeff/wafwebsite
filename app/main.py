@@ -13,7 +13,7 @@ from .db import close_db, get_db, initialize
 from .process import bounded_run, ping_arguments
 
 ROOT = Path(__file__).resolve().parent
-DOCUMENTS = {"onboarding.txt": "Первый день в компании", "vpn.txt": "Подключение к учебной сети", "meetings.txt": "Переговорные и видеосвязь"}
+DOCUMENTS = {"onboarding.txt": "Первый день в компании", "vpn.txt": "Подключение к корпоративной сети", "meetings.txt": "Переговорные и видеосвязь"}
 
 
 def login_required(view):
@@ -89,6 +89,11 @@ def create_app(config=None):
     def logout():
         session.clear()
         return redirect(url_for("login"))
+
+    @app.get('/api/me')
+    @login_required
+    def current_user():
+        return {'id': g.user['id'], 'username': g.user['username'], 'name': g.user['name']}
 
     def visible_tickets():
         return get_db().execute("""SELECT DISTINCT t.* FROM tickets t
@@ -193,7 +198,7 @@ def create_app(config=None):
 
     @app.get("/lab")
     def lab():
-        return render_template("lab.html", title="Лабораторная работа")
+        return redirect(url_for("documents"))
 
     @app.errorhandler(400)
     @app.errorhandler(403)

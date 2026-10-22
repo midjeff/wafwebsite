@@ -7,3 +7,6 @@ __pycache__/
 reports/generated/sonar-*/
 logs/*.log
 !logs/.gitkeep
+
+.env.sonar
+.runtime/sonar-token.txt

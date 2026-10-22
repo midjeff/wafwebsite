@@ -1,8 +1,8 @@
 {
-  "utc": "2026-10-21T19:02:54.317034+00:00",
+  "utc": "2026-10-22T13:57:04.312830+00:00",
   "services": {
     "vulnerable": {
-      "image_id": "sha256:3d984b25539f5d093f37440beffcb406bd45ec508610d8571440e6dc52da12a4",
+      "image_id": "sha256:6750a9641d2f73b76a9ce9d63ebae05b3d397d48bbdfaaccb484c7f2c48e008a",
       "user": "10001:10001",
       "health": "healthy",
       "host_config": {
@@ -63,11 +63,11 @@
         "icmp_echo_ignore_all": "0"
       },
       "ping_command": "docker compose exec -T vulnerable ping -c 1 -W 2 127.0.0.1",
-      "ping_output": "PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.088 ms\n\n--- 127.0.0.1 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.088/0.088/0.088/0.000 ms",
+      "ping_output": "PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.619 ms\n\n--- 127.0.0.1 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.619/0.619/0.619/0.000 ms",
       "ping_exit_code": 0
     },
     "fixed": {
-      "image_id": "sha256:d0beaff9a94501c0039ad78d5688f5c18bde9f45738ea3f1af0e072bc52827cb",
+      "image_id": "sha256:826d35900ced78c082967f07eb3552510b1d762fab39a31ae889227910a0d9c9",
       "user": "10001:10001",
       "health": "healthy",
       "host_config": {
@@ -128,7 +128,7 @@
         "icmp_echo_ignore_all": "0"
       },
       "ping_command": "docker compose exec -T fixed ping -c 1 -W 2 127.0.0.1",
-      "ping_output": "PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.033 ms\n\n--- 127.0.0.1 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.033/0.033/0.033/0.000 ms",
+      "ping_output": "PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.098 ms\n\n--- 127.0.0.1 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.098/0.098/0.098/0.000 ms",
       "ping_exit_code": 0
     },
     "waf": {

@@ -36,6 +36,8 @@ for case in [row for row in http["results"] if row.get("attack")]:
     passed = bool(case["passed"] and matching and detected and blocked)
     evidence.append({"name": case["name"], "case_id": case["case_id"], "passed": passed, "rules": messages})
     print(f"{'PASS' if passed else 'FAIL'} audit {case['name']}: {len(matching)} transaction(s), rules={messages}")
-complete = len(evidence) == 5 and all(item["passed"] for item in evidence)
+required = {'SQLi', 'Reflected XSS', 'Stored XSS', 'Command Injection', 'Path Traversal'}
+required |= {name + ' alternate' for name in list(required)}
+complete = len(evidence) == 10 and {item['name'] for item in evidence} == required and all(item["passed"] for item in evidence)
 Path(args.output).write_text(json.dumps({"complete": complete, "evidence": evidence}, ensure_ascii=False, indent=2), encoding="utf-8")
 sys.exit(0 if complete else 1)

@@ -1,0 +1,8 @@
+{
+  "tests": 9,
+  "failures": 0,
+  "errors": 0,
+  "success": true,
+  "platform": "win32",
+  "concurrency": "4 spawned OS processes, 12 concurrent requests for each independent budget"
+}

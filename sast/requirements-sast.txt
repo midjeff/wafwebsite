@@ -1,0 +1,10 @@
+# Separate from the application requirements so the analyzer does not change
+# either demo application's runtime dependencies.
+bandit==1.9.4
+colorama==0.4.6
+markdown-it-py==4.2.0
+mdurl==0.1.2
+Pygments==2.21.0
+PyYAML==6.0.3
+rich==15.0.0
+stevedore==5.8.0

@@ -1,0 +1,168 @@
+{
+    "total":  3,
+    "project":  "nexus-vulnerable",
+    "items":  [
+                  {
+                      "key":  "1ce92191-a9f2-4e80-986c-204ce8e0447a",
+                      "rule":  "python:S4502",
+                      "severity":  "CRITICAL",
+                      "component":  "nexus-vulnerable:app/main.py",
+                      "project":  "nexus-vulnerable",
+                      "line":  29,
+                      "hash":  "179643042db29a9995dc460d16749c31",
+                      "textRange":  {
+                                        "startLine":  29,
+                                        "endLine":  29,
+                                        "startOffset":  10,
+                                        "endOffset":  25
+                                    },
+                      "flows":  [
+
+                                ],
+                      "resolution":  "FALSE-POSITIVE",
+                      "status":  "RESOLVED",
+                      "message":  "Make sure disabling CSRF protection is safe here.",
+                      "effort":  "5min",
+                      "debt":  "5min",
+                      "author":  "",
+                      "tags":  [
+                                   "cwe",
+                                   "django",
+                                   "flask",
+                                   "former-hotspot"
+                               ],
+                      "creationDate":  "2026-10-22T14:12:41+0000",
+                      "updateDate":  "2026-10-22T16:14:14+0000",
+                      "type":  "VULNERABILITY",
+                      "scope":  "MAIN",
+                      "quickFixAvailable":  false,
+                      "messageFormattings":  [
+
+                                             ],
+                      "codeVariants":  [
+
+                                       ],
+                      "cleanCodeAttribute":  "CONVENTIONAL",
+                      "cleanCodeAttributeCategory":  "CONSISTENT",
+                      "impacts":  [
+                                      {
+                                          "softwareQuality":  "SECURITY",
+                                          "severity":  "HIGH"
+                                      }
+                                  ],
+                      "issueStatus":  "FALSE_POSITIVE",
+                      "prioritizedRule":  false,
+                      "fromSonarQubeUpdate":  false,
+                      "internalTags":  [
+
+                                       ],
+                      "linkedTicketStatus":  "NOT_LINKED"
+                  },
+                  {
+                      "key":  "443e65bb-d104-41f5-b5de-d33864c54cd6",
+                      "rule":  "Web:S5247",
+                      "severity":  "MAJOR",
+                      "component":  "nexus-vulnerable:app/templates/greeting.html",
+                      "project":  "nexus-vulnerable",
+                      "line":  1,
+                      "hash":  "0a35d76033a73962e6e19776e30a2527",
+                      "textRange":  {
+                                        "startLine":  1,
+                                        "endLine":  1,
+                                        "startOffset":  224,
+                                        "endOffset":  232
+                                    },
+                      "flows":  [
+
+                                ],
+                      "status":  "OPEN",
+                      "message":  "Make sure disabling auto-escaping feature is safe here.",
+                      "effort":  "5min",
+                      "debt":  "5min",
+                      "author":  "",
+                      "tags":  [
+                                   "cwe",
+                                   "former-hotspot"
+                               ],
+                      "creationDate":  "2026-10-22T14:12:41+0000",
+                      "updateDate":  "2026-10-22T14:12:41+0000",
+                      "type":  "VULNERABILITY",
+                      "scope":  "MAIN",
+                      "quickFixAvailable":  false,
+                      "messageFormattings":  [
+
+                                             ],
+                      "codeVariants":  [
+
+                                       ],
+                      "cleanCodeAttribute":  "COMPLETE",
+                      "cleanCodeAttributeCategory":  "INTENTIONAL",
+                      "impacts":  [
+                                      {
+                                          "softwareQuality":  "SECURITY",
+                                          "severity":  "MEDIUM"
+                                      }
+                                  ],
+                      "issueStatus":  "OPEN",
+                      "prioritizedRule":  false,
+                      "fromSonarQubeUpdate":  false,
+                      "internalTags":  [
+
+                                       ],
+                      "linkedTicketStatus":  "NOT_LINKED"
+                  },
+                  {
+                      "key":  "5988b07d-e556-48a0-8766-0506ef333a8b",
+                      "rule":  "Web:S5247",
+                      "severity":  "MAJOR",
+                      "component":  "nexus-vulnerable:app/templates/ticket.html",
+                      "project":  "nexus-vulnerable",
+                      "line":  1,
+                      "hash":  "86998f3a37e54f6b774803b0312f0f56",
+                      "textRange":  {
+                                        "startLine":  1,
+                                        "endLine":  1,
+                                        "startOffset":  801,
+                                        "endOffset":  809
+                                    },
+                      "flows":  [
+
+                                ],
+                      "status":  "OPEN",
+                      "message":  "Make sure disabling auto-escaping feature is safe here.",
+                      "effort":  "5min",
+                      "debt":  "5min",
+                      "author":  "",
+                      "tags":  [
+                                   "cwe",
+                                   "former-hotspot"
+                               ],
+                      "creationDate":  "2026-10-22T14:12:41+0000",
+                      "updateDate":  "2026-10-22T14:12:41+0000",
+                      "type":  "VULNERABILITY",
+                      "scope":  "MAIN",
+                      "quickFixAvailable":  false,
+                      "messageFormattings":  [
+
+                                             ],
+                      "codeVariants":  [
+
+                                       ],
+                      "cleanCodeAttribute":  "COMPLETE",
+                      "cleanCodeAttributeCategory":  "INTENTIONAL",
+                      "impacts":  [
+                                      {
+                                          "softwareQuality":  "SECURITY",
+                                          "severity":  "MEDIUM"
+                                      }
+                                  ],
+                      "issueStatus":  "OPEN",
+                      "prioritizedRule":  false,
+                      "fromSonarQubeUpdate":  false,
+                      "internalTags":  [
+
+                                       ],
+                      "linkedTicketStatus":  "NOT_LINKED"
+                  }
+              ]
+}

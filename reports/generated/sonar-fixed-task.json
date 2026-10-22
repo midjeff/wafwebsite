@@ -1,0 +1,25 @@
+{
+    "task":  {
+                 "id":  "ebcd604a-e499-4e9e-8f35-71cae482b0a8",
+                 "type":  "REPORT",
+                 "componentId":  "e02d7ef6-dcfe-4443-9935-86c32e73007d",
+                 "componentKey":  "nexus-fixed",
+                 "componentName":  "NEXUS - Fixed",
+                 "componentQualifier":  "TRK",
+                 "analysisId":  "26bd38a3-b489-4518-9743-04c3c58271d3",
+                 "status":  "SUCCESS",
+                 "submittedAt":  "2026-10-22T16:27:55+0000",
+                 "submitterLogin":  "admin",
+                 "startedAt":  "2026-10-22T16:27:56+0000",
+                 "executedAt":  "2026-10-22T16:27:57+0000",
+                 "executionTimeMs":  928,
+                 "hasScannerContext":  true,
+                 "warningCount":  1,
+                 "warnings":  [
+                                  "The token used for this analysis will expire on: October 29, 2026\nAfter this date, the token can no longer be used to execute the analysis. Please consider generating a new token and updating it in the locations where it is in use."
+                              ],
+                 "infoMessages":  [
+
+                                  ]
+             }
+}

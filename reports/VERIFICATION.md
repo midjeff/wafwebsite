@@ -1,26 +1,28 @@
 # Фактически выполненные проверки
 
-Обновлено 22.10.2026, Asia/Qyzylorda (UTC+5). В машинных журналах время UTC, поэтому дата поздних проверок там ещё 21.10.2026. Docker Desktop установлен; vulnerable, fixed и waf запущены и healthy. SonarQube в этом сеансе не запускался.
+Обновлено 22.10.2026, Asia/Qyzylorda (UTC+5). Docker Desktop установлен; vulnerable, fixed и waf запущены и healthy. SonarQube/PostgreSQL запущены через Compose; API вернул `UP`; два проекта отсканированы, JSON-результаты сохранены.
 
 | Проверка | Результат | Доказательства / границы |
 |---|---|---|
 | Пересборка vulnerable и fixed | **PASS** | Общий Dockerfile; снятие capability выполнено для обоих образов |
 | Обычный ping 127.0.0.1 | **2/2 PASS** | `generated/ping-runtime.json`: штатный UID/GID 10001, exit 0, 1 received, 0% packet loss |
-| Docker HTTP: vulnerable | **18/18 PASS** | `generated/http-vulnerable.json`, Linux |
-| Docker HTTP: WAF | **18/18 PASS** | `generated/http-waf.json`, Linux |
-| Docker HTTP: fixed | **18/18 PASS** | `generated/http-fixed.json`, Linux |
-| Полный `scripts/lab.ps1 test` | **PASS, exit 0** | 54/54 HTTP-проверки, включая normal_ping во всех трёх вариантах |
-| Корреляция audit ModSecurity/CRS | **5/5 PASS** | `generated/waf-evidence.json`, `logs/waf.log`; case_id + 403 + сообщение детектирующего правила |
-| Структура / Python syntax / Compose Schema | **55/55 PASS, exit 0** | `scripts/verify-project.py`, вывод `generated/structure-check.txt` |
+| Docker HTTP: vulnerable | **24/24 PASS** | `generated/http-vulnerable.json`, Linux |
+| Docker HTTP: WAF | **24/24 PASS** | `generated/http-waf.json`, Linux |
+| Docker HTTP: fixed | **24/24 PASS** | `generated/http-fixed.json`, Linux |
+| Полный `scripts/lab.ps1 test` | **PASS, exit 0** | 72/72 HTTP-проверки; все три сценария brute force также прошли |
+| Корреляция audit ModSecurity/CRS | **10/10 PASS** | `generated/waf-evidence.json`, `logs/waf.log`; пять базовых и пять альтернативных блокировок подтверждены по CRS audit |
+| Ограничение перебора через nginx | **6/6 журналируемых 429** | `generated/nginx-login-evidence.json`, `logs/login-rate.log`; это `limit_req`, не ModSecurity/CRS |
+| Flask/SQLite/process проверки | **34/34 PASS** | `generated/local-checks.json`; Windows |
+| Лимитер fixed и параллельные процессы | **9/9 PASS** | `generated/login-limit-checks.json`; четыре процесса и 12 одновременных запросов на бюджет |
+| Исполнение XSS и адаптивность в браузере | **25/25 PASS** | `generated/browser-checks.json`, `reports/screenshots/`; headless Chrome 155.0.8059.85, Alice/Bob в отдельных контекстах |
+| Структура / Python syntax / Compose Schema | **61/61 PASS, exit 0** | `scripts/verify-project.py`, вывод `generated/structure-check.txt` |
 | Синтаксис изменённого PowerShell-скрипта | **PASS** | PowerShell Parser: 0 ошибок в `scripts/lab.ps1` |
 | Runtime-порты, сеть, ограничения приложений | **PASS** | `generated/ping-runtime.json`; Docker inspect и /proc, не только YAML |
 | Страница входа с хоста на 8080/8081/8082 | **3/3 PASS** | HTTP 200; cookie vulnerable на 8080/8081, fixed на 8082; без запуска браузера |
 | Ранее: Flask/SQLite/процессы, Windows | **26/26 PASS**, исторический результат | `generated/local-checks.json`, в этом сеансе не перезапускались |
 | Ранее: HTTP Windows preview | **36/36 PASS**, исторический результат | `generated/local-http/`, по 18 на две версии; не смешивать с 54 контейнерными |
-| Ранее: Semgrep CE 1.181.0 | **4 успешных запуска**, без изменений | Registry 0/0, custom 5/1; JSON/SARIF/log и `semgrep-summary.json` сохранены, нового сканирования не было |
-| SonarQube / SonarScanner | **НЕ ВЫПОЛНЕНО** | Нужны запуск, первоначальная настройка, сканирование и экспорт |
-| Исполнение XSS в браузере | **НЕ ПРОВЕРЕНО** | HTTP-проверки изучают HTML и сохранение данных, не исполняют JavaScript |
-| Визуальная проверка / скриншоты | **НЕ ПРОВЕРЕНО** | В этом сеансе браузерная демонстрация не выполнялась |
+| Semgrep CE 1.181.0 | **8 успешных запусков: 4 до и 4 после изменений** | Registry 0/0, custom 5/1 в каждом прогоне; новые before/after JSON/SARIF/log отдельно, исходный `semgrep-summary.json` сохранён без изменения |
+| SonarQube / SonarScanner | **2/2 анализа и экспорт PASS** | Vulnerable: 3 Issues, 0 Hotspots; fixed: 1 Issue, 0 Hotspots; оба quality gate `OK`. JSON: `generated/sonar-*.json` |
 
 ## Причина и исправление ping
 
@@ -67,4 +69,11 @@ docker compose exec -T fixed ping -c 1 -W 2 127.0.0.1
 
 В каждом режиме 18 HTTP-проверок: два входа, четыре обычные страницы, поиск/скачивание/создание заявки/комментарий/ping, чистое состояние перед Stored XSS и шесть демонстраций. Linux Command Injection подтверждён реальным `LAB_TEST` от shell с разделителем `;`. XSS проверен по raw/escaped HTML и сохранению между отдельными сессиями. Браузерные alert и отсутствие исполнения в fixed этим не доказаны. Пять audit-проверок идут отдельно от 54 HTTP-проверок.
 
-Для завершения сдачи: выполнить браузерные шаги `DEMO-RU.md`, сохранить настоящие скриншоты по `SCREENSHOTS.md`; запустить и настроить SonarQube по `SONAR-SETUP.md`, просканировать обе версии, экспортировать и вручную разобрать Issues/Hotspots. Semgrep уже выполнялся ранее; повторный запуск не является частью этого исправления. Успех выбранных тестов не доказывает блокировку всех вариантов атак.
+Для завершения сдачи: подготовить демонстрацию по `DEMO-RU.md`, просмотреть сохранённые скриншоты по `SCREENSHOTS.md` и в SonarQube вручную рассмотреть открытые S4502 предупреждения CSRF. Сервер, два анализа, экспорты и оба quality gate уже проверены. Успех выбранных тестов не доказывает блокировку всех вариантов атак.
+
+## CSRF review (2026-10-22)
+
+Direct fixed-app CSRF verification passed **17/17** without sending requests through WAF. Missing, invalid, and cross-session tokens were rejected (HTTP 400) for all five mutating routes; valid same-session tokens were accepted for login and ticket creation. Evidence: `generated/csrf-checks.json`; run `.venv\Scripts\python.exe tests\csrf_checks.py` from the repository root.
+
+`python:S4502` was reported at `app/main.py:29` (`nexus-vulnerable`) and `app-fixed/main.py:30` (`nexus-fixed`). The global checks at `app/main.py:45-51` and `app-fixed/main.py:50-58` protect every POST before route dispatch. No CSRF defect was reproduced. SonarQube comments now contain the evidence and code references; the status is `FALSE_POSITIVE` in both projects. The Sonar issue exports were refreshed. This supersedes the earlier note above that requested review of open S4502 findings.
+Additional reruns for the S4502 review: the established Flask/SQLite/process suite passed **34/34** for both vulnerable and fixed code, and the project structure/configuration verifier passed **61/61**. Neither run changes or reclassifies the preserved Semgrep before/after results.

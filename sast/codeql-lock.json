@@ -1,0 +1,10 @@
+{
+  "cliVersion": "2.27.2",
+  "bundleAsset": "codeql-bundle-win64.tar.gz",
+  "bundleRelease": "https://github.com/github/codeql-action/releases/tag/codeql-bundle-v2.27.2",
+  "bundleSha256": "c4834b337e2db85bdd4e7e97455319ff70d28f06abb2987eff9ec0f62d51dcea",
+  "queryPack": "codeql/python-queries",
+  "queryPackVersion": "1.8.12",
+  "querySuite": "codeql-suites/python-security-extended.qls",
+  "language": "python"
+}

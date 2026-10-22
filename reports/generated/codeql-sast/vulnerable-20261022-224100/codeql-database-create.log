@@ -1,0 +1,59 @@
+﻿[2026-10-22 22:41:02] [build-stderr] No installed Python found!
+[2026-10-22 22:41:02] [build-stderr] No installed Python found!
+[2026-10-22 22:41:02] [build-stderr] No installed Python found!
+[2026-10-22 22:41:02] [build-stderr] No installed Python found!
+[2026-10-22 22:41:02] [build-stdout] No directories containing root identifiers were found. Returning working directory as root.
+[2026-10-22 22:41:02] [build-stdout] Will try to guess Python version, as it was not specified in `lgtm.yml`
+[2026-10-22 22:41:02] [build-stdout] Trying to guess Python version based on Trove classifiers in setup.py
+[2026-10-22 22:41:02] [build-stdout] Did not find setup.py (expected it to be at C:\Users\Shwepes\wafwebsite\app\setup.py)
+[2026-10-22 22:41:02] [build-stdout] Trying to guess Python version based on travis file
+[2026-10-22 22:41:02] [build-stdout] Did not find any travis files (expected them at either ['C:\\Users\\Shwepes\\wafwebsite\\app\\.travis.yml', 'C:\\Users\\Shwepes\\wafwebsite\\app\\travis.yml'])
+[2026-10-22 22:41:02] [build-stdout] Trying to guess Python version based on installed versions
+[2026-10-22 22:41:02] [build-stdout] Wanted to run Python 2, but it is not available. Using Python  instead
+[2026-10-22 22:41:02] [build-stdout] Only Python 3 installed -- will use that version
+[2026-10-22 22:41:02] [build-stdout] Using Python executable name provided via the python_executable_name extractor option: python
+[2026-10-22 22:41:02] [build-stdout] Wanted to run Python 3, but it is not available. Using Python  instead
+[2026-10-22 22:41:02] [build-stdout] Running without -S
+[2026-10-22 22:41:02] [build-stdout] Calling python C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\python\tools\python_tracer.py --verbosity 3 -z all -c C:\Users\Shwepes\wafwebsite\.runtime\codeql\databases\vulnerable\working\trap_cache -R C:\Users\Shwepes\wafwebsite\app
+[2026-10-22 22:41:02] [build-stdout] INFO: The Python extractor has recently stopped extracting the standard library by default. If you encounter problems, please let us know by submitting an issue to https://github.com/github/codeql. It is possible to re-enable extraction of the standard library by setting the environment variable CODEQL_EXTRACTOR_PYTHON_EXTRACT_STDLIB.
+[2026-10-22 22:41:02] [build-stdout] [INFO] Extraction will use the Python 3 standard library.
+[2026-10-22 22:41:02] [build-stdout] [INFO] sys_path is: ['C:\\Users\\Shwepes\\wafwebsite\\.runtime\\tools\\codeql-bundle-v2.27.2\\codeql\\python\\tools', 'C:\\Users\\Shwepes\\AppData\\Local\\Programs\\Python\\Python310\\python310.zip', 'C:\\Users\\Shwepes\\AppData\\Local\\Programs\\Python\\Python310\\DLLs', 'C:\\Users\\Shwepes\\AppData\\Local\\Programs\\Python\\Python310\\lib', 'C:\\Users\\Shwepes\\AppData\\Local\\Programs\\Python\\Python310', 'C:\\Users\\Shwepes\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages']
+[2026-10-22 22:41:02] [build-stdout] [INFO] Python version 3.10.11
+[2026-10-22 22:41:02] [build-stdout] [INFO] Python extractor version 7.1.11
+[2026-10-22 22:41:03] [build-stdout] [INFO] [4] Extracted file C:\Users\Shwepes\wafwebsite\app\__init__.py in 14ms
+[2026-10-22 22:41:03] [build-stdout] [INFO] [6] Extracted folder C:\Users\Shwepes\wafwebsite\app in 3ms
+[2026-10-22 22:41:03] [build-stdout] [INFO] [3] Extracted file C:\Users\Shwepes\wafwebsite\app\process.py in 66ms
+[2026-10-22 22:41:03] [build-stdout] [INFO] [1] Extracted file C:\Users\Shwepes\wafwebsite\app\db.py in 86ms
+[2026-10-22 22:41:03] [build-stdout] [INFO] [4] Skipped built-in file C:\Users\Shwepes\AppData\Local\Programs\Python\Python310\lib\sqlite3\__init__.py
+[2026-10-22 22:41:03] [build-stdout] [INFO] [6] Skipped built-in file C:\Users\Shwepes\AppData\Local\Programs\Python\Python310\lib\threading.py
+[2026-10-22 22:41:03] [build-stdout] [INFO] [3] Skipped built-in file C:\Users\Shwepes\AppData\Local\Programs\Python\Python310\lib\signal.py
+[2026-10-22 22:41:03] [build-stdout] [INFO] [9] Skipped built-in file C:\Users\Shwepes\AppData\Local\Programs\Python\Python310\lib\subprocess.py
+[2026-10-22 22:41:03] [build-stdout] [INFO] [5] Skipped built-in file C:\Users\Shwepes\AppData\Local\Programs\Python\Python310\lib\pathlib.py
+[2026-10-22 22:41:03] [build-stdout] [INFO] [10] Skipped built-in file C:\Users\Shwepes\AppData\Local\Programs\Python\Python310\lib\os.py
+[2026-10-22 22:41:03] [build-stdout] [INFO] [7] Extracted folder C:\Users\Shwepes\AppData\Local\Programs\Python\Python310\lib\sqlite3 in 2ms
+[2026-10-22 22:41:03] [build-stdout] [INFO] [2] Extracted file C:\Users\Shwepes\wafwebsite\app\main.py in 196ms
+[2026-10-22 22:41:03] [build-stdout] [INFO] [4] Skipped built-in file C:\Users\Shwepes\AppData\Local\Programs\Python\Python310\lib\site-packages\click\__init__.py
+[2026-10-22 22:41:03] [build-stdout] [INFO] [6] Skipped built-in file C:\Users\Shwepes\AppData\Local\Programs\Python\Python310\lib\secrets.py
+[2026-10-22 22:41:03] [build-stdout] [INFO] [3] Skipped built-in file C:\Users\Shwepes\AppData\Local\Programs\Python\Python310\lib\functools.py
+[2026-10-22 22:41:03] [build-stdout] [INFO] [1] Extracted folder C:\Users\Shwepes\AppData\Local\Programs\Python\Python310\lib\site-packages\click in 2ms
+[2026-10-22 22:41:03] [build-stdout] [INFO] Processed 16 modules in 0.85s
+[2026-10-22 22:41:04] [build-stderr] Scanning for files in C:\Users\Shwepes\wafwebsite\app...
+Initializing database at C:\Users\Shwepes\wafwebsite\.runtime\codeql\databases\vulnerable.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by com.semmle.util.files.SubstResolver in an unnamed module (file:/C:/Users/Shwepes/wafwebsite/.runtime/tools/codeql-bundle-v2.27.2/codeql/tools/codeql.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+Running build command: []
+Running command in C:\Users\Shwepes\wafwebsite\app: [C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\python\tools\autobuild.cmd]
+Finalizing database at C:\Users\Shwepes\wafwebsite\.runtime\codeql\databases\vulnerable.
+Running pre-finalize script C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\python\tools\pre-finalize.cmd in C:\Users\Shwepes\wafwebsite\app.
+Running command in C:\Users\Shwepes\wafwebsite\app: [C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\python\tools\pre-finalize.cmd]
+Pre-finalize script C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\python\tools\pre-finalize.cmd completed in 732 ms.
+Running TRAP import for CodeQL database at C:\Users\Shwepes\wafwebsite\.runtime\codeql\databases\vulnerable...
+Importing TRAP files
+Merging relations
+Finished writing database (relations: 89.89 KiB; string pool: 2.08 MiB).
+TRAP import complete (9.4s).
+Finished zipping source archive (7.04 KiB).
+Successfully created database at C:\Users\Shwepes\wafwebsite\.runtime\codeql\databases\vulnerable.

@@ -5,6 +5,7 @@ PASS vulnerable: no Docker socket mount
 PASS fixed: published port bound to loopback
 PASS fixed: no Docker socket mount
 PASS waf: published port bound to loopback
+PASS waf: no Docker socket mount
 PASS checks: no Docker socket mount
 PASS checks: no Docker socket mount
 PASS sonar-db: no Docker socket mount
@@ -53,3 +54,8 @@ PASS Fixed templates do not bypass escaping
 PASS lab-rules.yml: nonempty rule configuration
 PASS registry-python.yml: nonempty rule configuration
 PASS Default compose starts the complete application stand
+PASS WAF mounts the real nginx login rate configuration read-only
+PASS nginx limits login POSTs by original peer and returns 429
+PASS nginx writes rejected login requests to the captured container log
+PASS Fixed login failure policy is explicitly configured with positive values
+PASS Attack instructions are absent from portal templates

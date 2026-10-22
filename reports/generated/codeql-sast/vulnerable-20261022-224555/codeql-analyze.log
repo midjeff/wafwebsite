@@ -1,0 +1,165 @@
+﻿CodeQL scanned 4 out of 4 Python files in this invocation. Typically CodeQL is configured to analyze a single CodeQL language per invocation, so check other invocations to determine overall coverage information.
+Running queries.
+Resolving data extensions.
+Finished resolving data extensions.
+Loading data extensions.
+Finished loading data extensions.
+WARNING: Not caching stages during query-loading, since max heap size is only 1800 MB.
+[1/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-020\IncompleteUrlSubstringSanitization.qlx.
+[2/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-215\FlaskDebug.qlx.
+[3/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Expressions\UseofInput.qlx.
+[4/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-020\OverlyLargeRange.qlx.
+[5/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-020\IncompleteHostnameRegExp.qlx.
+[6/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-295\MissingHostKeyValidation.qlx.
+[7/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-116\BadTagFilter.qlx.
+[8/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-1004\NonHttpOnlyCookie.qlx.
+[9/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-1275\SameSiteNoneCookie.qlx.
+[10/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CVE-2018-1281\BindToAllInterfaces.qlx.
+[11/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-326\WeakCryptoKey.qlx.
+[12/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-209\StackTraceExposure.qlx.
+[13/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-327\BrokenCryptoAlgorithm.qlx.
+[14/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-327\InsecureDefaultProtocol.qlx.
+[15/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-285\PamAuthorization.qlx.
+[16/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-089\SqlInjection.qlx.
+[17/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-094\CodeInjection.qlx.
+[18/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-113\HeaderInjection.qlx.
+[19/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-090\LdapInjection.qlx.
+[20/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-079\ReflectedXss.qlx.
+[21/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-377\InsecureTemporaryFile.qlx.
+[22/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-078\CommandInjection.qlx.
+[23/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-074\TemplateInjection.qlx.
+[24/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-022\PathInjection.qlx.
+[25/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-020\CookieInjection.qlx.
+[26/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-327\InsecureProtocol.qlx.
+[27/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-352\CSRFProtectionDisabled.qlx.
+[28/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-312\CleartextLogging.qlx.
+[29/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-312\CleartextStorage.qlx.
+[30/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Diagnostics\ExtractedFiles.qlx.
+[31/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Diagnostics\ExtractionWarnings.qlx.
+[32/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Summary\LinesOfCode.qlx.
+[33/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-730\ReDoS.qlx.
+[34/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Summary\LinesOfUserCode.qlx.
+[35/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-079\Jinja2WithoutEscaping.qlx.
+[36/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-614\InsecureCookie.qlx.
+[37/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-295\RequestWithoutValidation.qlx.
+[38/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-327\WeakSensitiveDataHashing.qlx.
+[39/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-732\WeakFilePermissions.qlx.
+[40/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-601\UrlRedirect.qlx.
+[41/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-611\Xxe.qlx.
+[42/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-643\XpathInjection.qlx.
+[43/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-502\UnsafeDeserialization.qlx.
+[44/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-022\TarSlip.qlx.
+[45/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-730\PolynomialReDoS.qlx.
+[46/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-730\RegexInjection.qlx.
+[47/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-776\XmlBomb.qlx.
+[48/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-078\UnsafeShellCommandConstruction.qlx.
+[49/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-918\FullServerSideRequestForgery.qlx.
+[50/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-117\LogInjection.qlx.
+[51/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-943\NoSqlInjection.qlx.
+[52/52] Loaded C:\Users\Shwepes\wafwebsite\.runtime\tools\codeql-bundle-v2.27.2\codeql\qlpacks\codeql\python-queries\1.8.12\Security\CWE-918\PartialServerSideRequestForgery.qlx.
+Starting evaluation of codeql\python-queries\Diagnostics\ExtractedFiles.ql.
+Starting evaluation of codeql\python-queries\Diagnostics\ExtractionWarnings.ql.
+Starting evaluation of codeql\python-queries\Expressions\UseofInput.ql.
+Starting evaluation of codeql\python-queries\Security\CVE-2018-1281\BindToAllInterfaces.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-020\CookieInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-020\IncompleteHostnameRegExp.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-020\IncompleteUrlSubstringSanitization.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-020\OverlyLargeRange.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-022\PathInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-022\TarSlip.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-074\TemplateInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-078\CommandInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-078\UnsafeShellCommandConstruction.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-079\Jinja2WithoutEscaping.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-079\ReflectedXss.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-089\SqlInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-090\LdapInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-094\CodeInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-1004\NonHttpOnlyCookie.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-113\HeaderInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-209\StackTraceExposure.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-116\BadTagFilter.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-327\WeakSensitiveDataHashing.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-117\LogInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-1275\SameSiteNoneCookie.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-215\FlaskDebug.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-285\PamAuthorization.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-295\MissingHostKeyValidation.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-295\RequestWithoutValidation.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-312\CleartextLogging.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-312\CleartextStorage.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-326\WeakCryptoKey.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-327\BrokenCryptoAlgorithm.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-327\InsecureDefaultProtocol.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-327\InsecureProtocol.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-352\CSRFProtectionDisabled.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-377\InsecureTemporaryFile.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-502\UnsafeDeserialization.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-601\UrlRedirect.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-611\Xxe.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-614\InsecureCookie.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-643\XpathInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-730\PolynomialReDoS.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-730\ReDoS.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-730\RegexInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-732\WeakFilePermissions.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-776\XmlBomb.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-918\FullServerSideRequestForgery.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-918\PartialServerSideRequestForgery.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-943\NoSqlInjection.ql.
+Starting evaluation of codeql\python-queries\Summary\LinesOfCode.ql.
+Starting evaluation of codeql\python-queries\Summary\LinesOfUserCode.ql.
+[1/52 eval 624ms] Evaluation done; writing results to codeql\python-queries\Diagnostics\ExtractedFiles.bqrs.
+[2/52 eval 636ms] Evaluation done; writing results to codeql\python-queries\Diagnostics\ExtractionWarnings.bqrs.
+[3/52 eval 639ms] Evaluation done; writing results to codeql\python-queries\Summary\LinesOfCode.bqrs.
+[4/52 eval 843ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-020\IncompleteUrlSubstringSanitization.bqrs.
+[5/52 eval 949ms] Evaluation done; writing results to codeql\python-queries\Summary\LinesOfUserCode.bqrs.
+[6/52 eval 1.8s] Evaluation done; writing results to codeql\python-queries\Expressions\UseofInput.bqrs.
+[7/52 eval 1.8s] Evaluation done; writing results to codeql\python-queries\Security\CWE-295\MissingHostKeyValidation.bqrs.
+[8/52 eval 1.8s] Evaluation done; writing results to codeql\python-queries\Security\CWE-079\Jinja2WithoutEscaping.bqrs.
+[9/52 eval 1.8s] Evaluation done; writing results to codeql\python-queries\Security\CWE-732\WeakFilePermissions.bqrs.
+[10/52 eval 1.8s] Evaluation done; writing results to codeql\python-queries\Security\CWE-327\InsecureDefaultProtocol.bqrs.
+[11/52 eval 1.8s] Evaluation done; writing results to codeql\python-queries\Security\CWE-326\WeakCryptoKey.bqrs.
+[12/52 eval 2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-020\IncompleteHostnameRegExp.bqrs.
+[13/52 eval 2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-020\OverlyLargeRange.bqrs.
+[14/52 eval 2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-116\BadTagFilter.bqrs.
+[15/52 eval 2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-730\ReDoS.bqrs.
+[16/52 eval 2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-352\CSRFProtectionDisabled.bqrs.
+[17/52 eval 2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-1004\NonHttpOnlyCookie.bqrs.
+[18/52 eval 2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-614\InsecureCookie.bqrs.
+[19/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-113\HeaderInjection.bqrs.
+[20/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-730\PolynomialReDoS.bqrs.
+[21/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-643\XpathInjection.bqrs.
+[22/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-327\WeakSensitiveDataHashing.bqrs.
+[23/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-285\PamAuthorization.bqrs.
+[24/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-074\TemplateInjection.bqrs.
+[25/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-776\XmlBomb.bqrs.
+[26/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-022\TarSlip.bqrs.
+[27/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-094\CodeInjection.bqrs.
+[28/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-020\CookieInjection.bqrs.
+[29/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CVE-2018-1281\BindToAllInterfaces.bqrs.
+[30/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-611\Xxe.bqrs.
+[31/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-117\LogInjection.bqrs.
+[32/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-078\UnsafeShellCommandConstruction.bqrs.
+[33/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-1275\SameSiteNoneCookie.bqrs.
+[34/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-209\StackTraceExposure.bqrs.
+[35/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-295\RequestWithoutValidation.bqrs.
+[36/52 eval 2.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-215\FlaskDebug.bqrs.
+[37/52 eval 2.2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-327\BrokenCryptoAlgorithm.bqrs.
+[38/52 eval 2.2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-312\CleartextLogging.bqrs.
+[39/52 eval 2.2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-918\PartialServerSideRequestForgery.bqrs.
+[40/52 eval 2.2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-079\ReflectedXss.bqrs.
+[41/52 eval 2.2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-502\UnsafeDeserialization.bqrs.
+[42/52 eval 2.2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-730\RegexInjection.bqrs.
+[43/52 eval 2.2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-918\FullServerSideRequestForgery.bqrs.
+[44/52 eval 2.2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-090\LdapInjection.bqrs.
+[45/52 eval 2.2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-943\NoSqlInjection.bqrs.
+[46/52 eval 2.3s] Evaluation done; writing results to codeql\python-queries\Security\CWE-601\UrlRedirect.bqrs.
+[47/52 eval 2.3s] Evaluation done; writing results to codeql\python-queries\Security\CWE-312\CleartextStorage.bqrs.
+[48/52 eval 2.3s] Evaluation done; writing results to codeql\python-queries\Security\CWE-377\InsecureTemporaryFile.bqrs.
+[49/52 eval 2.3s] Evaluation done; writing results to codeql\python-queries\Security\CWE-327\InsecureProtocol.bqrs.
+[50/52 eval 2.5s] Evaluation done; writing results to codeql\python-queries\Security\CWE-089\SqlInjection.bqrs.
+[51/52 eval 2.5s] Evaluation done; writing results to codeql\python-queries\Security\CWE-022\PathInjection.bqrs.
+[52/52 eval 4.8s] Evaluation done; writing results to codeql\python-queries\Security\CWE-078\CommandInjection.bqrs.
+Shutting down query evaluator.
+Interpreting results.

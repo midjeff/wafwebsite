@@ -63,7 +63,7 @@
       "passed": true,
       "detail": "Exploitation effect observed in response or persisted data",
       "status": 200,
-      "case_id": "7fafe817ffca4e5888b6889dceaaccce",
+      "case_id": "bd0c8dbc43ae41d2a888014dc5d3e6ce",
       "attack": true
     },
     {
@@ -71,7 +71,7 @@
       "passed": true,
       "detail": "Exploitation effect observed in response or persisted data",
       "status": 200,
-      "case_id": "939934ae1d4a44639d258a30b9113c2f",
+      "case_id": "80d88dbc289b4c5189ab3e76594324f8",
       "attack": true
     },
     {
@@ -84,7 +84,7 @@
       "passed": true,
       "detail": "Exploitation effect observed in response or persisted data",
       "status": 302,
-      "case_id": "b9e1546112974ed5ac515e53d5e3e611",
+      "case_id": "1a5f45806d3146088980e7bcdf2ef601",
       "attack": true
     },
     {
@@ -92,7 +92,7 @@
       "passed": true,
       "detail": "Exploitation effect observed in response or persisted data",
       "status": 200,
-      "case_id": "3b34a3aa57664f8eb3ba43424710ea83",
+      "case_id": "09908c986b684598ba55b0e5475bdd9e",
       "attack": true
     },
     {
@@ -100,7 +100,7 @@
       "passed": true,
       "detail": "Exploitation effect observed in response or persisted data",
       "status": 200,
-      "case_id": "aecce0792a2c45128feac38893a70581",
+      "case_id": "d35185dc3b3a48a8b9a282d52c6be9aa",
       "attack": true
     },
     {
@@ -108,6 +108,53 @@
       "passed": true,
       "detail": "Alice reads Bob's ticket; WAF does not enforce ownership",
       "status": 200
+    },
+    {
+      "name": "SQLi alternate",
+      "passed": true,
+      "detail": "Exploitation effect observed in response or persisted data",
+      "status": 200,
+      "case_id": "e8660a50bb7f4b1da6c6394027d5a537",
+      "attack": true
+    },
+    {
+      "name": "Reflected XSS alternate",
+      "passed": true,
+      "detail": "Exploitation effect observed in response or persisted data",
+      "status": 200,
+      "case_id": "7794f3878b4a46b588e8a72c2bf67c69",
+      "attack": true
+    },
+    {
+      "name": "Stored XSS alternate",
+      "passed": true,
+      "detail": "Exploitation effect observed in response or persisted data",
+      "status": 302,
+      "case_id": "103332b046b445faa5af73c0e4834c15",
+      "attack": true
+    },
+    {
+      "name": "Command Injection alternate",
+      "passed": true,
+      "detail": "Exploitation effect observed in response or persisted data",
+      "status": 200,
+      "case_id": "242debdc14be46ea8154c179f951eca1",
+      "attack": true
+    },
+    {
+      "name": "Path Traversal alternate",
+      "passed": true,
+      "detail": "Exploitation effect observed in response or persisted data",
+      "status": 200,
+      "case_id": "45b527ffcde5473a8331ec87b78db602",
+      "attack": true
+    },
+    {
+      "name": "IDOR alternate GET/POST",
+      "passed": true,
+      "detail": "Authorization on a newly created private object, independent of fixture IDs",
+      "status": 200,
+      "post_status": 302
     }
   ],
   "xss_scope": "HTTP markup only; browser JavaScript execution requires the documented manual check"

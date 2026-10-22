@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-22T14:10:18.900542+00:00",
+  "server_status": "UP",
+  "projects": [
+    "nexus-vulnerable",
+    "nexus-fixed"
+  ],
+  "token_file": ".runtime/sonar-token.txt",
+  "admin_password_file": ".runtime/sonar-admin-password.txt",
+  "analysis_completed": true,
+  "analysis_results": {
+    "nexus-vulnerable": {
+      "files_indexed": 25,
+      "issues": 3,
+      "hotspots": 0,
+      "quality_gate": "OK"
+    },
+    "nexus-fixed": {
+      "files_indexed": 27,
+      "issues": 1,
+      "hotspots": 0,
+      "quality_gate": "OK"
+    }
+  },
+  "exports": [
+    "sonar-vulnerable-issues.json",
+    "sonar-vulnerable-hotspots.json",
+    "sonar-vulnerable-qualitygate.json",
+    "sonar-fixed-issues.json",
+    "sonar-fixed-hotspots.json",
+    "sonar-fixed-qualitygate.json"
+  ]
+}
