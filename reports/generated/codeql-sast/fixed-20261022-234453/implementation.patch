@@ -1,0 +1,152 @@
+diff --git a/app-fixed/main.py b/app-fixed/main.py
+index 3870f60..adf5ff4 100644
+--- a/app-fixed/main.py
++++ b/app-fixed/main.py
+@@ -14,7 +14,12 @@ from .login_limits import authenticate
+ from .process import bounded_run, ping_arguments
+ 
+ ROOT = Path(__file__).resolve().parent
+-DOCUMENTS = {"onboarding.txt": "Первый день в компании", "vpn.txt": "Подключение к корпоративной сети", "meetings.txt": "Переговорные и видеосвязь"}
++# Public identifiers select server-owned paths; request data never builds a path.
++DOCUMENTS = {
++    "onboarding.txt": {"label": "Первый день в компании", "path": ROOT / "documents" / "onboarding.txt"},
++    "vpn.txt": {"label": "Подключение к корпоративной сети", "path": ROOT / "documents" / "vpn.txt"},
++    "meetings.txt": {"label": "Переговорные и видеосвязь", "path": ROOT / "documents" / "meetings.txt"},
++}
+ 
+ 
+ def login_required(view):
+@@ -62,7 +67,8 @@ def create_app(config=None):
+             if "csrf" not in session:
+                 session["csrf"] = secrets.token_hex(24)
+             return session["csrf"]
+-        return dict(csrf_token=csrf_token, documents=DOCUMENTS)
++        return dict(csrf_token=csrf_token,
++                    documents={identifier: document["label"] for identifier, document in DOCUMENTS.items()})
+ 
+     @app.after_request
+     def response_headers(response):
+@@ -199,12 +205,10 @@ def create_app(config=None):
+     @app.get("/download")
+     @login_required
+     def download():
+-        directory = (ROOT / "documents").resolve()
+-        try:
+-            target = (directory / request.args.get("file", "onboarding.txt")).resolve()
+-            target.relative_to(directory)
+-        except (ValueError, OSError, RuntimeError):
+-            abort(400, "Документ должен находиться внутри разрешённой папки.")
++        document = DOCUMENTS.get(request.args.get("file", "onboarding.txt"))
++        if document is None:
++            abort(400, "Выберите документ из базы знаний.")
++        target = document["path"]
+         if not target.is_file():
+             abort(404)
+         return send_file(target, mimetype="text/plain", as_attachment=request.args.get("attachment") == "1")
+@@ -221,7 +225,7 @@ def create_app(config=None):
+                 abort(400, "Введите корректный IP-адрес.")
+             if not address.is_loopback:
+                 abort(400, "Диагностика разрешает только локальные loopback-адреса.")
+-            output = bounded_run(ping_arguments() + [str(address)], shell=False)
++            output = bounded_run(ping_arguments() + [str(address)])
+         return render_template("diagnostics.html", title="Диагностика сети", host=host, output=output)
+ 
+     @app.get("/lab")
+diff --git a/app-fixed/process.py b/app-fixed/process.py
+index 4704c13..c7a7d07 100644
+--- a/app-fixed/process.py
++++ b/app-fixed/process.py
+@@ -1,4 +1,4 @@
+-"""Bound process lifetime and captured output; does not sanitize commands."""
++"""Run argument lists without a shell; bound lifetime and captured output."""
+ import os
+ import signal
+ import subprocess
+@@ -9,9 +9,9 @@ def ping_arguments():
+     return ["ping", "-n", "1", "-w", "1000"] if os.name == "nt" else ["ping", "-c", "1", "-W", "1"]
+ 
+ 
+-def bounded_run(command, *, shell=False, timeout=3, limit=8192):
++def bounded_run(command, *, timeout=3, limit=8192):
+     process = subprocess.Popen(
+-        command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
++        command, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+         start_new_session=(os.name != "nt"),
+     )
+     output = bytearray()
+@@ -46,7 +46,7 @@ def bounded_run(command, *, shell=False, timeout=3, limit=8192):
+     except subprocess.TimeoutExpired:
+         timed_out = True
+     finally:
+-        # Kill remaining descendants even if the shell has already exited.
++        # Kill remaining descendants even if the original process has exited.
+         terminate()
+         process.wait(timeout=2)
+         reader.join(timeout=2)
+diff --git a/tests/unit_checks.py b/tests/unit_checks.py
+index f604094..70ceda7 100644
+--- a/tests/unit_checks.py
++++ b/tests/unit_checks.py
+@@ -192,6 +192,62 @@ class VulnerableTests(PortalChecks, unittest.TestCase):
+ class FixedTests(PortalChecks, unittest.TestCase):
+     fixed = True
+ 
++    def test_document_catalog_view_and_attachment(self):
++        from html import unescape
++        from urllib.parse import parse_qs, urlsplit
++
++        catalog = self.module.DOCUMENTS
++        physical_files = {path for path in (self.module.ROOT / "documents").iterdir() if path.is_file()}
++        self.assertEqual({document["path"] for document in catalog.values()}, physical_files)
++        for page in ("/", "/documents"):
++            links = [unescape(link) for link in re.findall(r'href="([^"]+)"', self.alice.get(page).text)]
++            document_links = [link for link in links if urlsplit(link).path == "/download"]
++            self.assertEqual({parse_qs(urlsplit(link).query)["file"][0] for link in document_links}, set(catalog))
++            for link in document_links:
++                with self.alice.get(link) as response:
++                    self.assertEqual(response.status_code, 200)
++        for identifier, document in catalog.items():
++            for attachment in (None, "0", "1"):
++                with self.subTest(identifier=identifier, attachment=attachment):
++                    query = {"file": identifier}
++                    if attachment is not None:
++                        query["attachment"] = attachment
++                    with self.alice.get("/download", query_string=query) as response:
++                        self.assertEqual(response.status_code, 200)
++                        self.assertEqual(response.data, document["path"].read_bytes())
++                        disposition = "attachment;" if attachment == "1" else "inline;"
++                        self.assertTrue(response.headers["Content-Disposition"].startswith(disposition))
++        with self.alice.get("/download") as response:
++            self.assertEqual(response.data, catalog["onboarding.txt"]["path"].read_bytes())
++        self.assertEqual(self.app.test_client().get("/download?file=vpn.txt").status_code, 302)
++
++    def test_document_catalog_rejects_paths_and_unknown_ids(self):
++        invalid = ("", "unknown.txt", "./onboarding.txt", "documents/onboarding.txt",
++                   "../lab-only.txt", "../documents/onboarding.txt", "..\\lab-only.txt",
++                   "/etc/passwd", "C:\\Windows\\win.ini", "//localhost/share/onboarding.txt",
++                   str(self.module.ROOT / "documents" / "onboarding.txt"), "onboarding.txt\x00")
++        for identifier in invalid:
++            for attachment in ("0", "1"):
++                with self.subTest(identifier=identifier, attachment=attachment):
++                    with self.alice.get("/download", query_string={"file": identifier, "attachment": attachment}) as response:
++                        self.assertEqual(response.status_code, 400)
++                        self.assertNotIn("LAB_TRAVERSAL_PROOF", response.text)
++        with self.alice.get("/download?file=%2e%2e%2flab-only.txt") as response:
++            self.assertEqual(response.status_code, 400)
++
++    def test_fixed_process_literal_arguments_and_limits(self):
++        run = self.module.bounded_run
++        literal = "127.0.0.1 & echo SHELL_MARKER"
++        result = run([sys.executable, "-c", "import sys; print(repr(sys.argv[1]))", literal])
++        self.assertEqual(result.strip(), repr(literal))
++        start = time.monotonic()
++        result = run([sys.executable, "-c", "import time; time.sleep(10)"], timeout=0.3)
++        self.assertLess(time.monotonic() - start, 4)
++        self.assertIn("Превышено время", result)
++        result = run([sys.executable, "-c", "print('x'*100000)"], limit=1024)
++        self.assertLess(len(result), 1200)
++        self.assertIn("Вывод ограничен", result)
++
+     def test_path_containment_and_sql_alternates(self):
+         for path in (str(ROOT / "app-fixed" / "lab-only.txt"), "../../app-fixed/lab-only.txt"):
+             self.assertEqual(self.alice.get("/download", query_string={"file": path}).status_code, 400)

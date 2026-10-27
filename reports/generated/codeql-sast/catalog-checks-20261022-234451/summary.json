@@ -1,0 +1,8 @@
+{
+  "tests": 37,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "success": true,
+  "scope": "Flask test clients with temporary SQLite databases and real Windows processes; no WAF or browser JS execution"
+}

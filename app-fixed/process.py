@@ -1,4 +1,4 @@
-"""Bound process lifetime and captured output; does not sanitize commands."""
+"""Run argument lists without a shell; bound lifetime and captured output."""
 import os
 import signal
 import subprocess
@@ -9,9 +9,9 @@ def ping_arguments():
     return ["ping", "-n", "1", "-w", "1000"] if os.name == "nt" else ["ping", "-c", "1", "-W", "1"]
 
 
-def bounded_run(command, *, shell=False, timeout=3, limit=8192):
+def bounded_run(command, *, timeout=3, limit=8192):
     process = subprocess.Popen(
-        command, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        command, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
         start_new_session=(os.name != "nt"),
     )
     output = bytearray()
@@ -46,7 +46,7 @@ def bounded_run(command, *, shell=False, timeout=3, limit=8192):
     except subprocess.TimeoutExpired:
         timed_out = True
     finally:
-        # Kill remaining descendants even if the shell has already exited.
+        # Kill remaining descendants even if the original process has exited.
         terminate()
         process.wait(timeout=2)
         reader.join(timeout=2)

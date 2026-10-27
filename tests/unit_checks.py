@@ -192,6 +192,62 @@ class VulnerableTests(PortalChecks, unittest.TestCase):
 class FixedTests(PortalChecks, unittest.TestCase):
     fixed = True
 
+    def test_document_catalog_view_and_attachment(self):
+        from html import unescape
+        from urllib.parse import parse_qs, urlsplit
+
+        catalog = self.module.DOCUMENTS
+        physical_files = {path for path in (self.module.ROOT / "documents").iterdir() if path.is_file()}
+        self.assertEqual({document["path"] for document in catalog.values()}, physical_files)
+        for page in ("/", "/documents"):
+            links = [unescape(link) for link in re.findall(r'href="([^"]+)"', self.alice.get(page).text)]
+            document_links = [link for link in links if urlsplit(link).path == "/download"]
+            self.assertEqual({parse_qs(urlsplit(link).query)["file"][0] for link in document_links}, set(catalog))
+            for link in document_links:
+                with self.alice.get(link) as response:
+                    self.assertEqual(response.status_code, 200)
+        for identifier, document in catalog.items():
+            for attachment in (None, "0", "1"):
+                with self.subTest(identifier=identifier, attachment=attachment):
+                    query = {"file": identifier}
+                    if attachment is not None:
+                        query["attachment"] = attachment
+                    with self.alice.get("/download", query_string=query) as response:
+                        self.assertEqual(response.status_code, 200)
+                        self.assertEqual(response.data, document["path"].read_bytes())
+                        disposition = "attachment;" if attachment == "1" else "inline;"
+                        self.assertTrue(response.headers["Content-Disposition"].startswith(disposition))
+        with self.alice.get("/download") as response:
+            self.assertEqual(response.data, catalog["onboarding.txt"]["path"].read_bytes())
+        self.assertEqual(self.app.test_client().get("/download?file=vpn.txt").status_code, 302)
+
+    def test_document_catalog_rejects_paths_and_unknown_ids(self):
+        invalid = ("", "unknown.txt", "./onboarding.txt", "documents/onboarding.txt",
+                   "../lab-only.txt", "../documents/onboarding.txt", "..\\lab-only.txt",
+                   "/etc/passwd", "C:\\Windows\\win.ini", "//localhost/share/onboarding.txt",
+                   str(self.module.ROOT / "documents" / "onboarding.txt"), "onboarding.txt\x00")
+        for identifier in invalid:
+            for attachment in ("0", "1"):
+                with self.subTest(identifier=identifier, attachment=attachment):
+                    with self.alice.get("/download", query_string={"file": identifier, "attachment": attachment}) as response:
+                        self.assertEqual(response.status_code, 400)
+                        self.assertNotIn("LAB_TRAVERSAL_PROOF", response.text)
+        with self.alice.get("/download?file=%2e%2e%2flab-only.txt") as response:
+            self.assertEqual(response.status_code, 400)
+
+    def test_fixed_process_literal_arguments_and_limits(self):
+        run = self.module.bounded_run
+        literal = "127.0.0.1 & echo SHELL_MARKER"
+        result = run([sys.executable, "-c", "import sys; print(repr(sys.argv[1]))", literal])
+        self.assertEqual(result.strip(), repr(literal))
+        start = time.monotonic()
+        result = run([sys.executable, "-c", "import time; time.sleep(10)"], timeout=0.3)
+        self.assertLess(time.monotonic() - start, 4)
+        self.assertIn("Превышено время", result)
+        result = run([sys.executable, "-c", "print('x'*100000)"], limit=1024)
+        self.assertLess(len(result), 1200)
+        self.assertIn("Вывод ограничен", result)
+
     def test_path_containment_and_sql_alternates(self):
         for path in (str(ROOT / "app-fixed" / "lab-only.txt"), "../../app-fixed/lab-only.txt"):
             self.assertEqual(self.alice.get("/download", query_string={"file": path}).status_code, 400)

@@ -14,7 +14,12 @@ from .login_limits import authenticate
 from .process import bounded_run, ping_arguments
 
 ROOT = Path(__file__).resolve().parent
-DOCUMENTS = {"onboarding.txt": "Первый день в компании", "vpn.txt": "Подключение к корпоративной сети", "meetings.txt": "Переговорные и видеосвязь"}
+# Public identifiers select server-owned paths; request data never builds a path.
+DOCUMENTS = {
+    "onboarding.txt": {"label": "Первый день в компании", "path": ROOT / "documents" / "onboarding.txt"},
+    "vpn.txt": {"label": "Подключение к корпоративной сети", "path": ROOT / "documents" / "vpn.txt"},
+    "meetings.txt": {"label": "Переговорные и видеосвязь", "path": ROOT / "documents" / "meetings.txt"},
+}
 
 
 def login_required(view):
@@ -35,7 +40,7 @@ def create_app(config=None):
                       VERSION_LABEL="Исправленная версия", VERSION_STYLE="fixed")
     if config:
         app.config.update(config)
-    for key, default in [('LOGIN_MAX_FAILURES', 5), ('LOGIN_WINDOW_SECONDS', 60), ('LOGIN_BLOCK_SECONDS', 15)]:
+    for key, default in [('LOGIN_MAX_FAILURES', 3), ('LOGIN_WINDOW_SECONDS', 900), ('LOGIN_BLOCK_SECONDS', 15)]:
         app.config.setdefault(key, int(os.environ.get(key, default)))
         if not isinstance(app.config[key], int) or app.config[key] <= 0:
             raise ValueError(f'{key} must be a positive integer')
@@ -62,7 +67,8 @@ def create_app(config=None):
             if "csrf" not in session:
                 session["csrf"] = secrets.token_hex(24)
             return session["csrf"]
-        return dict(csrf_token=csrf_token, documents=DOCUMENTS)
+        return dict(csrf_token=csrf_token,
+                    documents={identifier: document["label"] for identifier, document in DOCUMENTS.items()})
 
     @app.after_request
     def response_headers(response):
@@ -199,12 +205,10 @@ def create_app(config=None):
     @app.get("/download")
     @login_required
     def download():
-        directory = (ROOT / "documents").resolve()
-        try:
-            target = (directory / request.args.get("file", "onboarding.txt")).resolve()
-            target.relative_to(directory)
-        except (ValueError, OSError, RuntimeError):
-            abort(400, "Документ должен находиться внутри разрешённой папки.")
+        document = DOCUMENTS.get(request.args.get("file", "onboarding.txt"))
+        if document is None:
+            abort(400, "Выберите документ из базы знаний.")
+        target = document["path"]
         if not target.is_file():
             abort(404)
         return send_file(target, mimetype="text/plain", as_attachment=request.args.get("attachment") == "1")
@@ -221,7 +225,7 @@ def create_app(config=None):
                 abort(400, "Введите корректный IP-адрес.")
             if not address.is_loopback:
                 abort(400, "Диагностика разрешает только локальные loopback-адреса.")
-            output = bounded_run(ping_arguments() + [str(address)], shell=False)
+            output = bounded_run(ping_arguments() + [str(address)])
         return render_template("diagnostics.html", title="Диагностика сети", host=host, output=output)
 
     @app.get("/lab")
@@ -246,6 +250,7 @@ def create_app(config=None):
         """Clear login failure budgets locally; there is no HTTP reset route."""
         db = get_db()
         db.execute('DELETE FROM login_attempts')
+        db.execute('DELETE FROM login_failure_events')
         db.commit()
         click.echo('PASS: login limits reset')
 

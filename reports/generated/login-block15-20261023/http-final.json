@@ -1,0 +1,39 @@
+{
+  "base": "http://127.0.0.1:8082",
+  "rows": [
+    {
+      "status": 429,
+      "retry_after": "15"
+    },
+    {
+      "status": 302,
+      "retry_after": null,
+      "authenticated": true
+    },
+    {
+      "status": 200,
+      "retry_after": null
+    },
+    {
+      "status": 200,
+      "retry_after": null
+    },
+    {
+      "status": 200,
+      "retry_after": null
+    },
+    {
+      "status": 429,
+      "retry_after": "15"
+    },
+    {
+      "status": 429,
+      "retry_after": "13"
+    },
+    {
+      "status": 302,
+      "retry_after": null,
+      "authenticated": true
+    }
+  ]
+}

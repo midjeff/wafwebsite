@@ -2,5 +2,5 @@ projectKey=nexus-vulnerable
 serverUrl=http://sonarqube:9000
 serverVersion=26.10.0.133078
 dashboardUrl=http://sonarqube:9000/dashboard?id=nexus-vulnerable
-ceTaskId=7c8ba411-e15d-4d3f-8caf-555b9940fb88
-ceTaskUrl=http://sonarqube:9000/api/ce/task?id=7c8ba411-e15d-4d3f-8caf-555b9940fb88
+ceTaskId=a2f836fc-86a8-4e3a-8de2-640f8848ac24
+ceTaskUrl=http://sonarqube:9000/api/ce/task?id=a2f836fc-86a8-4e3a-8de2-640f8848ac24

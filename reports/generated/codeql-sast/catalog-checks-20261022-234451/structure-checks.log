@@ -1,0 +1,61 @@
+﻿PASS Python source parses
+PASS Compose conforms to the official compose-spec JSON schema
+PASS vulnerable: published port bound to loopback
+PASS vulnerable: no Docker socket mount
+PASS fixed: published port bound to loopback
+PASS fixed: no Docker socket mount
+PASS waf: published port bound to loopback
+PASS waf: no Docker socket mount
+PASS checks: no Docker socket mount
+PASS checks: no Docker socket mount
+PASS sonar-db: no Docker socket mount
+PASS sonarqube: published port bound to loopback
+PASS sonarqube: no Docker socket mount
+PASS sonarqube: no Docker socket mount
+PASS sonarqube: no Docker socket mount
+PASS scanner: no Docker socket mount
+PASS scanner: no Docker socket mount
+PASS scanner: no Docker socket mount
+PASS scanner: no Docker socket mount
+PASS scanner: no Docker socket mount
+PASS semgrep: no Docker socket mount
+PASS semgrep: no Docker socket mount
+PASS semgrep: no Docker socket mount
+PASS semgrep: no Docker socket mount
+PASS semgrep: no Docker socket mount
+PASS Application network explicitly permits external routing (internal: false)
+PASS vulnerable: exact loopback port mapping 127.0.0.1:8080:5000
+PASS vulnerable: attached only to lab, no host network
+PASS waf: exact loopback port mapping 127.0.0.1:8081:8080
+PASS waf: attached only to lab, no host network
+PASS fixed: exact loopback port mapping 127.0.0.1:8082:5000
+PASS fixed: attached only to lab, no host network
+PASS vulnerable: restricted container
+PASS vulnerable: no added capabilities or privileged mode
+PASS vulnerable: no-new-privileges enforced
+PASS vulnerable: unprivileged ICMP ping group range preserved
+PASS vulnerable: image non-root user is not overridden
+PASS vulnerable: shared Dockerfile builds the correct implementation
+PASS vulnerable: tmpfs options are a single mount specification
+PASS vulnerable: only dedicated database volume, no host directories
+PASS fixed: restricted container
+PASS fixed: no added capabilities or privileged mode
+PASS fixed: no-new-privileges enforced
+PASS fixed: unprivileged ICMP ping group range preserved
+PASS fixed: image non-root user is not overridden
+PASS fixed: shared Dockerfile builds the correct implementation
+PASS fixed: tmpfs options are a single mount specification
+PASS fixed: only dedicated database volume, no host directories
+PASS WAF uses same backend as port 8080
+PASS WAF blocking and request body inspection configured
+PASS Application runs as non-root
+PASS ping file capability removed after installation and before non-root USER
+PASS Fixed templates do not bypass escaping
+PASS lab-rules.yml: nonempty rule configuration
+PASS registry-python.yml: nonempty rule configuration
+PASS Default compose starts the complete application stand
+PASS WAF mounts the real nginx login rate configuration read-only
+PASS nginx limits login POSTs by original peer and returns 429
+PASS nginx writes rejected login requests to the captured container log
+PASS Fixed login failure policy is explicitly configured with positive values
+PASS Attack instructions are absent from portal templates

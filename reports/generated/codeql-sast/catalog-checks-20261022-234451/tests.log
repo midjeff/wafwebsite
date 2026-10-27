@@ -1,0 +1,42 @@
+test_alternative_command_and_traversal (catalog_checks.VulnerableTests) ... ok
+test_alternative_reflected_and_stored_markup (catalog_checks.VulnerableTests) ... ok
+test_alternative_sql_and_hash_disclosure (catalog_checks.VulnerableTests) ... ok
+test_authentication_csrf_and_validation (catalog_checks.VulnerableTests) ... ok
+test_command_injection_real_process (catalog_checks.VulnerableTests) ... ok
+test_create_and_persist (catalog_checks.VulnerableTests) ... ok
+test_idor_and_post_authorization (catalog_checks.VulnerableTests) ... ok
+test_idor_other_objects_both_methods (catalog_checks.VulnerableTests) ... ok
+test_normal_comments_two_sessions (catalog_checks.VulnerableTests) ... ok
+test_normal_diagnostics (catalog_checks.VulnerableTests) ... ok
+test_normal_pages_and_documents (catalog_checks.VulnerableTests) ... ok
+test_path_traversal (catalog_checks.VulnerableTests) ... ok
+test_portal_has_no_training_ui (catalog_checks.VulnerableTests) ... ok
+test_reflected_xss_markup (catalog_checks.VulnerableTests) ... ok
+test_sqli (catalog_checks.VulnerableTests) ... ok
+test_stored_xss_markup (catalog_checks.VulnerableTests) ... ok
+test_alternative_command_and_traversal (catalog_checks.FixedTests) ... ok
+test_alternative_reflected_and_stored_markup (catalog_checks.FixedTests) ... ok
+test_alternative_sql_and_hash_disclosure (catalog_checks.FixedTests) ... ok
+test_authentication_csrf_and_validation (catalog_checks.FixedTests) ... ok
+test_command_injection_real_process (catalog_checks.FixedTests) ... ok
+test_create_and_persist (catalog_checks.FixedTests) ... ok
+test_document_catalog_rejects_paths_and_unknown_ids (catalog_checks.FixedTests) ... ok
+test_document_catalog_view_and_attachment (catalog_checks.FixedTests) ... ok
+test_fixed_process_literal_arguments_and_limits (catalog_checks.FixedTests) ... ok
+test_idor_and_post_authorization (catalog_checks.FixedTests) ... ok
+test_idor_other_objects_both_methods (catalog_checks.FixedTests) ... ok
+test_normal_comments_two_sessions (catalog_checks.FixedTests) ... ok
+test_normal_diagnostics (catalog_checks.FixedTests) ... ok
+test_normal_pages_and_documents (catalog_checks.FixedTests) ... ok
+test_path_containment_and_sql_alternates (catalog_checks.FixedTests) ... ok
+test_path_traversal (catalog_checks.FixedTests) ... ok
+test_portal_has_no_training_ui (catalog_checks.FixedTests) ... ok
+test_reflected_xss_markup (catalog_checks.FixedTests) ... ok
+test_sqli (catalog_checks.FixedTests) ... ok
+test_stored_xss_markup (catalog_checks.FixedTests) ... ok
+test_timeout_and_output_limit (catalog_checks.ProcessTests) ... ok
+
+----------------------------------------------------------------------
+Ran 37 tests in 19.403s
+
+OK

@@ -8,11 +8,11 @@
                       "severity":  "CRITICAL",
                       "component":  "nexus-fixed:app-fixed/main.py",
                       "project":  "nexus-fixed",
-                      "line":  30,
+                      "line":  35,
                       "hash":  "179643042db29a9995dc460d16749c31",
                       "textRange":  {
-                                        "startLine":  30,
-                                        "endLine":  30,
+                                        "startLine":  35,
+                                        "endLine":  35,
                                         "startOffset":  10,
                                         "endOffset":  25
                                     },

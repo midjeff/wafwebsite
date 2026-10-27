@@ -1,0 +1,75 @@
+{
+  "codeqlBaseline": {
+    "languages": {
+      "python": {
+        "displayName": "Python",
+        "files": [
+          "login_limits.py",
+          "__init__.py",
+          "db.py",
+          "main.py",
+          "process.py"
+        ],
+        "linesOfCode": 414,
+        "name": "python"
+      },
+      "javascript": {
+        "displayName": "JavaScript/TypeScript",
+        "files": [
+          "templates/base.html",
+          "templates/_table.html"
+        ],
+        "linesOfCode": 25,
+        "name": "javascript"
+      }
+    }
+  },
+  "sourceHashes": [
+    {
+      "file": "app-fixed/__init__.py",
+      "sha256": "7516efa9fc2dc3f8f83ef474bd053a96ad1fffd270b644f5159bf89216fd785f",
+      "matchesCodeqlArchive": true
+    },
+    {
+      "file": "app-fixed/db.py",
+      "sha256": "ff2d194487bc51512e7e861771b3ce299c2a535376cd882c6b1dccfaad7bcc94",
+      "matchesCodeqlArchive": true
+    },
+    {
+      "file": "app-fixed/login_limits.py",
+      "sha256": "13dcbeb2813b1510466775d88225ddc4fc6a3348a54da0417bc64fadea520b80",
+      "matchesCodeqlArchive": true
+    },
+    {
+      "file": "app-fixed/main.py",
+      "sha256": "a49e8ffa124ee6412f5913c320805fb26e46fda31104f003cce46d3736924284",
+      "matchesCodeqlArchive": true
+    },
+    {
+      "file": "app-fixed/process.py",
+      "sha256": "9c1de1a40d40c52f56c25bae4590fb91f83c779d78bafdd41fc562166228acb6",
+      "matchesCodeqlArchive": true
+    }
+  ],
+  "banditAnalyzedFiles": [
+    "C:\\Users\\Shwepes\\wafwebsite\\app-fixed\\__init__.py",
+    "C:\\Users\\Shwepes\\wafwebsite\\app-fixed\\db.py",
+    "C:\\Users\\Shwepes\\wafwebsite\\app-fixed\\login_limits.py",
+    "C:\\Users\\Shwepes\\wafwebsite\\app-fixed\\main.py",
+    "C:\\Users\\Shwepes\\wafwebsite\\app-fixed\\process.py"
+  ],
+  "banditTotals": {
+    "CONFIDENCE.HIGH": 2,
+    "CONFIDENCE.LOW": 0,
+    "CONFIDENCE.MEDIUM": 0,
+    "CONFIDENCE.UNDEFINED": 0,
+    "SEVERITY.HIGH": 0,
+    "SEVERITY.LOW": 2,
+    "SEVERITY.MEDIUM": 0,
+    "SEVERITY.UNDEFINED": 0,
+    "loc": 428,
+    "nosec": 0,
+    "skipped_tests": 0
+  },
+  "banditErrors": []
+}

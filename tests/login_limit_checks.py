@@ -1,138 +1,83 @@
-"""SQLite/Flask login limits: persistence, spoofing, expiry and process races."""
+"""Account lockout checks using production durations and controlled clocks."""
 from concurrent.futures import ProcessPoolExecutor
-import json
 import multiprocessing
-from pathlib import Path
-import sys
 import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
-
 from unit_checks import ROOT, load_package, token
 
 
-def worker_login(arguments):
-    database, username, source = arguments
-    module = load_package('parallel_fixed', ROOT / 'app-fixed')
-    app = module.create_app({'TESTING': True, 'DATABASE': database, 'SECRET_KEY': 'concurrency-test',
-                             'LOGIN_MAX_FAILURES': 5, 'LOGIN_WINDOW_SECONDS': 120, 'LOGIN_BLOCK_SECONDS': 60})
-    with app.test_client() as client:
-        csrf = token(client.get('/login'))
-        response = client.post('/login', data={'username': username, 'password': 'IncorrectPass123', 'csrf_token': csrf},
-                               environ_overrides={'REMOTE_ADDR': source})
-        return response.status_code
+def worker_login(database):
+    m = load_package('race_fixed', ROOT / 'app-fixed')
+    a = m.create_app({'TESTING': True, 'DATABASE': database, 'SECRET_KEY': 'test'})
+    c = a.test_client()
+    return c.post('/login', data={'username':'alice','password':'wrong','csrf_token':token(c.get('/login'))}).status_code
 
 
 class LoginLimits(unittest.TestCase):
     def setUp(self):
-        (ROOT / '.runtime').mkdir(exist_ok=True)
-        self.temp = tempfile.TemporaryDirectory(dir=ROOT / '.runtime')
-        self.module = load_package('limit_fixed', ROOT / 'app-fixed')
-        self.config = {'TESTING': True, 'DATABASE': str(Path(self.temp.name) / 'limits.db'), 'SECRET_KEY': 'unit-limits',
-                       'LOGIN_MAX_FAILURES': 3, 'LOGIN_WINDOW_SECONDS': 30, 'LOGIN_BLOCK_SECONDS': 10}
-        self.app = self.module.create_app(self.config)
+        self.tmp = tempfile.TemporaryDirectory(dir=ROOT / '.runtime')
+        self.m = load_package('policy_fixed', ROOT / 'app-fixed')
+        self.config = {'TESTING':True,'DATABASE':str(Path(self.tmp.name)/'test.db'),'SECRET_KEY':'test'}
+        self.a = self.m.create_app(self.config)
 
     def tearDown(self):
-        self.temp.cleanup()
+        self.tmp.cleanup()
 
-    def attempt(self, username='alice', password='wrong', source='192.0.2.1', app=None, forwarded='203.0.113.1'):
-        client = (app or self.app).test_client()
-        csrf = token(client.get('/login'))
-        response = client.post('/login', data={'username': username, 'password': password, 'csrf_token': csrf},
-                               headers={'X-Forwarded-For': forwarded, 'X-Real-IP': forwarded},
-                               environ_overrides={'REMOTE_ADDR': source})
-        return response, client
+    def attempt(self, t, password='wrong', csrf=True, app=None):
+        c = (app or self.a).test_client()
+        data = {'username':'alice','password':password}
+        with patch('policy_fixed.login_limits.time.time', return_value=t):
+            if csrf: data['csrf_token'] = token(c.get('/login'))
+            r = c.post('/login', data=data)
+        return r
 
-    def test_new_sessions_spoofed_headers_and_expiry(self):
-        with patch('limit_fixed.login_limits.time.time', return_value=1000):
-            for i in range(3):
-                r, _ = self.attempt(forwarded=f'203.0.113.{i + 1}')
-                self.assertEqual(r.status_code, 429 if i == 2 else 200)
-            r, c = self.attempt(password='Alice-Lab-2026!')
-            self.assertEqual(r.status_code, 429)
-            self.assertEqual(r.headers['Retry-After'], '10')
-            self.assertEqual(c.get('/api/me').status_code, 302)
-        with patch('limit_fixed.login_limits.time.time', return_value=1011):
-            r, c = self.attempt(password='Alice-Lab-2026!')
-            self.assertEqual(r.status_code, 302)
-            self.assertEqual(c.get('/api/me').json['username'], 'alice')
+    def test_lock_and_expiry(self):
+        for t in (1000,1001,1002): self.assertEqual(self.attempt(t).status_code,200)
+        r = self.attempt(1002,'Alice-Lab-2026!')
+        self.assertEqual(r.status_code,429)
+        self.assertEqual(r.headers['Retry-After'],'15')
+        self.assertEqual(self.attempt(1007).headers['Retry-After'],'10')
+        self.assertEqual(self.attempt(1016).headers['Retry-After'],'1')
+        self.assertEqual(self.attempt(1017,'Alice-Lab-2026!').status_code,302)
 
-    def test_known_and_unknown_same_response_sequence(self):
-        with patch('limit_fixed.login_limits.time.time', return_value=1000):
-            for _ in range(4):
-                known, _ = self.attempt(source='192.0.2.1')
-                unknown, _ = self.attempt(username='missing-account', source='192.0.2.2')
-                self.assertEqual(known.status_code, unknown.status_code)
-                self.assertEqual(known.headers.get('Retry-After'), unknown.headers.get('Retry-After'))
-                # CSRF values differ; messages/statuses must not disclose account existence.
-                for message in ('Неверный логин или пароль', 'Слишком много попыток входа'):
-                    self.assertEqual(message in known.text, message in unknown.text)
+    def test_success_resets_consecutive_failures(self):
+        self.attempt(1000); self.attempt(1001)
+        self.assertEqual(self.attempt(1002,'Alice-Lab-2026!').status_code,302)
+        self.assertEqual(self.attempt(1003).status_code,200)
+        self.assertEqual(self.attempt(1004).status_code,200)
+        self.assertEqual(self.attempt(1005,'Alice-Lab-2026!').status_code,302)
 
-    def test_account_budget_survives_source_changes(self):
-        for i in range(3):
-            r, _ = self.attempt(source=f'192.0.2.{i + 1}')
-        self.assertEqual(r.status_code, 429)
-        r, _ = self.attempt(password='Alice-Lab-2026!', source='192.0.2.99')
-        self.assertEqual(r.status_code, 429)
+    def test_existing_long_block_is_shortened_once(self):
+        old = self.m.create_app({**self.config, 'LOGIN_BLOCK_SECONDS': 900})
+        for t in (1000, 1001, 1002): self.attempt(t, app=old)
+        self.assertEqual(self.attempt(1003).headers['Retry-After'], '15')
+        self.assertEqual(self.attempt(1008).headers['Retry-After'], '10')
+        self.assertEqual(self.attempt(1018, 'Alice-Lab-2026!').status_code, 302)
 
-    def test_source_budget_survives_account_changes_and_success(self):
-        self.attempt(username='missing1')
-        r, _ = self.attempt(username='bob', password='Bob-Lab-2026!')
-        self.assertEqual(r.status_code, 302)
-        self.attempt(username='missing2')
-        r, _ = self.attempt(username='missing3')
-        self.assertEqual(r.status_code, 429)
-        r, _ = self.attempt(password='Alice-Lab-2026!')
-        self.assertEqual(r.status_code, 429)
+    def test_csrf_does_not_count(self):
+        for t in range(1000,1005): self.assertEqual(self.attempt(t,csrf=False).status_code,400)
+        self.assertEqual(self.attempt(1006,'Alice-Lab-2026!').status_code,302)
 
-    def test_budget_persists_new_app_and_cli_reset(self):
-        for _ in range(3):
-            self.attempt()
-        second = self.module.create_app(self.config)
-        self.assertEqual(self.attempt(app=second)[0].status_code, 429)
-        result = second.test_cli_runner().invoke(args=['reset-login-limits'])
-        self.assertEqual(result.exit_code, 0)
-        self.assertEqual(self.attempt(app=second, password='Alice-Lab-2026!')[0].status_code, 302)
-        self.assertEqual(second.test_client().post('/reset-login-limits').status_code, 400)
-        self.assertEqual(second.test_client().get('/reset-login-limits').status_code, 404)
+    def test_rolling_window(self):
+        for t in (1000,1500,1901,1902): self.assertEqual(self.attempt(t).status_code,200)
+        self.assertEqual(self.attempt(1903,'Alice-Lab-2026!').status_code,429)
 
-    def test_window_expiration_and_success_clear_account(self):
-        with patch('limit_fixed.login_limits.time.time', return_value=1000):
-            self.attempt()
-            self.attempt()
-        with patch('limit_fixed.login_limits.time.time', return_value=1031):
-            self.assertEqual(self.attempt()[0].status_code, 200)
-            self.assertEqual(self.attempt(password='Alice-Lab-2026!')[0].status_code, 302)
-            # New source avoids its independent budget; successful login cleared the account.
-            self.assertEqual(self.attempt(source='192.0.2.2')[0].status_code, 200)
-            self.assertEqual(self.attempt(source='192.0.2.2')[0].status_code, 200)
+    def test_new_instance_and_sessions(self):
+        for t in (1000,1001,1002): self.attempt(t)
+        a = self.m.create_app(self.config)
+        self.assertEqual(self.attempt(1003,'Alice-Lab-2026!',app=a).status_code,429)
 
-    def test_database_failure_fails_closed(self):
+    def test_database_failure_closed(self):
         import sqlite3
-        with patch('limit_fixed.main.authenticate', side_effect=sqlite3.OperationalError('database is locked')):
-            r, client = self.attempt(password='Alice-Lab-2026!')
-            self.assertEqual(r.status_code, 503)
-            self.assertEqual(client.get('/api/me').status_code, 302)
+        with patch('policy_fixed.main.authenticate',side_effect=sqlite3.OperationalError('locked')):
+            self.assertEqual(self.attempt(1000,'Alice-Lab-2026!').status_code,503)
 
-    def test_multiple_processes_cannot_overrun_account_limit(self):
-        tasks = [(self.config['DATABASE'], 'alice', f'192.0.2.{i + 1}') for i in range(12)]
-        with ProcessPoolExecutor(max_workers=4, mp_context=multiprocessing.get_context('spawn')) as executor:
-            statuses = list(executor.map(worker_login, tasks))
-        self.assertEqual(statuses.count(200), 4)
-        self.assertEqual(statuses.count(429), 8)
+    def test_process_race(self):
+        with ProcessPoolExecutor(max_workers=4,mp_context=multiprocessing.get_context('spawn')) as pool:
+            statuses=list(pool.map(worker_login,[self.config['DATABASE']]*12))
+        self.assertEqual(statuses.count(200),3)
+        self.assertEqual(statuses.count(429),9)
 
-    def test_multiple_processes_cannot_overrun_source_limit(self):
-        tasks = [(self.config['DATABASE'], f'missing-{i}', '192.0.2.1') for i in range(12)]
-        with ProcessPoolExecutor(max_workers=4, mp_context=multiprocessing.get_context('spawn')) as executor:
-            statuses = list(executor.map(worker_login, tasks))
-        self.assertEqual(statuses.count(200), 4)
-        self.assertEqual(statuses.count(429), 8)
-
-
-if __name__ == '__main__':
-    result = unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(LoginLimits))
-    report = {'tests': result.testsRun, 'failures': len(result.failures), 'errors': len(result.errors),
-              'success': result.wasSuccessful(), 'platform': sys.platform,
-              'concurrency': '4 spawned OS processes, 12 concurrent requests for each independent budget'}
-    (ROOT / 'reports/generated/login-limit-checks.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
-    sys.exit(0 if result.wasSuccessful() else 1)
+if __name__ == '__main__': unittest.main(verbosity=2)

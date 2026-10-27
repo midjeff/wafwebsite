@@ -59,16 +59,19 @@ def run(mode, base):
         checks['new_session_and_forged_xff_do_not_bypass'] = fresh['status'] == 429 and not fresh['authenticated']
         if mode == 'fixed':
             checks['retry_after_present'] = fresh['retry_after'] is not None and fresh['retry_after'].isdigit() and int(fresh['retry_after']) > 0
-        # Fixed default block=15s; nginx budget drains in <=25s. Bounded waiting.
-        cooldown = max(25, int(fresh['retry_after'] or 0))
-        if cooldown > 60:
-            raise AssertionError('Configured cooldown exceeds this bounded demonstration (60 seconds)')
-        print(f'{mode}: waiting {cooldown + 1}s for recovery', flush=True)
-        time.sleep(cooldown + 1)
-        recovered = attempt(base, PASSWORDS[-1], 12)
-        report['after_cooldown'] = recovered
-        checks['correct_password_after_expiry'] = recovered['status'] == 302 and recovered['authenticated']
-        print(f"{mode}: recovery HTTP {recovered['status']}, authenticated={recovered['authenticated']}", flush=True)
+        if mode == 'fixed':
+            cooldown = int(fresh['retry_after'] or 15)
+            time.sleep(cooldown + 1)
+            recovered = attempt(base, PASSWORDS[-1], 12)
+            report['after_cooldown'] = recovered
+            checks['correct_password_after_expiry'] = recovered['status'] == 302 and recovered['authenticated']
+        else:
+            cooldown = max(90, int(fresh['retry_after'] or 0))
+            print(f'{mode}: waiting {cooldown + 1}s for recovery', flush=True)
+            time.sleep(cooldown + 1)
+            recovered = attempt(base, PASSWORDS[-1], 12)
+            report['after_cooldown'] = recovered
+            checks['correct_password_after_expiry'] = recovered['status'] == 302 and recovered['authenticated']
     report['passed'] = all(checks.values())
     return report
 

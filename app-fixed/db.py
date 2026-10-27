@@ -32,12 +32,17 @@ def initialize(path, reset=False):
         if reset:
             db.executescript("""
                 DROP TABLE IF EXISTS login_attempts;
+                DROP TABLE IF EXISTS login_failure_events;
                 DROP TABLE IF EXISTS comments;
                 DROP TABLE IF EXISTS participants;
                 DROP TABLE IF EXISTS tickets;
                 DROP TABLE IF EXISTS users;
             """)
         db.executescript("""
+            CREATE TABLE IF NOT EXISTS login_failure_events (
+                account TEXT NOT NULL, occurred REAL NOT NULL
+            );
+            CREATE INDEX IF NOT EXISTS login_failure_account ON login_failure_events(account);
             CREATE TABLE IF NOT EXISTS login_attempts (
                 scope TEXT NOT NULL, key TEXT NOT NULL, failures INTEGER NOT NULL,
                 window_start REAL NOT NULL, blocked_until REAL NOT NULL,

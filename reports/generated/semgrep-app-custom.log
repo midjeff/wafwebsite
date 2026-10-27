@@ -4,27 +4,27 @@
 │ 5 Code Findings │
 └─────────────────┘
                
-    app\main.py
+    app/main.py
    ❯❯❱ sast.lab-sql-string-construction
           ❰❰ Blocking ❱❱
           SQL assembled with string interpolation reaches execute; inspect parameter binding.
                                                                                              
-          159┆ people = get_db().execute(sql).fetchall()
+          164┆ people = get_db().execute(sql).fetchall()
    
     ❯❱ sast.lab-request-to-send-file
           ❰❰ Blocking ❱❱
           Request-controlled file path reaches send_file; validate resolved directory containment.
                                                                                                   
-          181┆ return send_file(target, mimetype="text/plain",     
+          186┆ return send_file(target, mimetype="text/plain",     
                as_attachment=request.args.get("attachment") == "1")
    
     ❯❱ sast.lab-shell-enabled
           ❰❰ Blocking ❱❱
           Shell-enabled process execution; review whether untrusted input reaches the command.
                                                                                               
-          191┆ output = bounded_run(command, shell=True)
+          196┆ output = bounded_run(command, shell=True)
                                
-    app\templates\greeting.html
+    app/templates/greeting.html
     ❯❱ sast.lab-jinja-autoescape-bypass
           ❰❰ Blocking ❱❱
           Template explicitly disables escaping; review the origin of the rendered value.
@@ -35,7 +35,7 @@
                marker" class="muted">Добро пожаловать в рабочее пространство.</p><a href="{{             
                url_for('employees') }}">← К сотрудникам</a></section>{% endblock %}                      
                              
-    app\templates\ticket.html
+    app/templates/ticket.html
     ❯❱ sast.lab-jinja-autoescape-bypass
           ❰❰ Blocking ❱❱
           Template explicitly disables escaping; review the origin of the rendered value.
@@ -67,11 +67,11 @@
 ┌─────────────┐
 │ Scan Status │
 └─────────────┘
-  Scanning 22 files tracked by git with 4 Code rules:
+  Scanning 25 files tracked by git with 4 Code rules:
                                                                                                                         
   Language      Rules   Files          Origin   Rules                                                                   
  ─────────────────────────────        ────────────────                                                                  
-  <multilang>       1      22          Custom       4                                                                   
+  <multilang>       1      25          Custom       4                                                                   
   python            3       4                                                                                           
                                                                                                                         
                 
@@ -82,8 +82,7 @@
 ✅ Scan completed successfully.
  • Findings: 5 (5 blocking)
  • Rules run: 4
- • Targets scanned: 22
+ • Targets scanned: 25
  • Parsed lines: ~100.0%
- • Scan was limited to files tracked by git
- • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
-Ran 4 rules on 22 files: 5 findings.
+ • No ignore information available
+Ran 4 rules on 25 files: 5 findings.

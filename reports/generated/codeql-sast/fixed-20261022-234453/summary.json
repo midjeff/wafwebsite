@@ -1,0 +1,13 @@
+﻿{
+    "variant":  "fixed",
+    "reportDirectory":  "reports/generated/codeql-sast/fixed-20261022-234453",
+    "discoveredFiles":  27,
+    "pythonFiles":  5,
+    "nonPythonFiles":  17,
+    "codeqlResults":  0,
+    "codeqlInvocationErrors":  0,
+    "codeqlPythonLauncherNotices":  4,
+    "banditResults":  2,
+    "banditErrors":  0,
+    "banditExitCode":  1
+}

@@ -1,0 +1,255 @@
+{
+  "base": "http://127.0.0.1:8082",
+  "results": [
+    {
+      "name": "login",
+      "passed": true,
+      "detail": "Authenticated local test session"
+    },
+    {
+      "name": "catalog_/",
+      "passed": true,
+      "detail": "Every shipped document is linked by the interface"
+    },
+    {
+      "name": "link_/download?file=onboarding.txt",
+      "passed": true,
+      "detail": "Exact document bytes and expected inline/attachment header",
+      "status": 200
+    },
+    {
+      "name": "link_/download?file=vpn.txt",
+      "passed": true,
+      "detail": "Exact document bytes and expected inline/attachment header",
+      "status": 200
+    },
+    {
+      "name": "link_/download?file=meetings.txt",
+      "passed": true,
+      "detail": "Exact document bytes and expected inline/attachment header",
+      "status": 200
+    },
+    {
+      "name": "catalog_/documents",
+      "passed": true,
+      "detail": "Every shipped document is linked by the interface"
+    },
+    {
+      "name": "link_/download?file=onboarding.txt",
+      "passed": true,
+      "detail": "Exact document bytes and expected inline/attachment header",
+      "status": 200
+    },
+    {
+      "name": "link_/download?file=onboarding.txt&attachment=1",
+      "passed": true,
+      "detail": "Exact document bytes and expected inline/attachment header",
+      "status": 200
+    },
+    {
+      "name": "link_/download?file=vpn.txt",
+      "passed": true,
+      "detail": "Exact document bytes and expected inline/attachment header",
+      "status": 200
+    },
+    {
+      "name": "link_/download?file=vpn.txt&attachment=1",
+      "passed": true,
+      "detail": "Exact document bytes and expected inline/attachment header",
+      "status": 200
+    },
+    {
+      "name": "link_/download?file=meetings.txt",
+      "passed": true,
+      "detail": "Exact document bytes and expected inline/attachment header",
+      "status": 200
+    },
+    {
+      "name": "link_/download?file=meetings.txt&attachment=1",
+      "passed": true,
+      "detail": "Exact document bytes and expected inline/attachment header",
+      "status": 200
+    },
+    {
+      "name": "default_document",
+      "passed": true,
+      "detail": "Existing default document preserved"
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "",
+      "attachment": "0",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "",
+      "attachment": "1",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "unknown.txt",
+      "attachment": "0",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "unknown.txt",
+      "attachment": "1",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "./onboarding.txt",
+      "attachment": "0",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "./onboarding.txt",
+      "attachment": "1",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "../documents/onboarding.txt",
+      "attachment": "0",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "../documents/onboarding.txt",
+      "attachment": "1",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "../lab-only.txt",
+      "attachment": "0",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "../lab-only.txt",
+      "attachment": "1",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "..\\lab-only.txt",
+      "attachment": "0",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "..\\lab-only.txt",
+      "attachment": "1",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "/srv/portal/documents/onboarding.txt",
+      "attachment": "0",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "/srv/portal/documents/onboarding.txt",
+      "attachment": "1",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "/etc/passwd",
+      "attachment": "0",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "/etc/passwd",
+      "attachment": "1",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "C:\\Windows\\win.ini",
+      "attachment": "0",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "C:\\Windows\\win.ini",
+      "attachment": "1",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "//localhost/share/onboarding.txt",
+      "attachment": "0",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "//localhost/share/onboarding.txt",
+      "attachment": "1",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "onboarding.txt\u0000",
+      "attachment": "0",
+      "status": 400
+    },
+    {
+      "name": "reject_id",
+      "passed": true,
+      "detail": "Unknown IDs and paths are rejected",
+      "identifier": "onboarding.txt\u0000",
+      "attachment": "1",
+      "status": 400
+    }
+  ]
+}

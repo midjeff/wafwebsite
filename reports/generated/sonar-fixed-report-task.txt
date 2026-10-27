@@ -2,5 +2,5 @@ projectKey=nexus-fixed
 serverUrl=http://sonarqube:9000
 serverVersion=26.10.0.133078
 dashboardUrl=http://sonarqube:9000/dashboard?id=nexus-fixed
-ceTaskId=ebcd604a-e499-4e9e-8f35-71cae482b0a8
-ceTaskUrl=http://sonarqube:9000/api/ce/task?id=ebcd604a-e499-4e9e-8f35-71cae482b0a8
+ceTaskId=dd0b76bf-20a3-4408-82f8-54e9dc12c653
+ceTaskUrl=http://sonarqube:9000/api/ce/task?id=dd0b76bf-20a3-4408-82f8-54e9dc12c653

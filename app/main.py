@@ -179,7 +179,6 @@ def create_app(config=None):
     @app.get("/download")
     @login_required
     def download():
-        # LAB CWE-22: no containment check after joining an untrusted path.
         target = ROOT / "documents" / request.args.get("file", "onboarding.txt")
         if not target.is_file():
             abort(404)

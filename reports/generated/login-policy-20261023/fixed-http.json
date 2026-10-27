@@ -1,0 +1,30 @@
+[
+  {
+    "status": 302,
+    "retry": null
+  },
+  {
+    "status": 400,
+    "retry": null
+  },
+  {
+    "status": 200,
+    "retry": null
+  },
+  {
+    "status": 200,
+    "retry": null
+  },
+  {
+    "status": 200,
+    "retry": null
+  },
+  {
+    "status": 429,
+    "retry": "900"
+  },
+  {
+    "status": 429,
+    "retry": "898"
+  }
+]

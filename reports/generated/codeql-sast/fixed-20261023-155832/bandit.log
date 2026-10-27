@@ -1,0 +1,5 @@
+﻿[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[json]	INFO	JSON output written to file: C:\Users\Shwepes\wafwebsite\reports\generated\codeql-sast\fixed-20261023-155832\bandit.json
